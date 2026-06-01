@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Focus Trip — Criar Conta</title>
+ <link rel="stylesheet" href="style.css" />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="auth-page">
+
+ <div class="auth-container">
+ <!-- LEFT PANEL -->
+ <div class="auth-left">
+ <a href="index.html" class="auth-logo">
+ <span class="logo-icon"></span>
+ <span class="logo-text">Focus<span class="logo-accent">Trip</span></span>
+ </a>
+ <div class="auth-promo">
+ <h2>Comece sua jornada de <span class="gradient-text">foco real</span></h2>
+ <p>Configure sua rotina de estudos em menos de 2 minutos e sinta a diferença já na primeira sessão.</p>
+ <div class="auth-promo-items">
+ <div class="promo-item"><span></span>Horários flexíveis e personalizados</div>
+ <div class="promo-item"><span></span>Métodos de estudo scientificamente validados</div>
+ <div class="promo-item"><span></span>Streak diário que te mantém comprometido</div>
+ <div class="promo-item"><span></span>Recompensas e perfil social motivador</div>
+ </div>
+ <div class="auth-streak-preview">
+ <span class="streak-fire"></span>
+ <span>Junte-se a 12.000+ estudantes em streak hoje</span>
+ </div>
+ </div>
+ </div>
+
+ <!-- RIGHT PANEL -->
+ <div class="auth-right">
+ <div class="auth-form-wrapper">
+ <h1 class="auth-title">Criar conta gratuita</h1>
+ <p class="auth-subtitle">Já tem conta? <a href="login.html">Entrar</a></p>
+
+ <form class="auth-form" id="formCadastro" onsubmit="handleCadastro(event)">
+ <div class="form-row">
+ <div class="form-group">
+ <label for="nome">Nome</label>
+ <input type="text" id="nome" placeholder="Seu nome" required />
+ </div>
+ <div class="form-group">
+ <label for="sobrenome">Sobrenome</label>
+ <input type="text" id="sobrenome" placeholder="Seu sobrenome" required />
+ </div>
+ </div>
+
+ <div class="form-group">
+ <label for="email">E-mail</label>
+ <input type="email" id="email" placeholder="seu@email.com" required />
+ </div>
+
+ <div class="form-group">
+ <label for="senha">Senha</label>
+ <div class="input-with-icon">
+ <input type="password" id="senha" placeholder="Mínimo 8 caracteres" required minlength="8" />
+ <button type="button" class="toggle-password" onclick="togglePass('senha')"></button>
+ </div>
+ <div class="password-strength" id="passStrength"></div>
+ </div>
+
+ <!-- ONBOARDING RÁPIDO -->
+ <div class="onboarding-section">
+ <p class="onboarding-title">Configure sua rotina agora</p>
+
+ <div class="form-group">
+ <label>Horas de estudo por dia</label>
+ <div class="hours-selector">
+ <button type="button" class="hours-btn" data-hours="1">1h</button>
+ <button type="button" class="hours-btn active" data-hours="2">2h</button>
+ <button type="button" class="hours-btn" data-hours="3">3h</button>
+ <button type="button" class="hours-btn" data-hours="4">4h</button>
+ <button type="button" class="hours-btn" data-hours="6">6h+</button>
+ </div>
+ </div>
+
+ <div class="form-group">
+ <label>Dias de estudo</label>
+ <div class="days-selector">
+ <button type="button" class="day-btn" data-day="seg">Seg</button>
+ <button type="button" class="day-btn active" data-day="ter">Ter</button>
+ <button type="button" class="day-btn active" data-day="qua">Qua</button>
+ <button type="button" class="day-btn active" data-day="qui">Qui</button>
+ <button type="button" class="day-btn active" data-day="sex">Sex</button>
+ <button type="button" class="day-btn" data-day="sab">Sáb</button>
+ <button type="button" class="day-btn" data-day="dom">Dom</button>
+ </div>
+ </div>
+
+ <div class="form-group">
+ <label>Método preferido</label>
+ <div class="method-selector">
+ <label class="method-option active-option">
+ <input type="radio" name="metodo" value="pomodoro" checked />
+ <span class="method-opt-icon"></span>
+ <span>Pomodoro</span>
+ </label>
+ <label class="method-option">
+ <input type="radio" name="metodo" value="blocos" />
+ <span class="method-opt-icon"></span>
+ <span>Blocos</span>
+ </label>
+ <label class="method-option">
+ <input type="radio" name="metodo" value="meta" />
+ <span class="method-opt-icon"></span>
+ <span>Meta Diária</span>
+ </label>
+ </div>
+ </div>
+ </div>
+
+ <button type="submit" class="btn-primary btn-full btn-lg">Criar minha conta e começar
+ </button>
+
+ <p class="auth-terms">Ao criar sua conta você concorda com os <a href="#">Termos de Uso</a>e <a href="#">Política de Privacidade</a>.
+ </p>
+ </form>
+ </div>
+ </div>
+ </div>
+
+ <script src="app.js"></script>
+ <script>
+ // Seletor de horas
+ document.querySelectorAll('.hours-btn').forEach(btn => {
+ btn.addEventListener('click', () => {
+ document.querySelectorAll('.hours-btn').forEach(b =>b.classList.remove('active'));
+ btn.classList.add('active');
+ });
+ });
+
+ // Seletor de dias (toggle individual)
+ document.querySelectorAll('.day-btn').forEach(btn => {
+ btn.addEventListener('click', () =>btn.classList.toggle('active'));
+ });
+
+ // Seletor de método
+ document.querySelectorAll('.method-option').forEach(opt => {
+ opt.addEventListener('click', () => {
+ document.querySelectorAll('.method-option').forEach(o =>o.classList.remove('active-option'));
+ opt.classList.add('active-option');
+ });
+ });
+
+ // Força da senha
+ document.getElementById('senha').addEventListener('input', function() {
+ const v = this.value;
+ const el = document.getElementById('passStrength');
+ let strength = 0;
+ if (v.length >= 8) strength++;
+ if (/[A-Z]/.test(v)) strength++;
+ if (/[0-9]/.test(v)) strength++;
+ if (/[^A-Za-z0-9]/.test(v)) strength++;
+ const levels = ['', 'Fraca ', 'Regular ', 'Boa ', 'Forte '];
+ const classes = ['', 'weak', 'fair', 'good', 'strong'];
+ el.textContent = v.length > 0 ? levels[strength] : '';
+ el.className = 'password-strength ' + (classes[strength] || '');
+ });
+
+ function togglePass(id) {
+ const input = document.getElementById(id);
+ input.type = input.type === 'password' ? 'text' : 'password';
+ }
+
+ function handleCadastro(e) {
+ e.preventDefault();
+ const nome = document.getElementById('nome').value;
+ const horasBtn = document.querySelector('.hours-btn.active');
+ const dias = [...document.querySelectorAll('.day-btn.active')].map(b =>b.dataset.day);
+ const metodo = document.querySelector('input[name="metodo"]:checked').value;
+ const user = {
+ nome: nome + ' ' + document.getElementById('sobrenome').value,
+ email: document.getElementById('email').value,
+ horas: horasBtn ? parseInt(horasBtn.dataset.hours) : 2,
+ dias,
+ metodo,
+ streak: 0,
+ xp: 0,
+ nivel: 1,
+ conquistas: [],
+ criadoEm: new Date().toISOString()
+ };
+ localStorage.setItem('focustrip_user', JSON.stringify(user));
+ window.location.href = 'dashboard.html';
+ }
+ </script>
+</body>
+</html>

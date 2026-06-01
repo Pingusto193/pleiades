@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Focus Trip — Dashboard</title>
+ <link rel="stylesheet" href="style.css" />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="app-page">
+
+ <!-- SIDEBAR -->
+ <aside class="sidebar" id="sidebar">
+ <div class="sidebar-logo">
+ <span class="logo-icon"></span>
+ <span class="logo-text">Focus<span class="logo-accent">Trip</span></span>
+ </div>
+ <nav class="sidebar-nav">
+ <a href="dashboard.html" class="nav-item active">
+ <span class="nav-icon"></span><span>Dashboard</span>
+ </a>
+ <a href="sessao.html" class="nav-item">
+ <span class="nav-icon"></span><span>Sessão de Estudo</span>
+ </a>
+ <a href="agenda.html" class="nav-item">
+ <span class="nav-icon"></span><span>Minha Agenda</span>
+ </a>
+ <a href="perfil.html" class="nav-item">
+ <span class="nav-icon"></span><span>Perfil</span>
+ </a>
+ <a href="ranking.html" class="nav-item">
+ <span class="nav-icon"></span><span>Ranking</span>
+ </a>
+ </nav>
+ <div class="sidebar-user" id="sidebarUser"></div>
+ </aside>
+
+ <!-- MAIN -->
+ <main class="app-main">
+ <!-- TOP BAR -->
+ <header class="app-topbar">
+ <div class="topbar-greeting" id="topGreeting">Olá!</div>
+ <div class="topbar-right">
+ <div class="topbar-streak" id="topStreak">0 dias</div>
+ <a href="perfil.html" class="topbar-avatar" id="topAvatar"></a>
+ </div>
+ </header>
+
+ <!-- CONTEÚDO -->
+ <div class="app-content">
+
+ <!-- AVISO DE SESSÃO DO DIA -->
+ <div class="day-status-card" id="dayStatus"></div>
+
+ <!-- STATS RÁPIDOS -->
+ <div class="stats-row">
+ <div class="stat-card">
+ <div class="stat-card-icon"></div>
+ <div class="stat-card-info">
+ <div class="stat-card-num" id="streakNum">0</div>
+ <div class="stat-card-label">Dias em sequência</div>
+ </div>
+ </div>
+ <div class="stat-card">
+ <div class="stat-card-icon"></div>
+ <div class="stat-card-info">
+ <div class="stat-card-num" id="todayHours">0h</div>
+ <div class="stat-card-label">Estudadas hoje</div>
+ </div>
+ </div>
+ <div class="stat-card">
+ <div class="stat-card-icon"></div>
+ <div class="stat-card-info">
+ <div class="stat-card-num" id="xpNum">0</div>
+ <div class="stat-card-label">XP Total</div>
+ </div>
+ </div>
+ <div class="stat-card">
+ <div class="stat-card-icon"></div>
+ <div class="stat-card-info">
+ <div class="stat-card-num" id="goalProgress">0%</div>
+ <div class="stat-card-label">Meta do dia</div>
+ </div>
+ </div>
+ </div>
+
+ <!-- CTA PRINCIPAL -->
+ <div class="main-cta-section">
+ <div class="main-cta-card" id="mainCta">
+ <div class="cta-text">
+ <h2>Pronto para estudar?</h2>
+ <p id="ctaSubtitle">Inicie sua sessão de hoje e mantenha o streak vivo.</p>
+ </div>
+ <a href="sessao.html" class="btn-primary btn-lg">Iniciar sessão</a>
+ </div>
+ </div>
+
+ <!-- PROGRESSO SEMANAL -->
+ <div class="section-title">Progresso desta semana</div>
+ <div class="weekly-progress" id="weeklyProgress"></div>
+
+ <!-- CONQUISTAS RECENTES -->
+ <div class="section-title">Conquistas</div>
+ <div class="achievements-grid" id="achievementsGrid"></div>
+
+ </div>
+ </main>
+
+ <!-- MODAL BLOQUEIO COGNITIVO -->
+ <div class="modal-overlay" id="blockModal" style="display:none">
+ <div class="modal-card modal-block">
+ <div class="modal-block-icon"></div>
+ <h2>Espera um segundo...</h2>
+ <p id="blockModalText">Você tem uma sessão de estudo pendente hoje.</p>
+ <div class="block-stats" id="blockStats"></div>
+ <div class="block-actions">
+ <button class="btn-primary" onclick="goToSession()">Ir estudar agora</button>
+ <button class="btn-ghost btn-sm" onclick="dismissBlock()">Ignorar por hoje</button>
+ </div>
+ </div>
+ </div>
+
+ <script src="app.js"></script>
+ <script>document.addEventListener('DOMContentLoaded', () => {
+ const user = getUser();
+ if (!user) { window.location.href = 'login.html'; return; }
+
+ // Greeting
+ const hora = new Date().getHours();
+ const saudacao = hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite';
+ document.getElementById('topGreeting').textContent = `${saudacao}, ${user.nome.split(' ')[0]}!`;
+ document.getElementById('topStreak').textContent = `${user.streak} dias`;
+
+ // Stats
+ document.getElementById('streakNum').textContent = user.streak;
+ document.getElementById('xpNum').textContent = user.xp;
+
+ const hoje = getTodaySessions();
+ const metaMinutos = (user.horas || 2) * 60;
+ const estudadoMinutos = hoje.reduce((a, s) =>a + (s.duracao || 0), 0);
+ const pct = Math.min(100, Math.round((estudadoMinutos / metaMinutos) * 100));
+ document.getElementById('todayHours').textContent = minToHour(estudadoMinutos);
+ document.getElementById('goalProgress').textContent = pct + '%';
+
+ // Sidebar user
+ document.getElementById('sidebarUser').innerHTML = `
+ <div class="sidebar-user-info">
+ <div class="sidebar-avatar"></div>
+ <div>
+ <div class="sidebar-name">${user.nome}</div>
+ <div class="sidebar-level">Nível ${user.nivel}</div>
+ </div>
+ </div>
+ <a href="login.html" class="sidebar-logout" onclick="logout()">Sair</a>
+ `;
+
+ // Day status
+ const diasPt = { seg:'segunda',ter:'terça',qua:'quarta',qui:'quinta',sex:'sexta',sab:'sábado',dom:'domingo' };
+ const dayKeys = ['dom','seg','ter','qua','qui','sex','sab'];
+ const diaAtual = dayKeys[new Date().getDay()];
+ const ehDiaEstudo = (user.dias || []).includes(diaAtual);
+ const statusEl = document.getElementById('dayStatus');
+ if (ehDiaEstudo && pct < 100) {
+ statusEl.innerHTML = `<span class="status-dot status-pending"></span>Hoje é dia de estudo — você ainda não completou sua meta de <strong>${user.horas}h</strong>`;
+ statusEl.className = 'day-status-card status-warning';
+ } else if (pct >= 100) {
+ statusEl.innerHTML = `<span class="status-dot status-done"></span>Meta de hoje concluída! Você ganhou <strong>+50 XP</strong>`;
+ statusEl.className = 'day-status-card status-success';
+ } else {
+ statusEl.innerHTML = `<span class="status-dot status-rest"></span>Hoje é dia de descanso — aproveite!`;
+ statusEl.className = 'day-status-card status-rest';
+ }
+
+ // CTA subtitle
+ if (pct >= 100) {
+ document.getElementById('ctaSubtitle').textContent = `Você já cumpriu a meta de hoje! Que tal uma sessão extra?`;
+ } else if (ehDiaEstudo) {
+ document.getElementById('ctaSubtitle').textContent = `Faltam ${minToHour(metaMinutos - estudadoMinutos)} para completar sua meta de hoje.`;
+ }
+
+ // Weekly progress
+ renderWeekly(user);
+
+ // Achievements
+ renderAchievements(user);
+
+ // Mostrar bloqueio cognitivo se dia de estudo e não estudou
+ if (ehDiaEstudo && pct < 100 && !sessionStorage.getItem('block_dismissed')) {
+ setTimeout(() => {
+ document.getElementById('blockModalText').textContent =
+ `Você tem ${minToHour(metaMinutos - estudadoMinutos)} de estudo pendente hoje. Seu streak de ${user.streak} dias depende disso!`;
+ document.getElementById('blockStats').innerHTML = `
+ <div class="block-stat"><span></span>Streak atual: <strong>${user.streak} dias</strong></div>
+ <div class="block-stat"><span></span>XP em risco: <strong>${user.streak * 10}</strong></div>
+ `;
+ document.getElementById('blockModal').style.display = 'flex';
+ }, 2000);
+ }
+ });
+
+ function renderWeekly(user) {
+ const days = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+ const dayKeys = ['dom','seg','ter','qua','qui','sex','sab'];
+ const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
+ const hoje = new Date();
+ const semana = Array.from({length:7}, (_,i) => {
+ const d = new Date(hoje); d.setDate(hoje.getDate() - (6-i));
+ return d.toISOString().split('T')[0];
+ });
+ const container = document.getElementById('weeklyProgress');
+ container.innerHTML = semana.map((date, i) => {
+ const dayIdx = new Date(date).getDay();
+ const ehEstudo = (user.dias||[]).includes(dayKeys[dayIdx]);
+ const daySessions = sessions.filter(s =>s.data === date);
+ const mins = daySessions.reduce((a,s) =>a+(s.duracao||0), 0);
+ const meta = (user.horas||2)*60;
+ const pct = Math.min(100, Math.round((mins/meta)*100));
+ const isToday = date === hoje.toISOString().split('T')[0];
+ return `
+ <div class="week-day ${isToday?'week-today':''} ${ehEstudo?'week-study':'week-rest'}">
+ <div class="week-bar-wrap">
+ <div class="week-bar" style="height:${pct}%"></div>
+ </div>
+ <div class="week-day-label">${days[dayIdx]}</div>
+ <div class="week-day-sub">${pct > 0 ? pct+'%' : ehEstudo ? '—' : ''}</div>
+ </div>
+ `;
+ }).join('');
+ }
+
+ function renderAchievements(user) {
+ const all = getAchievements();
+ const container = document.getElementById('achievementsGrid');
+ container.innerHTML = all.map(a => {
+ const unlocked = (user.conquistas||[]).includes(a.id) || checkAchievement(a, user);
+ return `
+ <div class="achievement-card ${unlocked ? 'unlocked' : 'locked'}">
+ <div class="ach-icon">${unlocked ? a.icon : ''}</div>
+ <div class="ach-name">${a.nome}</div>
+ <div class="ach-desc">${a.desc}</div>
+ ${unlocked ? '<div class="ach-badge">Conquistado </div>' : ''}
+ </div>
+ `;
+ }).join('');
+ }
+
+ function goToSession() {
+ document.getElementById('blockModal').style.display = 'none';
+ window.location.href = 'sessao.html';
+ }
+
+ function dismissBlock() {
+ sessionStorage.setItem('block_dismissed','1');
+ document.getElementById('blockModal').style.display = 'none';
+ }
+
+ function logout() {
+ localStorage.removeItem('focustrip_user');
+ }
+ </script>
+</body>
+</html>

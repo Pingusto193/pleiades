@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Focus Trip — Meu Perfil</title>
+ <link rel="stylesheet" href="style.css" />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="app-page">
+ <aside class="sidebar">
+ <div class="sidebar-logo"><span class="logo-icon"></span><span class="logo-text">Focus<span class="logo-accent">Trip</span></span></div>
+ <nav class="sidebar-nav">
+ <a href="dashboard.html" class="nav-item"><span class="nav-icon"></span><span>Dashboard</span></a>
+ <a href="sessao.html" class="nav-item"><span class="nav-icon"></span><span>Sessão de Estudo</span></a>
+ <a href="agenda.html" class="nav-item"><span class="nav-icon"></span><span>Minha Agenda</span></a>
+ <a href="perfil.html" class="nav-item active"><span class="nav-icon"></span><span>Perfil</span></a>
+ <a href="ranking.html" class="nav-item"><span class="nav-icon"></span><span>Ranking</span></a>
+ </nav>
+ </aside>
+
+ <main class="app-main">
+ <header class="app-topbar">
+ <div class="topbar-greeting">Meu Perfil</div>
+ <div class="topbar-right">
+ <div class="topbar-streak" id="topStreak">0 dias</div>
+ </div>
+ </header>
+ <div class="app-content">
+
+ <!-- PERFIL CARD -->
+ <div class="profile-hero-card" id="profileHero"></div>
+
+ <!-- ABAS -->
+ <div class="profile-tabs">
+ <button class="tab-btn active" onclick="showTab('conquistas', this)">Conquistas</button>
+ <button class="tab-btn" onclick="showTab('historico', this)">Histórico</button>
+ <button class="tab-btn" onclick="showTab('configuracoes', this)">Configurações</button>
+ </div>
+
+ <!-- ABA CONQUISTAS -->
+ <div class="tab-content" id="tab-conquistas">
+ <div class="achievements-full-grid" id="achievementsFull"></div>
+ </div>
+
+ <!-- ABA HISTÓRICO -->
+ <div class="tab-content" id="tab-historico" style="display:none">
+ <div class="history-list" id="historyList"></div>
+ </div>
+
+ <!-- ABA CONFIGURAÇÕES -->
+ <div class="tab-content" id="tab-configuracoes" style="display:none">
+ <div class="settings-card">
+ <h3>Configurações de Estudo</h3>
+ <div class="form-group">
+ <label>Horas de estudo por dia</label>
+ <div class="hours-selector" id="settingsHours"></div>
+ </div>
+ <div class="form-group">
+ <label>Dias de estudo</label>
+ <div class="days-selector" id="settingsDays"></div>
+ </div>
+ <div class="form-group">
+ <label>Método preferido</label>
+ <div class="method-selector" id="settingsMethod"></div>
+ </div>
+ <button class="btn-primary" onclick="saveSettings()">Salvar configurações</button>
+ </div>
+ </div>
+
+ </div>
+ </main>
+
+ <script src="app.js"></script>
+ <script>document.addEventListener('DOMContentLoaded', () => {
+ const user = getUser();
+ if (!user) { window.location.href = 'login.html'; return; }
+ document.getElementById('topStreak').textContent = `${user.streak} dias`;
+
+ // Profile hero
+ const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
+ const totalMins = sessions.reduce((a,s) =>a+(s.duracao||0), 0);
+ const nextLevelXP = user.nivel * 500;
+ const currentLevelXP = (user.nivel - 1) * 500;
+ const xpPct = Math.min(100, Math.round(((user.xp - currentLevelXP) / 500) * 100));
+
+ document.getElementById('profileHero').innerHTML = `
+ <div class="profile-hero-left">
+ <div class="profile-avatar-big"></div>
+ <div class="profile-hero-info">
+ <h2>${user.nome}</h2>
+ <div class="profile-email">${user.email}</div>
+ <div class="profile-streak-big"> ${user.streak} dias em sequência</div>
+ <div class="profile-badges-row">
+ ${getAchievements().filter(a => (user.conquistas||[]).includes(a.id) || checkAchievement(a, user))
+ .slice(0,5).map(a => `<span class="badge-icon-big" title="${a.nome}">${a.icon}</span>`).join('') || '<span class="no-badges">Sem conquistas ainda</span>'}
+ </div>
+ </div>
+ </div>
+ <div class="profile-hero-right">
+ <div class="profile-level-card">
+ <div class="level-label-big">Nível ${user.nivel}</div>
+ <div class="level-name">${getLevelName(user.nivel)}</div>
+ <div class="level-bar-big"><div class="level-fill-big" style="width:${xpPct}%"></div></div>
+ <div class="level-xp">${user.xp} / ${nextLevelXP} XP</div>
+ </div>
+ <div class="profile-quick-stats">
+ <div class="quick-stat"><span></span><strong>${minToHour(totalMins)}</strong><small>Total estudado</small></div>
+ <div class="quick-stat"><span></span><strong>${sessions.length}</strong><small>Sessões</small></div>
+ <div class="quick-stat"><span></span><strong>${(user.conquistas||[]).length}</strong><small>Conquistas</small></div>
+ </div>
+ </div>
+ `;
+
+ // Conquistas
+ renderAchievementsFull(user);
+
+ // Histórico
+ renderHistory(sessions);
+
+ // Configurações
+ renderSettings(user);
+ });
+
+ function renderAchievementsFull(user) {
+ const all = getAchievements();
+ document.getElementById('achievementsFull').innerHTML = all.map(a => {
+ const unlocked = (user.conquistas||[]).includes(a.id) || checkAchievement(a, user);
+ return `
+ <div class="ach-full-card ${unlocked ? 'unlocked' : 'locked'}">
+ <div class="ach-full-icon">${unlocked ? a.icon : ''}</div>
+ <div class="ach-full-name">${a.nome}</div>
+ <div class="ach-full-desc">${a.desc}</div>
+ <div class="ach-full-status">${unlocked ? ' Conquistado' : 'Bloqueado'}</div>
+ </div>
+ `;
+ }).join('');
+ }
+
+ function renderHistory(sessions) {
+ if (!sessions.length) {
+ document.getElementById('historyList').innerHTML = '<div class="empty-state">Nenhuma sessão registrada ainda.</div>';
+ return;
+ }
+ const sorted = [...sessions].reverse();
+ document.getElementById('historyList').innerHTML = sorted.map(s => `
+ <div class="history-item">
+ <div class="history-date">${formatDate(s.data)}</div>
+ <div class="history-subject">${s.materia || 'Sessão de estudo'}</div>
+ <div class="history-method">${s.metodo || 'pomodoro'}</div>
+ <div class="history-duration">${s.duracao}min</div>
+ <div class="history-status ${s.completa ? 'done' : 'partial'}">${s.completa ? ' Completa' : ' Parcial'}</div>
+ </div>
+ `).join('');
+ }
+
+ function renderSettings(user) {
+ const hours = [1,2,3,4,6];
+ document.getElementById('settingsHours').innerHTML = hours.map(h =>
+ `<button type="button" class="hours-btn ${user.horas===h?'active':''}" data-hours="${h}" onclick="selectHours(${h}, this)">${h}h</button>`
+ ).join('');
+
+ const days = [['seg','Seg'],['ter','Ter'],['qua','Qua'],['qui','Qui'],['sex','Sex'],['sab','Sáb'],['dom','Dom']];
+ document.getElementById('settingsDays').innerHTML = days.map(([k,l]) =>
+ `<button type="button" class="day-btn ${(user.dias||[]).includes(k)?'active':''}" data-day="${k}" onclick="this.classList.toggle('active')">${l}</button>`
+ ).join('');
+
+ const methods = [['pomodoro',' Pomodoro'],['blocos',' Blocos'],['livre',' Livre']];
+ document.getElementById('settingsMethod').innerHTML = methods.map(([v,l]) =>
+ `<label class="method-option ${user.metodo===v?'active-option':''}">
+ <input type="radio" name="metodo_cfg" value="${v}" ${user.metodo===v?'checked':''} onchange="document.querySelectorAll('.method-option').forEach(o=>o.classList.remove('active-option'));this.closest('.method-option').classList.add('active-option')"/>
+ <span>${l}</span>
+ </label>`
+ ).join('');
+ }
+
+ function selectHours(h, el) {
+ document.querySelectorAll('#settingsHours .hours-btn').forEach(b =>b.classList.remove('active'));
+ el.classList.add('active');
+ }
+
+ function saveSettings() {
+ const user = getUser();
+ const horasEl = document.querySelector('#settingsHours .hours-btn.active');
+ const diasEls = document.querySelectorAll('#settingsDays .day-btn.active');
+ const metodoEl = document.querySelector('input[name="metodo_cfg"]:checked');
+ if (horasEl) user.horas = parseInt(horasEl.dataset.hours);
+ user.dias = [...diasEls].map(b =>b.dataset.day);
+ if (metodoEl) user.metodo = metodoEl.value;
+ localStorage.setItem('focustrip_user', JSON.stringify(user));
+ showToast('Configurações salvas!');
+ }
+
+ function getLevelName(n) {
+ const names = ['','Iniciante','Dedicado','Focado','Avançado','Expert','Mestre','Lenda'];
+ return names[Math.min(n, names.length-1)] || 'Lenda';
+ }
+
+ function formatDate(dateStr) {
+ const d = new Date(dateStr + 'T12:00:00');
+ return d.toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
+ }
+
+ function showTab(id, btn) {
+ document.querySelectorAll('.tab-content').forEach(t =>t.style.display = 'none');
+ document.querySelectorAll('.tab-btn').forEach(b =>b.classList.remove('active'));
+ document.getElementById('tab-' + id).style.display = 'block';
+ btn.classList.add('active');
+ }
+ </script>
+</body>
+</html>
