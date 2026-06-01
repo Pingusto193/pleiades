@@ -1,210 +1,269 @@
 <!DOCTYPE html>
+<!-- Define que este documento é um arquivo HTML5 -->
 <html lang="pt-BR">
+<!-- Início do documento HTML, definindo o idioma como Português do Brasil -->
 <head>
- <meta charset="UTF-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>Focus Trip | estudo com rotina, metas e progresso</title>
- <link rel="stylesheet" href="style.css" />
- <link rel="preconnect" href="https://fonts.googleapis.com" />
- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <!-- Cabeçalho contendo metadados importantes, título e conexões a estilos e fontes -->
+  <meta charset="UTF-8" />
+  <!-- Define a codificação de caracteres como UTF-8 para suportar acentos -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Torna a página responsiva para se adaptar a celulares e tablets -->
+  <title>Focus Trip | estudo com rotina, metas e progresso</title>
+  <!-- Título principal exibido na aba do navegador -->
+  <link rel="stylesheet" href="style.css" />
+  <!-- Vincula o arquivo CSS principal para os estilos visuais -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <!-- Otimiza a conexão com o domínio de fontes do Google -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <!-- Importa as fontes Inter e Space Grotesk do Google Fonts -->
 </head>
 <body class="landing-page">
- <nav class="nav-landing">
- <a class="nav-logo" href="index.html" aria-label="Focus Trip">
- <span class="logo-mark">FT</span>
- <span class="logo-text">Focus<span class="logo-accent">Trip</span></span>
- </a>
- <div class="nav-links">
- <a href="#como-funciona">Como funciona</a>
- <a href="#metodos">M&eacute;todos</a>
- <a href="#recompensas">Progresso</a>
- <a href="login.html" class="btn-nav-login">Entrar</a>
- <a href="cadastro.html" class="btn-nav-signup">Criar conta</a>
- </div>
- </nav>
+  <!-- Corpo da Landing Page (página inicial institucional) -->
 
- <main>
- <section class="hero">
- <div class="hero-content">
- <p class="hero-badge">Para quem quer estudar sem depender da motiva&ccedil;&atilde;o do dia</p>
- <h1 class="hero-title">Organize seus estudos e acompanhe o que voc&ecirc; realmente fez.
- </h1>
- <p class="hero-subtitle">O Focus Trip junta agenda, timer, metas e hist&oacute;rico em um lugar simples.
- Voc&ecirc; escolhe o plano, inicia uma sess&atilde;o e acompanha sua const&acirc;ncia ao longo da semana.
- </p>
- <div class="hero-cta">
- <a href="cadastro.html" class="btn-primary btn-lg">Come&ccedil;ar agora</a>
- <a href="#como-funciona" class="btn-ghost btn-lg">Ver detalhes</a>
- </div>
- <div class="hero-note">
- <span>Sem promessa milagrosa.</span>
- <span>S&oacute; uma rotina mais clara para estudar um pouco melhor todos os dias.</span>
- </div>
- </div>
+  <nav class="nav-landing">
+    <!-- Barra de navegação principal da página inicial -->
+    <a class="nav-logo" href="index.html" aria-label="Focus Trip">
+      <!-- Logotipo que atua como link para a própria página inicial -->
+      <span class="logo-mark">FT</span>
+      <!-- Sigla visual do logotipo -->
+      <span class="logo-text">Focus<span class="logo-accent">Trip</span></span>
+      <!-- Nome completo com destaque no termo "Trip" -->
+    </a>
+    <div class="nav-links">
+      <!-- Links de navegação interna e botões de autenticação -->
+      <a href="#como-funciona">Como funciona</a>
+      <!-- Link âncora para a seção descritiva de funcionamento -->
+      <a href="#metodos">M&eacute;todos</a>
+      <!-- Link âncora para a seção com formatos de estudo -->
+      <a href="#recompensas">Progresso</a>
+      <!-- Link âncora para a seção de recompensas/perfil -->
+      <a href="login.html" class="btn-nav-login">Entrar</a>
+      <!-- Botão que direciona o usuário para a página de login -->
+      <a href="cadastro.html" class="btn-nav-signup">Criar conta</a>
+      <!-- Botão de destaque para criar uma nova conta -->
+    </div>
+  </nav>
 
- <div class="hero-visual" aria-label="Previa de uma sessao de estudo">
- <div class="mockup-card">
- <div class="mockup-header">
- <span class="mockup-dot red"></span>
- <span class="mockup-dot yellow"></span>
- <span class="mockup-dot green"></span>
- <span class="mockup-title">Sess&atilde;o de estudo</span>
- </div>
- <div class="mockup-body">
- <div class="mockup-subject">C&aacute;lculo I</div>
- <div class="mockup-timer">24:37</div>
- <div class="mockup-method-badge">Pomodoro</div>
- <div class="mockup-progress-bar"><div class="mockup-progress-fill" style="width:62%"></div></div>
- <div class="mockup-progress-label">15 min estudados de 25 min</div>
- <div class="mockup-warning">Parar agora vai registrar a sess&atilde;o como incompleta.</div>
- <button class="mockup-btn-stop">Pausar sess&atilde;o</button>
- </div>
- </div>
- <div class="mockup-streak-card">
- <strong>14 dias</strong>
- <span>sequ&ecirc;ncia atual</span>
- </div>
- </div>
- </section>
+  <main>
+    <!-- Conteúdo principal da página inicial -->
+    <section class="hero">
+      <!-- Seção de abertura da página (Hero Section) com a proposta principal de valor -->
+      <div class="hero-content">
+        <!-- Textos e botões de chamada à ação (CTA) à esquerda -->
+        <p class="hero-badge">Para quem quer estudar sem depender da motiva&ccedil;&atilde;o do dia</p>
+        <!-- Badge explicativo em cima do título principal -->
+        <h1 class="hero-title">Organize seus estudos e acompanhe o que voc&ecirc; realmente fez.</h1>
+        <!-- Título principal da landing page -->
+        <p class="hero-subtitle">O Focus Trip junta agenda, timer, metas e hist&oacute;rico em um lugar simples.
+        Voc&ecirc; escolhe o plano, inicia uma sess&atilde;o e acompanha sua const&acirc;ncia ao longo da semana.
+        </p>
+        <!-- Subtítulo detalhando o funcionamento básico da ferramenta -->
+        <div class="hero-cta">
+          <!-- Botões de ação para guiar a navegação do usuário -->
+          <a href="cadastro.html" class="btn-primary btn-lg">Come&ccedil;ar agora</a>
+          <!-- Link principal de cadastro destacado -->
+          <a href="#como-funciona" class="btn-ghost btn-lg">Ver detalhes</a>
+          <!-- Link secundário do tipo "ghost" para saber mais -->
+        </div>
+        <div class="hero-note">
+          <!-- Mensagem secundária para passar confiabilidade e pé no chão -->
+          <span>Sem promessa milagrosa.</span>
+          <span>S&oacute; uma rotina mais clara para estudar um pouco melhor todos os dias.</span>
+        </div>
+      </div>
 
- <section class="section" id="como-funciona">
- <div class="container">
- <div class="section-header">
- <span class="section-tag">Como funciona</span>
- <h2>Uma rotina que cabe na sua semana</h2>
- <p>O foco aqui &eacute; tirar a decis&atilde;o do improviso: voc&ecirc; define o plano antes e acompanha a execu&ccedil;&atilde;o depois.</p>
- </div>
- <div class="steps-grid">
- <article class="step-card">
- <div class="step-num">01</div>
- <h3>Monte sua agenda</h3>
- <p>Cadastre as mat&eacute;rias, escolha os dias de estudo e deixe claro o que precisa acontecer em cada per&iacute;odo.</p>
- </article>
- <article class="step-card featured">
- <div class="step-num">02</div>
- <h3>Inicie uma sess&atilde;o</h3>
- <p>Use Pomodoro, blocos longos ou uma meta di&aacute;ria. O timer ajuda a manter o come&ccedil;o e o fim bem definidos.</p>
- <div class="step-tag">Essencial</div>
- </article>
- <article class="step-card">
- <div class="step-num">03</div>
- <h3>Veja o progresso</h3>
- <p>Consulte streak, XP, conquistas e hist&oacute;rico para entender onde voc&ecirc; est&aacute; sendo constante e onde precisa ajustar.</p>
- </article>
- </div>
- </div>
- </section>
+      <div class="hero-visual" aria-label="Previa de uma sessao de estudo">
+        <!-- Painel visual simulando a interface da plataforma (Mockup) -->
+        <div class="mockup-card">
+          <!-- Card de simulação de uma sessão ativa -->
+          <div class="mockup-header">
+            <!-- Barra superior simulando uma janela do sistema -->
+            <span class="mockup-dot red"></span>
+            <span class="mockup-dot yellow"></span>
+            <span class="mockup-dot green"></span>
+            <span class="mockup-title">Sess&atilde;o de estudo</span>
+          </div>
+          <div class="mockup-body">
+            <!-- Dados simulados da sessão em andamento -->
+            <div class="mockup-subject">C&aacute;lculo I</div>
+            <!-- Disciplina simulada: Cálculo I -->
+            <div class="mockup-timer">24:37</div>
+            <!-- Cronômetro simulado -->
+            <div class="mockup-method-badge">Pomodoro</div>
+            <!-- Indicador do método usado (Pomodoro) -->
+            <div class="mockup-progress-bar"><div class="mockup-progress-fill" style="width:62%"></div></div>
+            <!-- Barra de progresso visual da sessão -->
+            <div class="mockup-progress-label">15 min estudados de 25 min</div>
+            <!-- Texto auxiliar indicando o progresso atual -->
+            <div class="mockup-warning">Parar agora vai registrar a sess&atilde;o como incompleta.</div>
+            <!-- Alerta cognitivo que evita o abandono impulsivo do estudo -->
+            <button class="mockup-btn-stop">Pausar sess&atilde;o</button>
+            <!-- Botão simulado de controle do cronômetro -->
+          </div>
+        </div>
+        <div class="mockup-streak-card">
+          <!-- Card simulando a sequência (streak) de estudos consecutiva do usuário -->
+          <strong>14 dias</strong>
+          <span>sequ&ecirc;ncia atual</span>
+        </div>
+      </div>
+    </section>
 
- <section class="section section-dark" id="metodos">
- <div class="container">
- <div class="section-header light">
- <span class="section-tag">M&eacute;todos</span>
- <h2>Escolha o formato da sess&atilde;o</h2>
- <p>Nem todo dia pede o mesmo ritmo. O site deixa voc&ecirc; alternar entre blocos curtos, profundos e revis&otilde;es.</p>
- </div>
- <div class="methods-grid">
- <article class="method-card active-method">
- <h3>Pomodoro</h3>
- <p>Blocos de 25 minutos para come&ccedil;ar sem enrolar e fazer pausas antes do cansa&ccedil;o pesar.</p>
- <div class="method-badge">Padr&atilde;o</div>
- </article>
- <article class="method-card">
- <h3>Blocos profundos</h3>
- <p>Sess&otilde;es maiores para listas, leituras longas ou conte&uacute;dos que precisam de mais imers&atilde;o.</p>
- </article>
- <article class="method-card">
- <h3>Revis&atilde;o espa&ccedil;ada</h3>
- <p>Um jeito pr&aacute;tico de voltar nos assuntos antes que eles sumam da mem&oacute;ria.</p>
- </article>
- <article class="method-card">
- <h3>Meta di&aacute;ria</h3>
- <p>Defina uma quantidade de estudo para o dia e acompanhe o quanto falta para cumprir.</p>
- </article>
- </div>
- </div>
- </section>
+    <section class="section" id="como-funciona">
+      <!-- Seção explicando detalhadamente o passo a passo da plataforma -->
+      <div class="container">
+        <div class="section-header">
+          <!-- Cabeçalho da seção -->
+          <span class="section-tag">Como funciona</span>
+          <h2>Uma rotina que cabe na sua semana</h2>
+          <p>O foco aqui &eacute; tirar a decis&atilde;o do improviso: voc&ecirc; define o plano antes e acompanha a execu&ccedil;&atilde;o depois.</p>
+        </div>
+        <div class="steps-grid">
+          <!-- Grid com os três passos principais de funcionamento -->
+          <article class="step-card">
+            <div class="step-num">01</div>
+            <h3>Monte sua agenda</h3>
+            <p>Cadastre as mat&eacute;rias, escolha os dias de estudo e deixe claro o que precisa acontecer em cada per&iacute;odo.</p>
+          </article>
+          <article class="step-card featured">
+            <!-- Card em destaque evidenciando o passo principal (Início da Sessão) -->
+            <div class="step-num">02</div>
+            <h3>Inicie uma sess&atilde;o</h3>
+            <p>Use Pomodoro, blocos longos ou uma meta di&aacute;ria. O timer ajuda a manter o come&ccedil;o e o fim bem definidos.</p>
+            <div class="step-tag">Essencial</div>
+          </article>
+          <article class="step-card">
+            <div class="step-num">03</div>
+            <h3>Veja o progresso</h3>
+            <p>Consulte streak, XP, conquistas e hist&oacute;rico para entender onde voc&ecirc; est&aacute; sendo constante e onde precisa ajustar.</p>
+          </article>
+        </div>
+      </div>
+    </section>
 
- <section class="section" id="recompensas">
- <div class="container">
- <div class="section-header">
- <span class="section-tag">Progresso</span>
- <h2>Pequenos registros ajudam a manter o ritmo</h2>
- <p>As conquistas existem para marcar consist&ecirc;ncia, n&atilde;o para transformar estudo em competi&ccedil;&atilde;o o tempo todo.</p>
- </div>
- <div class="rewards-showcase">
- <div class="rewards-left">
- <div class="reward-item unlocked">
- <span class="reward-icon">7d</span>
- <div><strong>Sequ&ecirc;ncia de 7 dias</strong><br/><small>uma semana sem abandonar o plano</small></div>
- <span class="reward-status">Feito</span>
- </div>
- <div class="reward-item unlocked">
- <span class="reward-icon">5x</span>
- <div><strong>Dia produtivo</strong><br/><small>5 sess&otilde;es Pomodoro conclu&iacute;das</small></div>
- <span class="reward-status">Feito</span>
- </div>
- <div class="reward-item locked">
- <span class="reward-icon">30d</span>
- <div><strong>Sequ&ecirc;ncia de 30 dias</strong><br/><small>um m&ecirc;s acompanhando sua rotina</small></div>
- <span class="reward-status locked-status">Pendente</span>
- </div>
- <div class="reward-item locked">
- <span class="reward-icon">100h</span>
- <div><strong>100 horas registradas</strong><br/><small>volume acumulado de estudo</small></div>
- <span class="reward-status locked-status">Pendente</span>
- </div>
- </div>
- <div class="rewards-right">
- <div class="profile-preview">
- <div class="profile-avatar">JS</div>
- <div class="profile-name">Jo&atilde;o Silva</div>
- <div class="profile-streak">14 dias de sequ&ecirc;ncia</div>
- <div class="profile-level">
- <span>N&iacute;vel 4 - Estudante dedicado</span>
- <div class="level-bar"><div class="level-fill" style="width:68%"></div></div>
- <small>680 / 1000 XP</small>
- </div>
- </div>
- </div>
- </div>
- </div>
- </section>
+    <section class="section section-dark" id="metodos">
+      <!-- Seção explicativa sobre as opções de formatos de sessões de estudo -->
+      <div class="container">
+        <div class="section-header light">
+          <!-- Cabeçalho com contraste leve para fundo escuro -->
+          <span class="section-tag">M&eacute;todos</span>
+          <h2>Escolha o formato da sess&atilde;o</h2>
+          <p>Nem todo dia pede o mesmo ritmo. O site deixa voc&ecirc; alternar entre blocos curtos, profundos e revis&otilde;es.</p>
+        </div>
+        <div class="methods-grid">
+          <!-- Grid com os 4 métodos principais de estudo disponíveis -->
+          <article class="method-card active-method">
+            <h3>Pomodoro</h3>
+            <p>Blocos de 25 minutos para come&ccedil;ar sem enrolar e fazer pausas antes do cansa&ccedil;o pesar.</p>
+            <div class="method-badge">Padr&atilde;o</div>
+          </article>
+          <article class="method-card">
+            <h3>Blocos profundos</h3>
+            <p>Sess&otilde;es maiores para listas, leituras longas ou conte&uacute;dos que precisam de mais imers&atilde;o.</p>
+          </article>
+          <article class="method-card">
+            <h3>Revis&atilde;o espa&ccedil;ada</h3>
+            <p>Um jeito pr&aacute;tico de voltar nos assuntos antes que eles sumam da mem&oacute;ria.</p>
+          </article>
+          <article class="method-card">
+            <h3>Meta di&aacute;ria</h3>
+            <p>Defina uma quantidade de estudo para o dia e acompanhe o quanto falta para cumprir.</p>
+          </article>
+        </div>
+      </div>
+    </section>
 
- <section class="section section-accent">
- <div class="container container-center">
- <div class="cognitive-block">
- <h2>Um lembrete antes de desistir</h2>
- <p>Quando voc&ecirc; tenta encerrar uma sess&atilde;o, o Focus Trip mostra o impacto disso no seu hist&oacute;rico.
- A escolha continua sendo sua, mas com contexto suficiente para decidir melhor.
- </p>
- <div class="cognitive-features">
- <div class="cog-feat">Aviso de sess&atilde;o incompleta</div>
- <div class="cog-feat">Hist&oacute;rico por dia</div>
- <div class="cog-feat">Ranking entre amigos</div>
- <div class="cog-feat">Metas com acompanhamento</div>
- </div>
- <a href="cadastro.html" class="btn-primary btn-lg">Criar minha conta</a>
- </div>
- </div>
- </section>
- </main>
+    <section class="section" id="recompensas">
+      <!-- Seção detalhando a gamificação e acompanhamento de conquistas -->
+      <div class="container">
+        <div class="section-header">
+          <!-- Cabeçalho da seção -->
+          <span class="section-tag">Progresso</span>
+          <h2>Pequenos registros ajudam a manter o ritmo</h2>
+          <p>As conquistas existem para marcar consist&ecirc;ncia, n&atilde;o para transformar estudo em competi&ccedil;&atilde;o o tempo todo.</p>
+        </div>
+        <div class="rewards-showcase">
+          <!-- Divisão visual: conquistas à esquerda e visualização do perfil à direita -->
+          <div class="rewards-left">
+            <!-- Conquistas desbloqueadas (unlocked) e bloqueadas (locked) -->
+            <div class="reward-item unlocked">
+              <span class="reward-icon">7d</span>
+              <div><strong>Sequ&ecirc;ncia de 7 dias</strong><br/><small>uma semana sem abandonar o plano</small></div>
+              <span class="reward-status">Feito</span>
+            </div>
+            <div class="reward-item unlocked">
+              <span class="reward-icon">5x</span>
+              <div><strong>Dia produtivo</strong><br/><small>5 sess&otilde;es Pomodoro conclu&iacute;das</small></div>
+              <span class="reward-status">Feito</span>
+            </div>
+            <div class="reward-item locked">
+              <span class="reward-icon">30d</span>
+              <div><strong>Sequ&ecirc;ncia de 30 dias</strong><br/><small>um m&ecirc;s acompanhando sua rotina</small></div>
+              <span class="reward-status locked-status">Pendente</span>
+            </div>
+            <div class="reward-item locked">
+              <span class="reward-icon">100h</span>
+              <div><strong>100 horas registradas</strong><br/><small>volume acumulado de estudo</small></div>
+              <span class="reward-status locked-status">Pendente</span>
+            </div>
+          </div>
+          <div class="rewards-right">
+            <!-- Demonstração fictícia do cartão de perfil do usuário -->
+            <div class="profile-preview">
+              <div class="profile-avatar">JS</div>
+              <div class="profile-name">Jo&atilde;o Silva</div>
+              <div class="profile-streak">14 dias de sequ&ecirc;ncia</div>
+              <div class="profile-level">
+                <span>N&iacute;vel 4 - Estudante dedicado</span>
+                <div class="level-bar"><div class="level-fill" style="width:68%"></div></div>
+                <small>680 / 1000 XP</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
- <footer class="footer">
- <div class="container">
- <div class="footer-logo">
- <span class="logo-mark">FT</span>
- <span class="logo-text">Focus<span class="logo-accent">Trip</span></span>
- </div>
- <p class="footer-tagline">Rotina simples para estudar com mais const&acirc;ncia.</p>
- <div class="footer-links">
- <a href="#">Sobre</a>
- <a href="#">Privacidade</a>
- <a href="#">Contato</a>
- </div>
- <p class="footer-copy">&copy; 2026 Focus Trip.</p>
- </div>
- </footer>
+    <section class="section section-accent">
+      <!-- Bloco de fechamento da página para engajamento final (CTA) -->
+      <div class="container container-center">
+        <div class="cognitive-block">
+          <h2>Um lembrete antes de desistir</h2>
+          <p>Quando voc&ecirc; tenta encerrar uma sess&atilde;o, o Focus Trip mostra o impacto disso no seu hist&oacute;rico.
+          A escolha continua sendo sua, mas com contexto suficiente para decidir melhor.
+          </p>
+          <div class="cognitive-features">
+            <!-- Destaques dos recursos da plataforma -->
+            <div class="cog-feat">Aviso de sess&atilde;o incompleta</div>
+            <div class="cog-feat">Hist&oacute;rico por dia</div>
+            <div class="cog-feat">Conquistas e medalhas</div>
+            <div class="cog-feat">Metas com acompanhamento</div>
+          </div>
+          <a href="cadastro.html" class="btn-primary btn-lg">Criar minha conta</a>
+        </div>
+      </div>
+    </section>
+  </main>
 
- <script src="app.js"></script>
+  <footer class="footer">
+    <!-- Rodapé estrutural da página -->
+    <div class="container">
+      <div class="footer-logo">
+        <span class="logo-mark">FT</span>
+        <span class="logo-text">Focus<span class="logo-accent">Trip</span></span>
+      </div>
+      <p class="footer-tagline">Rotina simples para estudar com mais const&acirc;ncia.</p>
+      <div class="footer-links">
+        <!-- Links secundários institucionais -->
+        <a href="#">Sobre</a>
+        <a href="#">Privacidade</a>
+        <a href="#">Contato</a>
+      </div>
+      <p class="footer-copy">&copy; 2026 Focus Trip.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <!-- Conecta o arquivo JS global compartilhado -->
 </body>
 </html>

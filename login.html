@@ -1,88 +1,139 @@
 <!DOCTYPE html>
+<!-- Define que este documento é um arquivo HTML5 -->
 <html lang="pt-BR">
+<!-- Início do documento HTML, configurando o idioma para Português do Brasil -->
 <head>
- <meta charset="UTF-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>Focus Trip — Entrar</title>
- <link rel="stylesheet" href="style.css" />
- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Início do cabeçalho da página (contém metadados, links externos e título) -->
+  <meta charset="UTF-8" />
+  <!-- Define a codificação de caracteres como UTF-8 (permite acentos e caracteres especiais) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Garante que a página seja responsiva e se ajuste bem a diferentes tamanhos de tela (como celulares) -->
+  <title>Focus Trip — Entrar</title>
+  <!-- Define o título da página que aparece na aba do navegador -->
+  <link rel="stylesheet" href="style.css" />
+  <!-- Importa o arquivo de estilos CSS externo (style.css) para estilizar os elementos da página -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Importa fontes do Google Fonts (Inter e Space Grotesk) para melhorar a tipografia do site -->
 </head>
 <body class="auth-page">
+  <!-- Corpo da página de autenticação, onde todo o conteúdo visual visível é inserido -->
 
- <div class="auth-container auth-container-slim">
- <div class="auth-right auth-right-full">
- <div class="auth-form-wrapper">
- <a href="index.html" class="auth-logo auth-logo-centered">
- <span class="logo-icon"></span>
- <span class="logo-text">Focus<span class="logo-accent">Trip</span></span>
- </a>
+  <div class="auth-container auth-container-slim">
+    <!-- Container principal da área de login, com estilo mais estreito (slim) -->
+    <div class="auth-right auth-right-full">
+      <!-- Elemento que ocupa a largura total da área do formulário de autenticação -->
+      <div class="auth-form-wrapper">
+        <!-- Envoltório que centraliza e dá espaçamento ao formulário -->
+        <a href="index.html" class="auth-logo auth-logo-centered">
+          <!-- Link que leva à página inicial (index.html) agindo como logotipo centralizado -->
+          <span class="logo-icon"></span>
+          <!-- Ícone visual do logotipo (estilizado via CSS) -->
+          <span class="logo-text">Focus<span class="logo-accent">Trip</span></span>
+          <!-- Texto do logotipo com destaque na palavra "Trip" -->
+        </a>
 
- <h1 class="auth-title">Bem-vindo de volta </h1>
- <p class="auth-subtitle">Não tem conta? <a href="cadastro.html">Criar grátis</a></p>
+        <h1 class="auth-title">Bem-vindo de volta </h1>
+        <!-- Título principal da tela de login -->
+        <p class="auth-subtitle">Não tem conta? <a href="cadastro.html">Criar grátis</a></p>
+        <!-- Subtítulo com link direcionando para a página de cadastro (cadastro.html) -->
 
- <form class="auth-form" id="formLogin" onsubmit="handleLogin(event)">
- <div class="form-group">
- <label for="email">E-mail</label>
- <input type="email" id="email" placeholder="seu@email.com" required />
- </div>
+        <form class="auth-form" id="formLogin" onsubmit="handleLogin(event)">
+          <!-- Formulário de login. Ao enviar (submit), chama a função handleLogin e previne o comportamento padrão -->
+          <div class="form-group">
+            <!-- Grupo de controle para organizar o campo de e-mail -->
+            <label for="email">E-mail</label>
+            <!-- Rótulo (label) para o campo de e-mail -->
+            <input type="email" id="email" placeholder="seu@email.com" required />
+            <!-- Campo de entrada do tipo e-mail, obrigatório, com um exemplo de preenchimento -->
+          </div>
 
- <div class="form-group">
- <label for="senha">Senha</label>
- <div class="input-with-icon">
- <input type="password" id="senha" placeholder="Sua senha" required />
- <button type="button" class="toggle-password" onclick="togglePass('senha')"></button>
- </div>
- </div>
+          <div class="form-group">
+            <!-- Grupo de controle para organizar o campo de senha -->
+            <label for="senha">Senha</label>
+            <!-- Rótulo para o campo de senha -->
+            <div class="input-with-icon">
+              <!-- Container para agrupar o campo de texto e o botão de mostrar/ocultar senha -->
+              <input type="password" id="senha" placeholder="Sua senha" required />
+              <!-- Campo de senha obrigatório que esconde os caracteres por padrão -->
+              <button type="button" class="toggle-password" onclick="togglePass('senha')"></button>
+              <!-- Botão para alternar a visibilidade da senha chamando a função togglePass -->
+            </div>
+          </div>
 
- <div id="login-error" class="auth-error" style="display:none">E-mail ou senha incorretos.</div>
+          <div id="login-error" class="auth-error" style="display:none">E-mail ou senha incorretos.</div>
+          <!-- Elemento oculto por padrão (display:none) usado para exibir mensagens de erro caso o login falhe -->
 
- <button type="submit" class="btn-primary btn-full btn-lg">Entrar na minha conta</button>
+          <button type="submit" class="btn-primary btn-full btn-lg">Entrar na minha conta</button>
+          <!-- Botão principal de submissão do formulário para efetuar o login -->
 
- <div class="auth-divider"><span>ou</span></div>
+          <div class="auth-divider"><span>ou</span></div>
+          <!-- Linha divisória visual com o texto "ou" no meio -->
 
- <a href="cadastro.html" class="btn-ghost btn-full">Criar nova conta</a>
- </form>
- </div>
- </div>
- </div>
+          <a href="cadastro.html" class="btn-ghost btn-full">Criar nova conta</a>
+          <!-- Botão secundário estilizado que direciona para a página de cadastro -->
+        </form>
+      </div>
+    </div>
+  </div>
 
- <script src="app.js"></script>
- <script>function togglePass(id) {
- const input = document.getElementById(id);
- input.type = input.type === 'password' ? 'text' : 'password';
- }
+  <script src="app.js"></script>
+  <!-- Importa o arquivo JavaScript global (app.js) com as lógicas compartilhadas do projeto -->
+  <script>
+    // Função para alternar a visibilidade da senha (mostrar/esconder)
+    function togglePass(id) {
+      // Obtém o elemento de entrada (input) usando o ID fornecido
+      const input = document.getElementById(id);
+      // Se o tipo atual for 'password', muda para 'text' (mostrando a senha), senão muda de volta para 'password'
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
 
- function handleLogin(e) {
- e.preventDefault();
- const stored = localStorage.getItem('focustrip_user');
- const emailInput = document.getElementById('email').value;
- if (stored) {
- const user = JSON.parse(stored);
- if (user.email === emailInput) {
- window.location.href = 'dashboard.html';
- return;
- }
- }
- // Demo: aceitar qualquer login se não houver usuário cadastrado
- if (!stored) {
- const demoUser = {
- nome: 'Estudante Demo',
- email: emailInput,
- horas: 2,
- dias: ['ter','qua','qui','sex'],
- metodo: 'pomodoro',
- streak: 5,
- xp: 320,
- nivel: 2,
- conquistas: ['streak7'],
- criadoEm: new Date().toISOString()
- };
- localStorage.setItem('focustrip_user', JSON.stringify(demoUser));
- window.location.href = 'dashboard.html';
- return;
- }
- document.getElementById('login-error').style.display = 'block';
- }
- </script>
+    // Função que gerencia a submissão do formulário de login
+    function handleLogin(e) {
+      // Impede o recarregamento padrão da página ao enviar o formulário
+      e.preventDefault();
+      
+      // Busca no localStorage por um usuário já cadastrado
+      const stored = localStorage.getItem('focustrip_user');
+      // Obtém o valor digitado pelo usuário no campo de e-mail
+      const emailInput = document.getElementById('email').value;
+      
+      // Se existir um usuário cadastrado no localStorage
+      if (stored) {
+        // Converte a string JSON recuperada de volta para um objeto JavaScript
+        const user = JSON.parse(stored);
+        // Verifica se o e-mail digitado coincide com o e-mail do usuário cadastrado
+        if (user.email === emailInput) {
+          // Redireciona o usuário para o painel de controle (dashboard)
+          window.location.href = 'dashboard.html';
+          return; // Finaliza a execução da função
+        }
+      }
+      
+      // Modo de demonstração: se não houver nenhum usuário cadastrado no sistema
+      if (!stored) {
+        // Cria um objeto de usuário padrão (demo) para simular o primeiro acesso
+        const demoUser = {
+          nome: 'Estudante Demo',
+          email: emailInput,
+          horas: 2,
+          dias: ['ter','qua','qui','sex'],
+          metodo: 'pomodoro',
+          streak: 5,
+          xp: 320,
+          nivel: 2,
+          conquistas: ['streak7'],
+          criadoEm: new Date().toISOString() // Salva a data de criação no formato ISO
+        };
+        // Salva o usuário criado no localStorage convertendo o objeto para uma string JSON
+        localStorage.setItem('focustrip_user', JSON.stringify(demoUser));
+        // Redireciona para o painel (dashboard)
+        window.location.href = 'dashboard.html';
+        return; // Finaliza a execução da função
+      }
+      
+      // Se o e-mail não coincidir com o cadastrado, exibe a mensagem de erro na tela
+      document.getElementById('login-error').style.display = 'block';
+    }
+  </script>
 </body>
 </html>

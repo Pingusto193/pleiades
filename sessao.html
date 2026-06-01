@@ -1,437 +1,500 @@
 <!DOCTYPE html>
+<!-- Define que este documento é um arquivo HTML5 -->
 <html lang="pt-BR">
+<!-- Início do documento HTML, configurando o idioma para Português do Brasil -->
 <head>
- <meta charset="UTF-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>Focus Trip — Sessão de Estudo</title>
- <link rel="stylesheet" href="style.css" />
- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Cabeçalho com metadados, links externos e título da página -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Focus Trip — Sessão de Estudo</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Importa as fontes do Google Fonts (Inter e Space Grotesk) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body class="app-page">
+  <!-- Corpo da página principal da aplicação -->
 
- <!-- SIDEBAR -->
- <aside class="sidebar">
- <div class="sidebar-logo">
- <span class="logo-icon"></span>
- <span class="logo-text">Focus<span class="logo-accent">Trip</span></span>
- </div>
- <nav class="sidebar-nav">
- <a href="dashboard.html" class="nav-item"><span class="nav-icon"></span><span>Dashboard</span></a>
- <a href="sessao.html" class="nav-item active"><span class="nav-icon"></span><span>Sessão de Estudo</span></a>
- <a href="agenda.html" class="nav-item"><span class="nav-icon"></span><span>Minha Agenda</span></a>
- <a href="perfil.html" class="nav-item"><span class="nav-icon"></span><span>Perfil</span></a>
- <a href="ranking.html" class="nav-item"><span class="nav-icon"></span><span>Ranking</span></a>
- </nav>
- </aside>
+  <!-- SIDEBAR (Barra Lateral de Navegação) -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon"></span>
+      <span class="logo-text">Focus<span class="logo-accent">Trip</span></span>
+    </div>
+    <nav class="sidebar-nav">
+      <!-- Links de navegação interna com o item "Sessão de Estudo" realçado como ativo -->
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon"></span><span>Dashboard</span>
+      </a>
+      <a href="sessao.html" class="nav-item active">
+        <span class="nav-icon"></span><span>Sessão de Estudo</span>
+      </a>
+      <a href="agenda.html" class="nav-item">
+        <span class="nav-icon"></span><span>Minha Agenda</span>
+      </a>
+      <a href="perfil.html" class="nav-item">
+        <span class="nav-icon"></span><span>Perfil</span>
+      </a>
 
- <!-- MAIN -->
- <main class="app-main">
- <header class="app-topbar">
- <div class="topbar-greeting">Sessão de Estudo</div>
- <div class="topbar-right">
- <div class="topbar-streak" id="topStreak">0 dias</div>
- </div>
- </header>
+    </nav>
+  </aside>
 
- <div class="app-content">
+  <!-- MAIN (Área Principal de Conteúdo) -->
+  <main class="app-main">
+    <header class="app-topbar">
+      <div class="topbar-greeting">Sessão de Estudo</div>
+      <div class="topbar-right">
+        <!-- Mostra a sequência de dias atual do usuário na barra superior -->
+        <div class="topbar-streak" id="topStreak">0 dias</div>
+      </div>
+    </header>
 
- <!-- SETUP ou TIMER -->
- <div id="setupPanel">
- <div class="session-setup-card">
- <h2>Configure sua sessão</h2>
+    <div class="app-content">
 
- <div class="form-group">
- <label>Matéria / Assunto</label>
- <input type="text" id="subjectInput" class="input-styled" placeholder="Ex: Matemática — Derivadas" />
- </div>
+      <!-- SETUP PANEL (Painel de Configuração Inicial da Sessão) -->
+      <div id="setupPanel">
+        <div class="session-setup-card">
+          <h2>Configurações de Estudo</h2>
 
- <div class="form-group">
- <label>Método de estudo</label>
- <div class="method-selector-big">
- <div class="method-big-card active-method-big" data-method="pomodoro" onclick="selectMethod('pomodoro',this)">
- <div class="method-big-icon"></div>
- <div class="method-big-name">Pomodoro</div>
- <div class="method-big-desc">25min foco + 5min pausa</div>
- </div>
- <div class="method-big-card" data-method="blocos" onclick="selectMethod('blocos',this)">
- <div class="method-big-icon"></div>
- <div class="method-big-name">Bloco Profundo</div>
- <div class="method-big-desc">90min de foco total</div>
- </div>
- <div class="method-big-card" data-method="livre" onclick="selectMethod('livre',this)">
- <div class="method-big-icon"></div>
- <div class="method-big-name">Livre</div>
- <div class="method-big-desc">Você define o tempo</div>
- </div>
- </div>
- </div>
+          <div class="form-group">
+            <label>Matéria / Assunto</label>
+            <input type="text" id="subjectInput" class="input-styled" placeholder="Ex: Matemática — Derivadas" />
+          </div>
 
- <div id="livreConfig" style="display:none" class="form-group">
- <label>Duração (minutos)</label>
- <input type="number" id="livreMin" class="input-styled" value="45" min="5" max="300" />
- </div>
+          <div class="form-group">
+            <label>Método de estudo</label>
+            <div class="method-selector-big">
+              <!-- Cards de seleção do método de estudo (Pomodoro, Bloco Profundo e Livre) -->
+              <div class="method-big-card active-method-big" data-method="pomodoro" onclick="selectMethod('pomodoro',this)">
+                <div class="method-big-icon"></div>
+                <div class="method-big-name">Pomodoro</div>
+                <div class="method-big-desc">25min foco + 5min pausa</div>
+              </div>
+              <div class="method-big-card" data-method="blocos" onclick="selectMethod('blocos',this)">
+                <div class="method-big-icon"></div>
+                <div class="method-big-name">Bloco Profundo</div>
+                <div class="method-big-desc">90min de foco total</div>
+              </div>
+              <div class="method-big-card" data-method="livre" onclick="selectMethod('livre',this)">
+                <div class="method-big-icon"></div>
+                <div class="method-big-name">Livre</div>
+                <div class="method-big-desc">Você define o tempo</div>
+              </div>
+            </div>
+          </div>
 
- <button class="btn-primary btn-lg btn-full" onclick="startSession()">Iniciar sessão</button>
- </div>
- </div>
+          <!-- Input numérico opcional exibido apenas quando o método "Livre" é escolhido -->
+          <div id="livreConfig" style="display:none" class="form-group">
+            <label>Duração (minutos)</label>
+            <input type="number" id="livreMin" class="input-styled" value="45" min="5" max="300" />
+          </div>
 
- <!-- TIMER ATIVO -->
- <div id="timerPanel" style="display:none">
- <div class="timer-container">
+          <button class="btn-primary btn-lg btn-full" onclick="startSession()">Iniciar sessão</button>
+        </div>
+      </div>
 
- <!-- AVISO COGNITIVO TOP -->
- <div class="cognitive-reminder" id="cognitiveReminder">Seu streak de <span id="streakReminder">0</span>dias está ativo — não abandone agora!
- </div>
+      <!-- TIMER PANEL (Painel do Cronômetro Ativo durante o estudo) -->
+      <div id="timerPanel" style="display:none">
+        <div class="timer-container">
 
- <div class="timer-card">
- <div class="timer-phase" id="timerPhase">FOCO</div>
- <div class="timer-subject" id="timerSubject">—</div>
- <div class="timer-method-tag" id="timerMethodTag">Pomodoro</div>
+          <!-- AVISO COGNITIVO TOP (Lembrete motivador de streak ativo) -->
+          <div class="cognitive-reminder" id="cognitiveReminder">Seu streak de <span id="streakReminder">0</span> dias está ativo — não abandone agora!</div>
 
- <!-- SVG CIRCLE TIMER -->
- <div class="timer-circle-wrap">
- <svg class="timer-svg" viewBox="0 0 200 200">
- <circle class="timer-bg-circle" cx="100" cy="100" r="88"/>
- <circle class="timer-progress-circle" id="timerCircle" cx="100" cy="100" r="88"
- stroke-dasharray="553" stroke-dashoffset="0"/>
- </svg>
- <div class="timer-display" id="timerDisplay">25:00</div>
- </div>
+          <div class="timer-card">
+            <!-- Informa o estado atual do ciclo (FOCO, PAUSA ou PAUSA LONGA) -->
+            <div class="timer-phase" id="timerPhase">FOCO</div>
+            <div class="timer-subject" id="timerSubject">—</div>
+            <div class="timer-method-tag" id="timerMethodTag">Pomodoro</div>
 
- <div class="timer-cycle-info" id="timerCycleInfo">Ciclo 1 de 4</div>
+            <!-- SVG CIRCLE TIMER (Animação circular de progresso do timer) -->
+            <div class="timer-circle-wrap">
+              <svg class="timer-svg" viewBox="0 0 200 200">
+                <circle class="timer-bg-circle" cx="100" cy="100" r="88"/>
+                <!-- Circunferência de raio 88 é ~553px (stroke-dasharray) -->
+                <circle class="timer-progress-circle" id="timerCircle" cx="100" cy="100" r="88" stroke-dasharray="553" stroke-dashoffset="0"/>
+              </svg>
+              <!-- Mostrador digital do tempo restante -->
+              <div class="timer-display" id="timerDisplay">25:00</div>
+            </div>
 
- <div class="timer-actions">
- <button class="btn-timer-secondary" id="btnPause" onclick="togglePause()">Pausar</button>
- <button class="btn-timer-stop" onclick="confirmStop()">Encerrar</button>
- </div>
- </div>
+            <!-- Exibe o indicador do ciclo atual do Pomodoro -->
+            <div class="timer-cycle-info" id="timerCycleInfo">Ciclo 1 de 4</div>
 
- <!-- PROGRESSO DA SESSÃO -->
- <div class="session-progress-card">
- <div class="session-prog-title">Progresso da sessão</div>
- <div class="session-prog-row">
- <span>Tempo estudado hoje</span>
- <strong id="todayStudied">0min</strong>
- </div>
- <div class="session-prog-row">
- <span>Meta do dia</span>
- <strong id="dayGoal">2h</strong>
- </div>
- <div class="session-prog-bar-wrap">
- <div class="session-prog-bar" id="sessionProgBar" style="width:0%"></div>
- </div>
- <div class="session-prog-pct" id="sessionProgPct">0% da meta diária</div>
- </div>
+            <div class="timer-actions">
+              <button class="btn-timer-secondary" id="btnPause" onclick="togglePause()">Pausar</button>
+              <button class="btn-timer-stop" onclick="confirmStop()">Encerrar</button>
+            </div>
+          </div>
 
- <!-- MINI RANKING -->
- <div class="session-social-card" id="sessionSocial">
- <div class="social-title">Como você está indo vs amigos</div>
- <div id="socialRanking"></div>
- </div>
+          <!-- PROGRESSO DA SESSÃO (Indicador de alcance da meta diária de horas do usuário) -->
+          <div class="session-progress-card">
+            <div class="session-prog-title">Progresso da sessão</div>
+            <div class="session-prog-row">
+              <span>Tempo estudado hoje</span>
+              <strong id="todayStudied">0min</strong>
+            </div>
+            <div class="session-prog-row">
+              <span>Meta do dia</span>
+              <strong id="dayGoal">2h</strong>
+            </div>
+            <div class="session-prog-bar-wrap">
+              <div class="session-prog-bar" id="sessionProgBar" style="width:0%"></div>
+            </div>
+            <div class="session-prog-pct" id="sessionProgPct">0% da meta diária</div>
+          </div>
 
- </div>
- </div>
 
- <!-- RESULTADO DA SESSÃO -->
- <div id="resultPanel" style="display:none">
- <div class="result-card">
- <div class="result-icon" id="resultIcon"></div>
- <h2 id="resultTitle">Sessão concluída!</h2>
- <p id="resultDesc">Excelente trabalho!</p>
- <div class="result-stats" id="resultStats"></div>
- <div class="result-rewards" id="resultRewards"></div>
- <div class="result-actions">
- <button class="btn-primary" onclick="startNewSession()">Nova sessão</button>
- <a href="dashboard.html" class="btn-ghost">Voltar ao dashboard</a>
- </div>
- </div>
- </div>
 
- </div>
- </main>
+        </div>
+      </div>
 
- <!-- MODAL CONFIRMAÇÃO SAÍDA -->
- <div class="modal-overlay" id="stopModal" style="display:none">
- <div class="modal-card">
- <div class="modal-icon"></div>
- <h2>Tem certeza?</h2>
- <p id="stopModalText">Você está prestes a encerrar sua sessão.</p>
- <div class="stop-consequences" id="stopConsequences"></div>
- <div class="modal-actions">
- <button class="btn-primary" onclick="cancelStop()">Continuar estudando</button>
- <button class="btn-danger btn-sm" onclick="forceStop()">Encerrar mesmo assim</button>
- </div>
- </div>
- </div>
+      <!-- RESULT PANEL (Painel de Resultados ao Concluir ou Parar a Sessão) -->
+      <div id="resultPanel" style="display:none">
+        <div class="result-card">
+          <div class="result-icon" id="resultIcon"></div>
+          <h2 id="resultTitle">Sessão concluída!</h2>
+          <p id="resultDesc">Excelente trabalho!</p>
+          <div class="result-stats" id="resultStats"></div>
+          <div class="result-rewards" id="resultRewards"></div>
+          <div class="result-actions">
+            <button class="btn-primary" onclick="startNewSession()">Nova sessão</button>
+            <a href="dashboard.html" class="btn-ghost">Voltar ao dashboard</a>
+          </div>
+        </div>
+      </div>
 
- <script src="app.js"></script>
- <script>let timer = null;
- let totalSeconds = 0;
- let currentSeconds = 0;
- let isPaused = false;
- let isBreak = false;
- let cycle = 1;
- let maxCycles = 4;
- let sessionMethod = 'pomodoro';
- let sessionStart = null;
- let sessionMinutesAccum = 0;
- let sessionSubject = '';
+    </div>
+  </main>
 
- const METHODS = {
- pomodoro: { focus: 25*60, breakTime: 5*60, cycles: 4, longBreak: 15*60, label: 'Pomodoro' },
- blocos: { focus: 90*60, breakTime: 20*60, cycles: 1, longBreak: 20*60, label: 'Bloco Profundo' },
- livre: { focus: 45*60, breakTime: 0, cycles: 1, label: 'Livre' }
- };
+  <!-- MODAL CONFIRMAÇÃO SAÍDA (Confirmação para evitar desistência impulsiva) -->
+  <div class="modal-overlay" id="stopModal" style="display:none">
+    <div class="modal-card">
+      <div class="modal-icon"></div>
+      <h2>Tem certeza?</h2>
+      <p id="stopModalText">Você está prestes a encerrar sua sessão.</p>
+      <!-- Mostra as consequências negativas da interrupção precoce -->
+      <div class="stop-consequences" id="stopConsequences"></div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="cancelStop()">Continuar estudando</button>
+        <button class="btn-danger btn-sm" onclick="forceStop()">Encerrar mesmo assim</button>
+      </div>
+    </div>
+  </div>
 
- document.addEventListener('DOMContentLoaded', () => {
- const user = getUser();
- if (!user) { window.location.href = 'login.html'; return; }
- document.getElementById('topStreak').textContent = `${user.streak} dias`;
- document.getElementById('streakReminder').textContent = user.streak;
- // Método padrão do usuário
- selectMethod(user.metodo || 'pomodoro', document.querySelector(`[data-method="${user.metodo||'pomodoro'}"]`));
- });
+  <script src="app.js"></script>
+  <!-- Conecta os scripts utilitários comuns do sistema -->
+  
+  <script>
+    // Variáveis de controle de estado do cronômetro
+    let timer = null;
+    let totalSeconds = 0;      // Duração total configurada da fase ativa (em seg)
+    let currentSeconds = 0;    // Segundos restantes da fase ativa
+    let isPaused = false;
+    let isBreak = false;       // Controla se a fase atual é de intervalo
+    let cycle = 1;
+    let maxCycles = 4;
+    let sessionMethod = 'pomodoro';
+    let sessionStart = null;   // Horário real em que a sessão foi disparada
+    let sessionMinutesAccum = 0;
+    let sessionSubject = '';
 
- function selectMethod(method, el) {
- document.querySelectorAll('.method-big-card').forEach(c =>c.classList.remove('active-method-big'));
- if (el) el.classList.add('active-method-big');
- sessionMethod = method;
- document.getElementById('livreConfig').style.display = method === 'livre' ? 'block' : 'none';
- }
+    // Definição dos perfis dos métodos de estudo
+    const METHODS = {
+      pomodoro: { focus: 25*60, breakTime: 5*60, cycles: 4, longBreak: 15*60, label: 'Pomodoro' },
+      blocos: { focus: 90*60, breakTime: 20*60, cycles: 1, longBreak: 20*60, label: 'Bloco Profundo' },
+      livre: { focus: 45*60, breakTime: 0, cycles: 1, label: 'Livre' }
+    };
 
- function startSession() {
- const user = getUser();
- sessionSubject = document.getElementById('subjectInput').value || 'Sessão de estudo';
- if (sessionMethod === 'livre') {
- METHODS.livre.focus = parseInt(document.getElementById('livreMin').value || 45) * 60;
- }
- const m = METHODS[sessionMethod];
- totalSeconds = m.focus;
- currentSeconds = m.focus;
- maxCycles = m.cycles;
- cycle = 1;
- isBreak = false;
- sessionStart = new Date();
- sessionMinutesAccum = 0;
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = getUser();
+      // Redireciona para o login caso não encontre dados do usuário ativo
+      if (!user) { window.location.href = 'login.html'; return; }
+      
+      // Exibe a sequência de dias atual do usuário nos rótulos de topo e aviso
+      document.getElementById('topStreak').textContent = `${user.streak} dias`;
+      document.getElementById('streakReminder').textContent = user.streak;
+      
+      // Seleciona o método preferencial do usuário de forma padrão na tela
+      selectMethod(user.metodo || 'pomodoro', document.querySelector(`[data-method="${user.metodo || 'pomodoro'}"]`));
+    });
 
- document.getElementById('setupPanel').style.display = 'none';
- document.getElementById('timerPanel').style.display = 'block';
- document.getElementById('timerSubject').textContent = sessionSubject;
- document.getElementById('timerMethodTag').textContent = m.label;
- document.getElementById('timerPhase').textContent = 'FOCO';
- document.getElementById('dayGoal').textContent = (user.horas || 2) + 'h';
- updateCycleInfo();
- updateSocialRanking();
- startTimer();
- }
+    // Controla a seleção visual e lógica do método de estudo
+    function selectMethod(method, el) {
+      document.querySelectorAll('.method-big-card').forEach(c => c.classList.remove('active-method-big'));
+      if (el) el.classList.add('active-method-big');
+      sessionMethod = method;
+      // Mostra o input de minutos personalizado apenas se for o método 'Livre'
+      document.getElementById('livreConfig').style.display = method === 'livre' ? 'block' : 'none';
+    }
 
- function startTimer() {
- clearInterval(timer);
- timer = setInterval(() => {
- if (isPaused) return;
- currentSeconds--;
- updateDisplay();
- if (currentSeconds <= 0) phaseComplete();
- }, 1000);
- }
+    // Inicializa a sessão com as opções configuradas e comuta as telas
+    function startSession() {
+      const user = getUser();
+      sessionSubject = document.getElementById('subjectInput').value || 'Sessão de estudo';
+      
+      // Captura o tempo definido pelo usuário caso o método selecionado seja 'Livre'
+      if (sessionMethod === 'livre') {
+        METHODS.livre.focus = parseInt(document.getElementById('livreMin').value || 45) * 60;
+      }
+      
+      const m = METHODS[sessionMethod];
+      totalSeconds = m.focus;
+      currentSeconds = m.focus;
+      maxCycles = m.cycles;
+      cycle = 1;
+      isBreak = false;
+      sessionStart = new Date();
+      sessionMinutesAccum = 0;
 
- function updateDisplay() {
- const m = Math.floor(currentSeconds / 60).toString().padStart(2,'0');
- const s = (currentSeconds % 60).toString().padStart(2,'0');
- document.getElementById('timerDisplay').textContent = `${m}:${s}`;
- // Progress circle
- const dashArray = 553;
- const progress = 1 - (currentSeconds / totalSeconds);
- document.getElementById('timerCircle').style.strokeDashoffset = dashArray * (1 - progress);
- // Atualizar progresso diário
- const user = getUser();
- const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
- const today = new Date().toISOString().split('T')[0];
- const prevMins = sessions.filter(s =>s.data === today).reduce((a,s) =>a+(s.duracao||0), 0);
- const currentMins = prevMins + Math.floor((totalSeconds - currentSeconds) / 60);
- const metaMins = (user.horas || 2) * 60;
- const pct = Math.min(100, Math.round((currentMins / metaMins) * 100));
- document.getElementById('todayStudied').textContent = currentMins + 'min';
- document.getElementById('sessionProgBar').style.width = pct + '%';
- document.getElementById('sessionProgPct').textContent = pct + '% da meta diária';
- }
+      // Altera o painel visual visível
+      document.getElementById('setupPanel').style.display = 'none';
+      document.getElementById('timerPanel').style.display = 'block';
+      document.getElementById('timerSubject').textContent = sessionSubject;
+      document.getElementById('timerMethodTag').textContent = m.label;
+      document.getElementById('timerPhase').textContent = 'FOCO';
+      document.getElementById('dayGoal').textContent = (user.horas || 2) + 'h';
+      
+      // Atualiza os contadores de ciclo
+      updateCycleInfo();
+      // Dispara o loop do timer
+      startTimer();
+    }
 
- function phaseComplete() {
- clearInterval(timer);
- const m = METHODS[sessionMethod];
- if (!isBreak) {
- // Terminou foco — registrar
- sessionMinutesAccum += Math.floor(m.focus / 60);
- if (sessionMethod === 'pomodoro' && cycle < maxCycles) {
- isBreak = true;
- const breakDur = (cycle % 4 === 0) ? m.longBreak : m.breakTime;
- totalSeconds = breakDur;
- currentSeconds = breakDur;
- document.getElementById('timerPhase').textContent = cycle % 4 === 0 ? 'PAUSA LONGA' : 'PAUSA';
- document.getElementById('timerDisplay').style.color = 'var(--color-success)';
- playSound('break');
- startTimer();
- } else {
- finishSession(true);
- }
- } else {
- // Pausa acabou, volta pro foco
- isBreak = false;
- cycle++;
- updateCycleInfo();
- totalSeconds = m.focus;
- currentSeconds = m.focus;
- document.getElementById('timerPhase').textContent = 'FOCO';
- document.getElementById('timerDisplay').style.color = '';
- playSound('focus');
- startTimer();
- }
- }
+    // Dispara ou reinicializa a execução lógica do intervalo de tempo (1 segundo)
+    function startTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        if (isPaused) return; // Se pausado, não desconta o tempo
+        currentSeconds--;
+        updateDisplay();
+        
+        // Finaliza a fase atual do cronômetro quando zera o tempo
+        if (currentSeconds <= 0) phaseComplete();
+      }, 1000);
+    }
 
- function updateCycleInfo() {
- const m = METHODS[sessionMethod];
- document.getElementById('timerCycleInfo').textContent =
- sessionMethod === 'pomodoro' ? `Ciclo ${cycle} de ${maxCycles}` : '';
- }
+    // Formata o mostrador digital e ajusta o preenchimento circular do cronômetro
+    function updateDisplay() {
+      const m = Math.floor(currentSeconds / 60).toString().padStart(2,'0');
+      const s = (currentSeconds % 60).toString().padStart(2,'0');
+      document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+      
+      // Efeito visual do preenchimento circular (stroke-dashoffset de 553 a 0)
+      const dashArray = 553;
+      const progress = 1 - (currentSeconds / totalSeconds);
+      document.getElementById('timerCircle').style.strokeDashoffset = dashArray * (1 - progress);
 
- function togglePause() {
- isPaused = !isPaused;
- document.getElementById('btnPause').textContent = isPaused ? 'Retomar' : 'Pausar';
- }
+      // Atualização do cálculo de progresso diário acumulado
+      const user = getUser();
+      const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
+      const today = new Date().toISOString().split('T')[0];
+      
+      // Soma minutos estudados anteriormente no dia de hoje
+      const prevMins = sessions.filter(s => s.data === today).reduce((a,s) => a + (s.duracao || 0), 0);
+      // Calcula o tempo total da sessão decorrida até o segundo atual
+      const currentMins = prevMins + Math.floor((totalSeconds - currentSeconds) / 60);
+      const metaMins = (user.horas || 2) * 60;
+      // Porcentagem de conclusão da meta diária
+      const pct = Math.min(100, Math.round((currentMins / metaMins) * 100));
+      
+      document.getElementById('todayStudied').textContent = currentMins + 'min';
+      document.getElementById('sessionProgBar').style.width = pct + '%';
+      document.getElementById('sessionProgPct').textContent = pct + '% da meta diária';
+    }
 
- function confirmStop() {
- const user = getUser();
- const elapsed = Math.floor((new Date() - sessionStart) / 60000);
- const m = METHODS[sessionMethod];
- const streakRisk = elapsed < m.focus / 60 * 0.5;
- document.getElementById('stopModalText').textContent =
- streakRisk ? `Você só estudou ${elapsed} minutos. Tem certeza que quer parar?` :
- `Você está encerrando com ${elapsed} minutos de estudo.`;
- document.getElementById('stopConsequences').innerHTML = `
- <div class="consequence ${streakRisk ? 'danger' : 'warn'}">
- ${streakRisk ? ` Sessão curta — nenhum XP será ganho` : ` Você ganhará XP pelo tempo estudado`}
- </div>
- ${streakRisk && user.streak > 0 ? `<div class="consequence danger">Streak de <strong>${user.streak} dias</strong>pode ser perdido se você não completar a meta hoje</div>` : ''}
- `;
- document.getElementById('stopModal').style.display = 'flex';
- isPaused = true;
- }
+    // Gerencia o fluxo entre a conclusão das fases de FOCO e PAUSA
+    function phaseComplete() {
+      clearInterval(timer);
+      const m = METHODS[sessionMethod];
+      
+      if (!isBreak) {
+        // Concluiu uma fase de estudo/foco - acumula os minutos
+        sessionMinutesAccum += Math.floor(m.focus / 60);
+        
+        // Transiciona para a pausa caso haja ciclos pendentes
+        if (sessionMethod === 'pomodoro' && cycle < maxCycles) {
+          isBreak = true;
+          // Ciclo 4 indica que é a vez de uma pausa mais longa (longBreak)
+          const breakDur = (cycle % 4 === 0) ? m.longBreak : m.breakTime;
+          totalSeconds = breakDur;
+          currentSeconds = breakDur;
+          
+          document.getElementById('timerPhase').textContent = cycle % 4 === 0 ? 'PAUSA LONGA' : 'PAUSA';
+          document.getElementById('timerDisplay').style.color = 'var(--color-success)';
+          
+          playSound('break'); // Toca sinal acústico de início da pausa
+          startTimer();
+        } else {
+          // Terminou a totalidade de ciclos configurados para o método
+          finishSession(true);
+        }
+      } else {
+        // Concluiu uma fase de pausa - inicia novo ciclo de foco
+        isBreak = false;
+        cycle++;
+        updateCycleInfo();
+        totalSeconds = m.focus;
+        currentSeconds = m.focus;
+        
+        document.getElementById('timerPhase').textContent = 'FOCO';
+        document.getElementById('timerDisplay').style.color = '';
+        
+        playSound('focus'); // Toca sinal acústico de início de foco
+        startTimer();
+      }
+    }
 
- function cancelStop() {
- document.getElementById('stopModal').style.display = 'none';
- isPaused = false;
- }
+    // Atualiza o indicador visual do ciclo de Pomodoro
+    function updateCycleInfo() {
+      document.getElementById('timerCycleInfo').textContent =
+        sessionMethod === 'pomodoro' ? `Ciclo ${cycle} de ${maxCycles}` : '';
+    }
 
- function forceStop() {
- document.getElementById('stopModal').style.display = 'none';
- const elapsed = Math.floor((new Date() - sessionStart) / 60000);
- finishSession(false, elapsed);
- }
+    // Alterna a variável de pausa e altera o rótulo do botão correspondente
+    function togglePause() {
+      isPaused = !isPaused;
+      document.getElementById('btnPause').textContent = isPaused ? 'Retomar' : 'Pausar';
+    }
 
- function finishSession(completed, forcedMinutes) {
- clearInterval(timer);
- const user = getUser();
- const mins = forcedMinutes !== undefined ? forcedMinutes :
- Math.floor(METHODS[sessionMethod].focus * METHODS[sessionMethod].cycles / 60);
- const today = new Date().toISOString().split('T')[0];
+    // Mostra o pop-up de confirmação avisando sobre as penalidades de desistência precoce
+    function confirmStop() {
+      const user = getUser();
+      // Minutos que a sessão ficou rodando de fato
+      const elapsed = Math.floor((new Date() - sessionStart) / 60000);
+      const m = METHODS[sessionMethod];
+      // Define se a sessão foi muito curta (menor que a metade do planejado)
+      const streakRisk = elapsed < (m.focus / 60) * 0.5;
+      
+      document.getElementById('stopModalText').textContent =
+        streakRisk ? `Você só estudou ${elapsed} minutos. Tem certeza que quer parar?` :
+                     `Você está encerrando com ${elapsed} minutos de estudo.`;
+                     
+      document.getElementById('stopConsequences').innerHTML = `
+        <div class="consequence ${streakRisk ? 'danger' : 'warn'}">
+          ${streakRisk ? `Sessão curta — nenhum XP será ganho` : `Você ganhará XP pelo tempo estudado`}
+        </div>
+        ${streakRisk && user.streak > 0 ? `<div class="consequence danger">Streak de <strong>${user.streak} dias</strong> pode ser perdido se você não completar a meta hoje</div>` : ''}
+      `;
+      
+      document.getElementById('stopModal').style.display = 'flex';
+      isPaused = true;
+    }
 
- // Salvar sessão
- const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
- sessions.push({ data: today, duracao: mins, materia: sessionSubject, metodo: sessionMethod, completa: completed });
- localStorage.setItem('focustrip_sessions', JSON.stringify(sessions));
+    // Cancela a interrupção da sessão e retoma o cronômetro
+    function cancelStop() {
+      document.getElementById('stopModal').style.display = 'none';
+      isPaused = false;
+    }
 
- // Calcular XP
- const xpGain = completed ? mins + 10 : Math.floor(mins * 0.5);
- const prevXP = user.xp || 0;
- user.xp = prevXP + xpGain;
- user.nivel = Math.floor(user.xp / 500) + 1;
+    // Confirma a parada da sessão salvando apenas os minutos acumulados reais
+    function forceStop() {
+      document.getElementById('stopModal').style.display = 'none';
+      const elapsed = Math.floor((new Date() - sessionStart) / 60000);
+      finishSession(false, elapsed);
+    }
 
- // Checar streak
- const todayMins = sessions.filter(s =>s.data === today).reduce((a,s) =>a+(s.duracao||0), 0);
- const metaMins = (user.horas || 2) * 60;
- if (todayMins >= metaMins) {
- const yest = new Date(); yest.setDate(yest.getDate()-1);
- const yestKey = yest.toISOString().split('T')[0];
- const yestSessions = sessions.filter(s =>s.data === yestKey);
- const yestMins = yestSessions.reduce((a,s)=>a+(s.duracao||0),0);
- if (yestMins >= metaMins || user.streak === 0) {
- user.streak = (user.streak || 0) + 1;
- }
- // Checar conquistas
- checkAndUnlockAchievements(user);
- }
+    // Grava a sessão, distribui XP, incrementa streaks e abre tela de resultados
+    function finishSession(completed, forcedMinutes) {
+      clearInterval(timer);
+      const user = getUser();
+      // Usa os minutos decorridos reais se a sessão foi forçada ou o planejado total caso concluída
+      const mins = forcedMinutes !== undefined ? forcedMinutes :
+        Math.floor((METHODS[sessionMethod].focus * METHODS[sessionMethod].cycles) / 60);
+      const today = new Date().toISOString().split('T')[0];
 
- localStorage.setItem('focustrip_user', JSON.stringify(user));
+      // SALVAMENTO DA SESSÃO (Local Storage)
+      const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
+      sessions.push({ data: today, duracao: mins, materia: sessionSubject, metodo: sessionMethod, completa: completed, criadoEm: new Date().toISOString() });
+      localStorage.setItem('focustrip_sessions', JSON.stringify(sessions));
 
- // Mostrar resultado
- document.getElementById('timerPanel').style.display = 'none';
- document.getElementById('resultPanel').style.display = 'block';
+      // CÁLCULO E ATRIBUIÇÃO DE XP
+      // Bônus de +10 XP caso a sessão tenha sido inteiramente concluída sem desistências
+      const xpGain = completed ? mins + 10 : Math.floor(mins * 0.5);
+      const prevXP = user.xp || 0;
+      user.xp = prevXP + xpGain;
+      // Atualiza o nível do usuário (uma nova faixa a cada 500 XP)
+      user.nivel = Math.floor(user.xp / 500) + 1;
 
- const newAchs = (user.conquistas || []).filter(id => !JSON.parse(localStorage.getItem('focustrip_prev_achs') || '[]').includes(id));
- localStorage.setItem('focustrip_prev_achs', JSON.stringify(user.conquistas || []));
+      // ATUALIZAÇÃO DO STREAK (Sequência de dias)
+      // Calcula o total acumulado estudado hoje para validar meta
+      const todayMins = sessions.filter(s => s.data === today).reduce((a,s) => a + (s.duracao || 0), 0);
+      const metaMins = (user.horas || 2) * 60;
+      
+      if (todayMins >= metaMins) {
+        const yest = new Date(); yest.setDate(yest.getDate()-1);
+        const yestKey = yest.toISOString().split('T')[0];
+        const yestSessions = sessions.filter(s => s.data === yestKey);
+        const yestMins = yestSessions.reduce((a,s) => a + (s.duracao || 0), 0);
+        
+        // Incrementa o streak se o usuário estudou ontem ou se estiver iniciando sua primeira sequência
+        if (yestMins >= metaMins || user.streak === 0) {
+          user.streak = (user.streak || 0) + 1;
+        }
+        
+        // Verifica se novas conquistas foram destravadas
+        checkAndUnlockAchievements(user);
+      }
 
- document.getElementById('resultIcon').textContent = '';
- document.getElementById('resultTitle').textContent = completed ? 'Sessão concluída!' : 'Sessão encerrada';
- document.getElementById('resultDesc').textContent = completed ?
- `Incrível! Você completou ${mins} minutos de ${sessionSubject}.` :
- `Você estudou ${mins} minutos. Tente completar a sessão na próxima!`;
- document.getElementById('resultStats').innerHTML = `
- <div class="result-stat"><span></span> ${mins} minutos estudados</div>
- <div class="result-stat"><span></span>+${xpGain} XP ganhos</div>
- <div class="result-stat"><span></span>Streak: ${user.streak} dias</div>
- `;
- if (newAchs.length > 0) {
- const all = getAchievements();
- const unlocked = all.filter(a =>newAchs.includes(a.id));
- document.getElementById('resultRewards').innerHTML = `
- <div class="new-rewards-title">Nova conquista desbloqueada!</div>
- ${unlocked.map(a => `<div class="new-reward-item"><span>${a.icon}</span> <strong>${a.nome}</strong></div>`).join('')}
- `;
- }
- }
+      localStorage.setItem('focustrip_user', JSON.stringify(user));
 
- function startNewSession() {
- document.getElementById('resultPanel').style.display = 'none';
- document.getElementById('setupPanel').style.display = 'block';
- sessionStart = null;
- }
+      // EXIBIÇÃO DA TELA DE RESULTADOS
+      document.getElementById('timerPanel').style.display = 'none';
+      document.getElementById('resultPanel').style.display = 'block';
 
- function updateSocialRanking() {
- // Dados mockados para demonstração social
- const user = getUser();
- const today = new Date().toISOString().split('T')[0];
- const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
- const myMins = sessions.filter(s =>s.data === today).reduce((a,s)=>a+(s.duracao||0),0);
- const fakeRanking = [
- { nome: 'Ana Lima', mins: 120, streak: 21 },
- { nome: user.nome.split(' ')[0], mins: myMins, streak: user.streak, isMe: true },
- { nome: 'Pedro Costa', mins: 85, streak: 8 },
- { nome: 'Julia Souza', mins: 60, streak: 5 },
- ].sort((a,b) =>b.mins - a.mins);
+      // Compara conquistas desbloqueadas para alertar o usuário apenas das novas
+      const newAchs = (user.conquistas || []).filter(id => !JSON.parse(localStorage.getItem('focustrip_prev_achs') || '[]').includes(id));
+      localStorage.setItem('focustrip_prev_achs', JSON.stringify(user.conquistas || []));
 
- document.getElementById('socialRanking').innerHTML = fakeRanking.map((p,i) => `
- <div class="social-rank-row ${p.isMe ? 'rank-me' : ''}">
- <span class="rank-pos">${i+1}º</span>
- <span class="rank-name">${p.nome}${p.isMe?' (você)':''}</span>
- <span class="rank-streak"> ${p.streak}</span>
- <span class="rank-mins">${p.mins}min</span>
- </div>
- `).join('');
- }
+      document.getElementById('resultIcon').textContent = '';
+      document.getElementById('resultTitle').textContent = completed ? 'Sessão concluída!' : 'Sessão encerrada';
+      document.getElementById('resultDesc').textContent = completed ?
+        `Incrível! Você completou ${mins} minutos de ${sessionSubject}.` :
+        `Você estudou ${mins} minutos. Tente completar a sessão na próxima!`;
+        
+      document.getElementById('resultStats').innerHTML = `
+        <div class="result-stat"><span></span>${mins} minutos estudados</div>
+        <div class="result-stat"><span></span>+${xpGain} XP ganhos</div>
+        <div class="result-stat"><span></span>Streak: ${user.streak} dias</div>
+      `;
+      
+      // Renderiza as novas conquistas obtidas no card de resultados
+      if (newAchs.length > 0) {
+        const all = getAchievements();
+        const unlocked = all.filter(a => newAchs.includes(a.id));
+        document.getElementById('resultRewards').innerHTML = `
+          <div class="new-rewards-title">Nova conquista desbloqueada!</div>
+          ${unlocked.map(a => `<div class="new-reward-item"><span>${a.icon}</span> <strong>${a.nome}</strong></div>`).join('')}
+        `;
+      }
+    }
 
- function playSound(type) {
- try {
- const ctx = new (window.AudioContext || window.webkitAudioContext)();
- const osc = ctx.createOscillator();
- const gain = ctx.createGain();
- osc.connect(gain); gain.connect(ctx.destination);
- osc.frequency.value = type === 'break' ? 440 : 660;
- osc.type = 'sine';
- gain.gain.setValueAtTime(0.3, ctx.currentTime);
- gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
- osc.start(); osc.stop(ctx.currentTime + 0.5);
- } catch(e) {}
- }
- </script>
+    // Reinicia os parâmetros da sessão para permitir a configuração de um novo ciclo
+    function startNewSession() {
+      document.getElementById('resultPanel').style.display = 'none';
+      document.getElementById('setupPanel').style.display = 'block';
+      sessionStart = null;
+    }
+
+
+
+    // Emite sons simples e customizados usando a API do Web Audio nativa do navegador
+    function playSound(type) {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        
+        // Frequência de 440Hz para avisos de intervalos e 660Hz para início do foco
+        osc.frequency.value = type === 'break' ? 440 : 660;
+        osc.type = 'sine';
+        
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+        
+        osc.start(); 
+        osc.stop(ctx.currentTime + 0.5);
+      } catch(e) {}
+    }
+  </script>
 </body>
 </html>
