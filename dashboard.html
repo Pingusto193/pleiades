@@ -3,7 +3,7 @@
 <head>
  <meta charset="UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>Focus Trip — Dashboard</title>
+ <title>Focus Trip | Dashboard</title>
  <link rel="stylesheet" href="style.css" />
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
@@ -46,10 +46,10 @@
  </div>
  </header>
 
- <!-- CONTEÚDO -->
+ <!-- CONTEUDO -->
  <div class="app-content">
 
- <!-- AVISO DE SESSÃO DO DIA -->
+ <!-- AVISO DE SESSAO DO DIA -->
  <div class="day-status-card" id="dayStatus"></div>
 
  <!-- STATS RÁPIDOS -->
@@ -120,7 +120,7 @@
  </div>
  </div>
 
- <script src="app.js"></script>
+ <script src="app.js?v=db4"></script>
  <script>document.addEventListener('DOMContentLoaded', () => {
  const user = getUser();
  if (!user) { window.location.href = 'login.html'; return; }
@@ -130,6 +130,9 @@
  const saudacao = hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite';
  document.getElementById('topGreeting').textContent = `${saudacao}, ${user.nome.split(' ')[0]}!`;
  document.getElementById('topStreak').textContent = `${user.streak} dias`;
+ if (user.avatarUrl) {
+ document.getElementById('topAvatar').innerHTML = `<img src="${mediaUrl(user.avatarUrl)}" alt="Foto de perfil" />`;
+ }
 
  // Stats
  document.getElementById('streakNum').textContent = user.streak;
@@ -145,7 +148,7 @@
  // Sidebar user
  document.getElementById('sidebarUser').innerHTML = `
  <div class="sidebar-user-info">
- <div class="sidebar-avatar"></div>
+ <div class="sidebar-avatar">${user.avatarUrl ? `<img src="${mediaUrl(user.avatarUrl)}" alt="Foto de perfil" />` : ''}</div>
  <div>
  <div class="sidebar-name">${user.nome}</div>
  <div class="sidebar-level">Nível ${user.nivel}</div>
@@ -161,13 +164,13 @@
  const ehDiaEstudo = (user.dias || []).includes(diaAtual);
  const statusEl = document.getElementById('dayStatus');
  if (ehDiaEstudo && pct < 100) {
- statusEl.innerHTML = `<span class="status-dot status-pending"></span>Hoje é dia de estudo — você ainda não completou sua meta de <strong>${user.horas}h</strong>`;
+ statusEl.innerHTML = `<span class="status-dot status-pending"></span>Hoje é dia de estudo - você ainda não completou sua meta de <strong>${user.horas}h</strong>`;
  statusEl.className = 'day-status-card status-warning';
  } else if (pct >= 100) {
  statusEl.innerHTML = `<span class="status-dot status-done"></span>Meta de hoje concluída! Você ganhou <strong>+50 XP</strong>`;
  statusEl.className = 'day-status-card status-success';
  } else {
- statusEl.innerHTML = `<span class="status-dot status-rest"></span>Hoje é dia de descanso — aproveite!`;
+ statusEl.innerHTML = `<span class="status-dot status-rest"></span>Hoje é dia de descanso - aproveite!`;
  statusEl.className = 'day-status-card status-rest';
  }
 
@@ -204,25 +207,27 @@
  const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
  const hoje = new Date();
  const semana = Array.from({length:7}, (_,i) => {
- const d = new Date(hoje); d.setDate(hoje.getDate() - (6-i));
- return d.toISOString().split('T')[0];
+ const d = new Date(hoje);
+ d.setDate(hoje.getDate() - (6-i));
+ return d;
  });
  const container = document.getElementById('weeklyProgress');
- container.innerHTML = semana.map((date, i) => {
- const dayIdx = new Date(date).getDay();
+ container.innerHTML = semana.map((date) => {
+ const dateKey = localDateKey(date);
+ const dayIdx = date.getDay();
  const ehEstudo = (user.dias||[]).includes(dayKeys[dayIdx]);
- const daySessions = sessions.filter(s =>s.data === date);
+ const daySessions = sessions.filter(s =>s.data === dateKey);
  const mins = daySessions.reduce((a,s) =>a+(s.duracao||0), 0);
  const meta = (user.horas||2)*60;
  const pct = Math.min(100, Math.round((mins/meta)*100));
- const isToday = date === hoje.toISOString().split('T')[0];
+ const isToday = dateKey === localDateKey(hoje);
  return `
  <div class="week-day ${isToday?'week-today':''} ${ehEstudo?'week-study':'week-rest'}">
  <div class="week-bar-wrap">
  <div class="week-bar" style="height:${pct}%"></div>
  </div>
  <div class="week-day-label">${days[dayIdx]}</div>
- <div class="week-day-sub">${pct > 0 ? pct+'%' : ehEstudo ? '—' : ''}</div>
+ <div class="week-day-sub">${pct > 0 ? pct+'%' : ehEstudo ? '-' : ''}</div>
  </div>
  `;
  }).join('');
@@ -256,6 +261,9 @@
 
  function logout() {
  localStorage.removeItem('focustrip_user');
+ localStorage.removeItem('focustrip_token');
+ localStorage.removeItem('focustrip_sessions');
+ localStorage.removeItem('focustrip_subjects');
  }
  </script>
 </body>

@@ -3,7 +3,7 @@
 <head>
  <meta charset="UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>Focus Trip — Sessão de Estudo</title>
+ <title>Focus Trip | Sessão de Estudo</title>
  <link rel="stylesheet" href="style.css" />
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
@@ -42,7 +42,7 @@
 
  <div class="form-group">
  <label>Matéria / Assunto</label>
- <input type="text" id="subjectInput" class="input-styled" placeholder="Ex: Matemática — Derivadas" />
+ <input type="text" id="subjectInput" class="input-styled" placeholder="Ex: Matemática - Derivadas" />
  </div>
 
  <div class="form-group">
@@ -80,12 +80,12 @@
  <div class="timer-container">
 
  <!-- AVISO COGNITIVO TOP -->
- <div class="cognitive-reminder" id="cognitiveReminder">Seu streak de <span id="streakReminder">0</span>dias está ativo — não abandone agora!
+ <div class="cognitive-reminder" id="cognitiveReminder">Seu streak de <span id="streakReminder">0</span>dias está ativo - não abandone agora!
  </div>
 
  <div class="timer-card">
  <div class="timer-phase" id="timerPhase">FOCO</div>
- <div class="timer-subject" id="timerSubject">—</div>
+ <div class="timer-subject" id="timerSubject">-</div>
  <div class="timer-method-tag" id="timerMethodTag">Pomodoro</div>
 
  <!-- SVG CIRCLE TIMER -->
@@ -164,7 +164,7 @@
  </div>
  </div>
 
- <script src="app.js"></script>
+ <script src="app.js?v=db4"></script>
  <script>let timer = null;
  let totalSeconds = 0;
  let currentSeconds = 0;
@@ -188,7 +188,7 @@
  if (!user) { window.location.href = 'login.html'; return; }
  document.getElementById('topStreak').textContent = `${user.streak} dias`;
  document.getElementById('streakReminder').textContent = user.streak;
- // Método padrão do usuário
+ // Método padr?o do usuário
  selectMethod(user.metodo || 'pomodoro', document.querySelector(`[data-method="${user.metodo||'pomodoro'}"]`));
  });
 
@@ -246,7 +246,7 @@
  // Atualizar progresso diário
  const user = getUser();
  const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
- const today = new Date().toISOString().split('T')[0];
+ const today = localDateKey();
  const prevMins = sessions.filter(s =>s.data === today).reduce((a,s) =>a+(s.duracao||0), 0);
  const currentMins = prevMins + Math.floor((totalSeconds - currentSeconds) / 60);
  const metaMins = (user.horas || 2) * 60;
@@ -260,7 +260,7 @@
  clearInterval(timer);
  const m = METHODS[sessionMethod];
  if (!isBreak) {
- // Terminou foco — registrar
+ // Terminou foco - registrar
  sessionMinutesAccum += Math.floor(m.focus / 60);
  if (sessionMethod === 'pomodoro' && cycle < maxCycles) {
  isBreak = true;
@@ -309,7 +309,7 @@
  `Você está encerrando com ${elapsed} minutos de estudo.`;
  document.getElementById('stopConsequences').innerHTML = `
  <div class="consequence ${streakRisk ? 'danger' : 'warn'}">
- ${streakRisk ? ` Sessão curta — nenhum XP será ganho` : ` Você ganhará XP pelo tempo estudado`}
+ ${streakRisk ? ` Sessão curta - nenhum XP será ganho` : ` Você ganhará XP pelo tempo estudado`}
  </div>
  ${streakRisk && user.streak > 0 ? `<div class="consequence danger">Streak de <strong>${user.streak} dias</strong>pode ser perdido se você não completar a meta hoje</div>` : ''}
  `;
@@ -333,12 +333,14 @@
  const user = getUser();
  const mins = forcedMinutes !== undefined ? forcedMinutes :
  Math.floor(METHODS[sessionMethod].focus * METHODS[sessionMethod].cycles / 60);
- const today = new Date().toISOString().split('T')[0];
+ const today = localDateKey();
 
  // Salvar sessão
  const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
- sessions.push({ data: today, duracao: mins, materia: sessionSubject, metodo: sessionMethod, completa: completed });
+ const sessionRecord = { data: today, duracao: mins, materia: sessionSubject, metodo: sessionMethod, completa: completed };
+ sessions.push(sessionRecord);
  localStorage.setItem('focustrip_sessions', JSON.stringify(sessions));
+ persistSession(sessionRecord).catch(() =>showToast('Sessão salva localmente. A sincronização será tentada depois.'));
 
  // Calcular XP
  const xpGain = completed ? mins + 10 : Math.floor(mins * 0.5);
@@ -351,7 +353,7 @@
  const metaMins = (user.horas || 2) * 60;
  if (todayMins >= metaMins) {
  const yest = new Date(); yest.setDate(yest.getDate()-1);
- const yestKey = yest.toISOString().split('T')[0];
+ const yestKey = localDateKey(yest);
  const yestSessions = sessions.filter(s =>s.data === yestKey);
  const yestMins = yestSessions.reduce((a,s)=>a+(s.duracao||0),0);
  if (yestMins >= metaMins || user.streak === 0) {
@@ -361,7 +363,7 @@
  checkAndUnlockAchievements(user);
  }
 
- localStorage.setItem('focustrip_user', JSON.stringify(user));
+ saveUser(user);
 
  // Mostrar resultado
  document.getElementById('timerPanel').style.display = 'none';
@@ -399,7 +401,7 @@
  function updateSocialRanking() {
  // Dados mockados para demonstração social
  const user = getUser();
- const today = new Date().toISOString().split('T')[0];
+ const today = localDateKey();
  const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
  const myMins = sessions.filter(s =>s.data === today).reduce((a,s)=>a+(s.duracao||0),0);
  const fakeRanking = [

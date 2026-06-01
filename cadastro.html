@@ -3,7 +3,7 @@
 <head>
  <meta charset="UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>Focus Trip — Criar Conta</title>
+ <title>Focus Trip | Criar Conta</title>
  <link rel="stylesheet" href="style.css" />
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
@@ -124,7 +124,7 @@
  </div>
  </div>
 
- <script src="app.js"></script>
+ <script src="app.js?v=db4"></script>
  <script>
  // Seletor de horas
  document.querySelectorAll('.hours-btn').forEach(btn => {
@@ -167,26 +167,25 @@
  input.type = input.type === 'password' ? 'text' : 'password';
  }
 
- function handleCadastro(e) {
+ async function handleCadastro(e) {
  e.preventDefault();
  const nome = document.getElementById('nome').value;
  const horasBtn = document.querySelector('.hours-btn.active');
  const dias = [...document.querySelectorAll('.day-btn.active')].map(b =>b.dataset.day);
  const metodo = document.querySelector('input[name="metodo"]:checked').value;
- const user = {
+ try {
+ await registerAccount({
  nome: nome + ' ' + document.getElementById('sobrenome').value,
  email: document.getElementById('email').value,
+ password: document.getElementById('senha').value,
  horas: horasBtn ? parseInt(horasBtn.dataset.hours) : 2,
  dias,
- metodo,
- streak: 0,
- xp: 0,
- nivel: 1,
- conquistas: [],
- criadoEm: new Date().toISOString()
- };
- localStorage.setItem('focustrip_user', JSON.stringify(user));
+ metodo
+ });
  window.location.href = 'dashboard.html';
+ } catch (error) {
+ showToast(error.message);
+ }
  }
  </script>
 </body>

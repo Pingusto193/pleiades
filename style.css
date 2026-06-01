@@ -563,6 +563,15 @@ input.input-styled:focus,
   width: 34px; height: 34px; border-radius: 50%;
   background: var(--bg-card); display: flex; align-items: center;
   justify-content: center; font-size: 1.2rem; border: 1.5px solid var(--border);
+  overflow: hidden;
+}
+
+.topbar-avatar img,
+.sidebar-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
 }
 
 .app-content { padding: 28px; flex: 1; max-width: 960px; width: 100%; }
@@ -786,6 +795,15 @@ input.input-styled:focus,
   align-items: center; justify-content: center; font-size: 2.2rem;
   flex-shrink: 0;
 }
+.profile-avatar-big img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+.profile-avatar-big:has(img)::before {
+  display: none;
+}
 .profile-hero-info h2    { font-size: 1.3rem; font-weight: 700; margin-bottom: 2px; }
 .profile-email           { font-size: .8rem; color: var(--text-muted); margin-bottom: 6px; }
 .profile-streak-big      { color: var(--color-accent); font-weight: 600; font-size: .88rem; margin-bottom: 10px; }
@@ -901,15 +919,47 @@ input.input-styled:focus,
 }
 .cal-days { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
 .cal-day {
-  aspect-ratio: 1; background: var(--bg-card); border: 1px solid var(--border);
+  min-height: 98px; background: var(--bg-card); border: 1px solid var(--border);
   border-radius: var(--radius-sm); display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 2px; padding: 4px;
+  align-items: flex-start; justify-content: flex-start; gap: 4px; padding: 8px;
   font-size: .8rem; transition: transform .15s; cursor: default; position: relative;
+  overflow: hidden;
 }
 .cal-day:hover { transform: scale(1.04); }
 .cal-day-num  { font-weight: 700; font-size: .85rem; }
 .cal-day-icon { font-size: .85rem; }
 .cal-day-mins { font-size: .62rem; color: var(--text-muted); }
+.cal-day-plan {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 4px;
+  border-top: 1px solid rgba(35, 33, 29, .08);
+}
+.cal-day-plan strong {
+  font-size: .7rem;
+  color: var(--color-primary);
+}
+.cal-day-plan small {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  font-size: .65rem;
+  font-weight: 600;
+}
+.cal-day-plan em {
+  justify-self: flex-start;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: #eee5d6;
+  color: var(--text-muted);
+  font-size: .62rem;
+  font-style: normal;
+}
 .cal-empty    { background: transparent; border-color: transparent; }
 .cal-today    { border-color: var(--color-primary)!important; box-shadow: 0 0 0 1px var(--color-primary); }
 .cal-done     { border-color: rgba(16,185,129,.4); background: rgba(16,185,129,.08); }
@@ -941,6 +991,12 @@ input.input-styled:focus,
 .subject-color { width: 10px; height: 36px; border-radius: 4px; flex-shrink: 0; }
 .subject-info  { flex: 1; }
 .subject-info strong { font-size: .9rem; }
+.subject-schedule {
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: .76rem;
+  font-weight: 600;
+}
 .subject-days  { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
 .day-chip {
   font-size: .72rem; font-weight: 600; padding: 2px 8px;
@@ -955,6 +1011,19 @@ input.input-styled:focus,
 }
 .add-subject-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; }
 .add-subject-form { display: flex; flex-direction: column; gap: 12px; }
+.schedule-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.form-group.compact {
+  margin: 0;
+}
+.form-group.compact label {
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
 
 /* ═══════════════════════════════════════════════
    RANKING
@@ -1092,6 +1161,9 @@ input.input-styled:focus,
   .stats-row      { grid-template-columns: 1fr 1fr; }
   .achievements-grid { grid-template-columns: 1fr 1fr; }
   .month-summary  { grid-template-columns: 1fr 1fr; }
+  .schedule-fields { grid-template-columns: 1fr; }
+  .cal-day { min-height: 82px; padding: 6px; }
+  .cal-day-plan small { display: none; }
   .methods-grid   { grid-template-columns: 1fr; }
   .cognitive-features { grid-template-columns: 1fr; }
   .ranking-list-header,
@@ -1618,6 +1690,12 @@ input.input-styled:focus,
   font-weight: 800;
 }
 
+.app-page .sidebar-avatar:has(img)::before,
+.app-page .topbar-avatar:has(img)::before,
+.app-page .profile-avatar-big:has(img)::before {
+  display: none;
+}
+
 .app-page .app-main {
   background: transparent;
 }
@@ -1704,8 +1782,19 @@ input.input-styled:focus,
 .auth-page .method-opt-icon,
 .auth-page .streak-fire,
 .auth-page .promo-item span,
-.auth-page .toggle-password {
+.auth-page .streak-fire {
   display: none;
+}
+
+.auth-page .toggle-password {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 7px;
+  color: var(--text-muted);
+  font-size: .75rem;
 }
 
 .app-page .stat-card,

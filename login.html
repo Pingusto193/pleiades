@@ -3,85 +3,60 @@
 <head>
  <meta charset="UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>Focus Trip — Entrar</title>
+ <title>Focus Trip | Entrar</title>
  <link rel="stylesheet" href="style.css" />
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body class="auth-page">
-
  <div class="auth-container auth-container-slim">
- <div class="auth-right auth-right-full">
- <div class="auth-form-wrapper">
- <a href="index.html" class="auth-logo auth-logo-centered">
- <span class="logo-icon"></span>
- <span class="logo-text">Focus<span class="logo-accent">Trip</span></span>
- </a>
+  <div class="auth-right auth-right-full">
+   <div class="auth-form-wrapper">
+    <a href="index.html" class="auth-logo auth-logo-centered">
+     <span class="logo-icon"></span>
+     <span class="logo-text">Focus<span class="logo-accent">Trip</span></span>
+    </a>
 
- <h1 class="auth-title">Bem-vindo de volta </h1>
- <p class="auth-subtitle">Não tem conta? <a href="cadastro.html">Criar grátis</a></p>
+    <h1 class="auth-title">Bem-vindo de volta</h1>
+    <p class="auth-subtitle">Não tem conta? <a href="cadastro.html">Criar grátis</a></p>
 
- <form class="auth-form" id="formLogin" onsubmit="handleLogin(event)">
- <div class="form-group">
- <label for="email">E-mail</label>
- <input type="email" id="email" placeholder="seu@email.com" required />
+    <form class="auth-form" id="formLogin" onsubmit="handleLogin(event)">
+     <div class="form-group">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" placeholder="seu@email.com" required />
+     </div>
+
+     <div class="form-group">
+      <label for="senha">Senha</label>
+      <div class="input-with-icon">
+       <input type="password" id="senha" placeholder="Sua senha" required />
+       <button type="button" class="toggle-password" onclick="togglePass('senha')">Mostrar</button>
+      </div>
+     </div>
+
+     <div id="login-error" class="auth-error" style="display:none">E-mail ou senha incorretos.</div>
+     <button type="submit" class="btn-primary btn-full btn-lg">Entrar na minha conta</button>
+     <div class="auth-divider"><span>ou</span></div>
+     <a href="cadastro.html" class="btn-ghost btn-full">Criar nova conta</a>
+    </form>
+   </div>
+  </div>
  </div>
 
- <div class="form-group">
- <label for="senha">Senha</label>
- <div class="input-with-icon">
- <input type="password" id="senha" placeholder="Sua senha" required />
- <button type="button" class="toggle-password" onclick="togglePass('senha')"></button>
- </div>
- </div>
-
- <div id="login-error" class="auth-error" style="display:none">E-mail ou senha incorretos.</div>
-
- <button type="submit" class="btn-primary btn-full btn-lg">Entrar na minha conta</button>
-
- <div class="auth-divider"><span>ou</span></div>
-
- <a href="cadastro.html" class="btn-ghost btn-full">Criar nova conta</a>
- </form>
- </div>
- </div>
- </div>
-
- <script src="app.js"></script>
- <script>function togglePass(id) {
- const input = document.getElementById(id);
- input.type = input.type === 'password' ? 'text' : 'password';
+ <script src="app.js?v=db4"></script>
+ <script>
+ function togglePass(id) {
+  const input = document.getElementById(id);
+  input.type = input.type === 'password' ? 'text' : 'password';
  }
 
- function handleLogin(e) {
- e.preventDefault();
- const stored = localStorage.getItem('focustrip_user');
- const emailInput = document.getElementById('email').value;
- if (stored) {
- const user = JSON.parse(stored);
- if (user.email === emailInput) {
- window.location.href = 'dashboard.html';
- return;
- }
- }
- // Demo: aceitar qualquer login se não houver usuário cadastrado
- if (!stored) {
- const demoUser = {
- nome: 'Estudante Demo',
- email: emailInput,
- horas: 2,
- dias: ['ter','qua','qui','sex'],
- metodo: 'pomodoro',
- streak: 5,
- xp: 320,
- nivel: 2,
- conquistas: ['streak7'],
- criadoEm: new Date().toISOString()
- };
- localStorage.setItem('focustrip_user', JSON.stringify(demoUser));
- window.location.href = 'dashboard.html';
- return;
- }
- document.getElementById('login-error').style.display = 'block';
+ async function handleLogin(e) {
+  e.preventDefault();
+  try {
+   await loginAccount(document.getElementById('email').value, document.getElementById('senha').value);
+   window.location.href = 'dashboard.html';
+  } catch (error) {
+   document.getElementById('login-error').style.display = 'block';
+  }
  }
  </script>
 </body>
