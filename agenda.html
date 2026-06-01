@@ -3,6 +3,7 @@
 <html lang="pt-BR">
 <!-- Início do documento HTML, configurando o idioma para Português do Brasil -->
 <head>
+<<<<<<< HEAD
   <!-- Cabeçalho com metadados, título e conexões com estilo e fontes -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,6 +11,13 @@
   <link rel="stylesheet" href="style.css" />
   <!-- Importa as fontes do Google Fonts (Inter e Space Grotesk) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+=======
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Focus Trip | Minha Agenda</title>
+ <link rel="stylesheet" href="style.css?v=agenda2" />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 </head>
 <body class="app-page">
   <!-- Corpo da página principal da aplicação -->
@@ -38,6 +46,7 @@
     </nav>
   </aside>
 
+<<<<<<< HEAD
   <!-- MAIN (Área Principal) -->
   <main class="app-main">
     <header class="app-topbar">
@@ -47,6 +56,14 @@
         <div class="topbar-streak" id="topStreak">0 dias</div>
       </div>
     </header>
+=======
+ <!-- CABEÇALHO DO MÊS -->
+ <div class="calendar-header">
+ <button class="cal-nav-btn" id="btnPrevMonth" onclick="changeMonth(-1)">&lsaquo;</button>
+ <h2 class="cal-month-title" id="calTitle">Maio 2026</h2>
+ <button class="cal-nav-btn" id="btnNextMonth" onclick="changeMonth(1)">&rsaquo;</button>
+ </div>
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
     <div class="app-content">
 
@@ -74,6 +91,7 @@
         </div>
       </div>
 
+<<<<<<< HEAD
       <div class="calendar-header">
         <button class="cal-nav-btn" id="btnPrevMonth" onclick="changeMonth(-1)">‹</button>
         <!-- Título dinâmico do mês/ano atual exibido -->
@@ -89,12 +107,66 @@
         <span class="legend-dot dot-missed"></span>Perdido
         <span class="legend-dot dot-rest"></span>Descanso
       </div>
+=======
+ <!-- MATERIAS AGENDADAS -->
+ <div class="section-title">Matérias desta semana</div>
+ <div class="subjects-week" id="subjectsWeek"></div>
+
+ <!-- ADICIONAR MATERIA -->
+ <div class="add-subject-card">
+ <h3>Adicionar matéria - semana</h3>
+ <div class="add-subject-form">
+ <input type="text" id="subjectName" class="input-styled" placeholder="Nome da matéria (ex: Física)" />
+ <div class="schedule-fields">
+ <div class="form-group compact">
+ <label for="subjectTime">Horário</label>
+ <input type="time" id="subjectTime" class="input-styled" value="08:00" />
+ </div>
+ <div class="form-group compact">
+ <label for="subjectDuration">Estudo</label>
+ <select id="subjectDuration" class="input-styled">
+ <option value="25">25 min</option>
+ <option value="45">45 min</option>
+ <option value="60" selected>1h</option>
+ <option value="90">1h 30min</option>
+ <option value="120">2h</option>
+ </select>
+ </div>
+ <div class="form-group compact">
+ <label for="subjectBreak">Descanso</label>
+ <select id="subjectBreak" class="input-styled">
+ <option value="5">5 min</option>
+ <option value="10" selected>10 min</option>
+ <option value="15">15 min</option>
+ <option value="20">20 min</option>
+ <option value="30">30 min</option>
+ </select>
+ </div>
+ </div>
+ <div class="days-selector" id="subjectDays">
+ <button type="button" class="day-btn" data-day="seg">Seg</button>
+ <button type="button" class="day-btn" data-day="ter">Ter</button>
+ <button type="button" class="day-btn" data-day="qua">Qua</button>
+ <button type="button" class="day-btn" data-day="qui">Qui</button>
+ <button type="button" class="day-btn" data-day="sex">Sex</button>
+ <button type="button" class="day-btn" data-day="sab">Sáb</button>
+ <button type="button" class="day-btn" data-day="dom">Dom</button>
+ </div>
+ <button class="btn-primary" onclick="addSubject()">Adicionar</button>
+ </div>
+ </div>
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
       <!-- CALENDÁRIO (Estrutura do grid de dias preenchido dinamicamente via JS) -->
       <div class="calendar-grid" id="calendarGrid"></div>
 
+<<<<<<< HEAD
       <!-- RESUMO DO MÊS (Estatísticas de consistência calculadas via JS) -->
       <div class="month-summary" id="monthSummary"></div>
+=======
+ <script src="app.js?v=db4"></script>
+ <script>let viewYear, viewMonth;
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
 
 
@@ -116,20 +188,37 @@
       // Exibe a sequência de dias atual do usuário
       document.getElementById('topStreak').textContent = `${user.streak} dias`;
 
+<<<<<<< HEAD
       // Inicializa o calendário mostrando o mês e ano do dia atual
       const now = new Date();
       viewYear = now.getFullYear();
       viewMonth = now.getMonth();
+=======
+function renderCalendar() {
+ const user = getUser();
+ const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
+ const subjects = JSON.parse(localStorage.getItem('focustrip_subjects') || '[]');
+ const dayKeys = ['dom','seg','ter','qua','qui','sex','sab'];
+ const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+ 'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
       // Vincula a alternância da classe ativa ao clicar nos dias da semana para novas matérias
       document.querySelectorAll('#subjectDays .day-btn').forEach(btn => 
         btn.addEventListener('click', () => btn.classList.toggle('active'))
       );
 
+<<<<<<< HEAD
       // Renderiza as interfaces na tela
       renderCalendar();
       renderSubjectsWeek();
     });
+=======
+ const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+ const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+ const today = localDateKey();
+ const metaMins = (user.horas || 2) * 60;
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
     // Função que retrocede ou avança o mês visível no calendário
     function changeMonth(delta) {
@@ -148,8 +237,23 @@
       const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
                           'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
+<<<<<<< HEAD
       // Atualiza o título do cabeçalho do calendário
       document.getElementById('calTitle').textContent = `${monthNames[viewMonth]} ${viewYear}`;
+=======
+ for (let d = 1; d <= daysInMonth; d++) {
+ const dateStr = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+ const dayOfWeek = new Date(viewYear, viewMonth, d).getDay();
+ const dayKey = dayKeys[dayOfWeek];
+ const dayPlan = subjects
+ .filter(s =>(s.dias || []).includes(dayKey))
+ .sort((a, b) =>(a.horario || '08:00').localeCompare(b.horario || '08:00'));
+ const ehEstudo = (user.dias || []).includes(dayKey) || dayPlan.length > 0;
+ const daySessions = sessions.filter(s =>s.data === dateStr);
+ const mins = daySessions.reduce((a,s) =>a+(s.duracao||0), 0);
+ const isFuture = dateStr >today;
+ const isToday = dateStr === today;
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
       // Encontra em qual dia da semana (0-6) inicia o dia 1 do mês selecionado
       const firstDay = new Date(viewYear, viewMonth, 1).getDay();
@@ -160,14 +264,32 @@
       // Meta diária do usuário convertida em minutos
       const metaMins = (user.horas || 2) * 60;
 
+<<<<<<< HEAD
       // Inicia a montagem da estrutura HTML do calendário
       let html = '<div class="cal-week-headers"><span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span></div><div class="cal-days">';
+=======
+ html += `
+ <div class="${cls}" title="${buildDayTitle(dayPlan, mins)}">
+ <span class="cal-day-num">${d}</span>
+ <span class="cal-day-icon">${icon}</span>
+ ${dayPlan.length ? `
+ <span class="cal-day-plan">
+ <strong>${dayPlan[0].horario || '08:00'}</strong>
+ <small>${dayPlan[0].nome}</small>
+ ${dayPlan.length > 1 ? `<em>+${dayPlan.length - 1}</em>` : ''}
+ </span>` : ''}
+ ${mins > 0 ? `<span class="cal-day-mins">${mins}m</span>` : ''}
+ </div>
+ `;
+ }
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
       // Cria blocos vazios para preencher os dias da semana anteriores ao início do dia 1
       for (let i = 0; i < firstDay; i++) {
         html += '<div class="cal-day cal-empty"></div>';
       }
 
+<<<<<<< HEAD
       // Loop gerando cada dia do mês individualmente
       for (let d = 1; d <= daysInMonth; d++) {
         // Constrói a data no formato YYYY-MM-DD do dia atual do loop
@@ -183,6 +305,22 @@
         
         const isFuture = dateStr > today;
         const isToday = dateStr === today;
+=======
+ // Resumo do mês
+ const monthSessions = sessions.filter(s =>s.data.startsWith(`${viewYear}-${String(viewMonth+1).padStart(2,'0')}`));
+ const totalMins = monthSessions.reduce((a,s) =>a+(s.duracao||0), 0);
+ const metasDias = Array.from({length: daysInMonth}, (_,i) => {
+ const dateStr = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(i+1).padStart(2,'0')}`;
+ const dayOfWeek = new Date(viewYear, viewMonth, i+1).getDay();
+ const dayKey = dayKeys[dayOfWeek];
+ const hasPlan = subjects.some(s =>(s.dias || []).includes(dayKey));
+ return ((user.dias||[]).includes(dayKey) || hasPlan) && dateStr <= today ? dateStr : null;
+ }).filter(Boolean);
+ const cumpriu = metasDias.filter(d => {
+ const m = sessions.filter(s =>s.data === d).reduce((a,s) =>a+(s.duracao||0), 0);
+ return m >= metaMins;
+ });
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
         let cls = 'cal-day';
         let icon = '';
@@ -202,6 +340,7 @@
           cls += ' cal-missed'; // Dia de estudo planejado perdido (sem registros)
         }
 
+<<<<<<< HEAD
         html += `
           <div class="${cls}" title="${mins > 0 ? mins+'min estudados' : ''}">
             <span class="cal-day-num">${d}</span>
@@ -300,5 +439,84 @@
       renderSubjectsWeek(); // Atualiza a visualização na tela
     }
   </script>
+=======
+ function buildDayTitle(plan, mins) {
+ const studied = mins > 0 ? `${mins}min estudados` : 'Sem estudo registrado';
+ if (!plan.length) return studied;
+ const agenda = plan.map(s =>`${s.horario || '08:00'} - ${s.nome}: ${minToHour(Number(s.duracao || 60))} + ${s.pausa || 10}min descanso`).join(' | ');
+ return `${agenda} | ${studied}`;
+ }
+
+ function normalizeSubject(subject) {
+ return {
+ ...subject,
+ horario: subject.horario || '08:00',
+ duracao: Number(subject.duracao || 60),
+ pausa: Number(subject.pausa || 10)
+ };
+ }
+
+ function renderSubjectsWeek() {
+ const subjects = JSON.parse(localStorage.getItem('focustrip_subjects') || '[]').map(normalizeSubject);
+ const container = document.getElementById('subjectsWeek');
+ if (!subjects.length) {
+ container.innerHTML = '<div class="empty-state">Nenhuma matéria cadastrada. Adicione abaixo! </div>';
+ return;
+ }
+ const dayLabels = { seg:'Seg', ter:'Ter', qua:'Qua', qui:'Qui', sex:'Sex', sab:'Sáb', dom:'Dom' };
+ container.innerHTML = subjects.map((s, i) => `
+ <div class="subject-card">
+ <div class="subject-color" style="background:${s.color}"></div>
+ <div class="subject-info">
+ <strong>${s.nome}</strong>
+ <div class="subject-schedule">${s.horario} - ${minToHour(s.duracao)} de estudo - ${s.pausa}min de descanso</div>
+ <div class="subject-days">${s.dias.map(d => `<span class="day-chip">${dayLabels[d]}</span>`).join('')}</div>
+ </div>
+ <button class="btn-icon-del" onclick="removeSubject(${i})" title="Remover"></button>
+ </div>
+ `).join('');
+ }
+
+ async function addSubject() {
+ const nome = document.getElementById('subjectName').value.trim();
+ if (!nome) { showToast('Digite o nome da matéria!'); return; }
+ const dias = [...document.querySelectorAll('#subjectDays .day-btn.active')].map(b =>b.dataset.day);
+ if (!dias.length) { showToast('Selecione pelo menos um dia!'); return; }
+ const horario = document.getElementById('subjectTime').value || '08:00';
+ const duracao = Number(document.getElementById('subjectDuration').value || 60);
+ const pausa = Number(document.getElementById('subjectBreak').value || 10);
+ const colors = ['#6366f1','#ec4899','#f59e0b','#10b981','#3b82f6','#8b5cf6','#ef4444'];
+ const subjects = JSON.parse(localStorage.getItem('focustrip_subjects') || '[]');
+ const subject = { nome, dias, horario, duracao, pausa, color: colors[subjects.length % colors.length] };
+ subjects.push(subject);
+ localStorage.setItem('focustrip_subjects', JSON.stringify(subjects));
+ persistSubject(subject).then((saved) => {
+ if (!saved) return;
+ const latest = JSON.parse(localStorage.getItem('focustrip_subjects') || '[]');
+ latest[latest.length - 1] = saved;
+ localStorage.setItem('focustrip_subjects', JSON.stringify(latest));
+ renderSubjectsWeek();
+ renderCalendar();
+ }).catch(() =>showToast('Matéria salva localmente. A sincronização será tentada depois.'));
+ document.getElementById('subjectName').value = '';
+ document.getElementById('subjectTime').value = '08:00';
+ document.getElementById('subjectDuration').value = '60';
+ document.getElementById('subjectBreak').value = '10';
+ document.querySelectorAll('#subjectDays .day-btn').forEach(b =>b.classList.remove('active'));
+ renderSubjectsWeek();
+ renderCalendar();
+ showToast('Matéria adicionada!');
+ }
+
+ function removeSubject(i) {
+ const subjects = JSON.parse(localStorage.getItem('focustrip_subjects') || '[]');
+ const [removed] = subjects.splice(i, 1);
+ localStorage.setItem('focustrip_subjects', JSON.stringify(subjects));
+ deleteSubjectFromServer(removed && removed.id).catch(() => {});
+ renderSubjectsWeek();
+ renderCalendar();
+ }
+ </script>
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 </body>
 </html>

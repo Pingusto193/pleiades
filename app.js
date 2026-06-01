@@ -2,7 +2,115 @@
 // Focus Trip — app.js (utilitários compartilhados)
 //
 
+<<<<<<< HEAD
 // Recupera os dados do usuário atualmente logado a partir do localStorage
+=======
+// Usuário
+const API_BASE = window.location.origin === 'http://localhost:3000'
+ ? ''
+ : 'http://localhost:3000';
+
+function mediaUrl(path) {
+ if (!path) return '';
+ if (/^(https?:|data:|blob:)/.test(path)) return path;
+ return `${API_BASE}${path}`;
+}
+
+function getToken() {
+ return localStorage.getItem('focustrip_token');
+}
+
+function setAccountData(data) {
+ if (data.token) localStorage.setItem('focustrip_token', data.token);
+ if (data.user) localStorage.setItem('focustrip_user', JSON.stringify(data.user));
+ if (data.sessions) localStorage.setItem('focustrip_sessions', JSON.stringify(data.sessions));
+ if (data.subjects) localStorage.setItem('focustrip_subjects', JSON.stringify(data.subjects));
+}
+
+async function apiRequest(path, options = {}) {
+ const headers = options.headers ? { ...options.headers } : {};
+ const token = getToken();
+ if (token) headers.Authorization = `Bearer ${token}`;
+ if (options.body && !(options.body instanceof FormData)) headers['Content-Type'] = 'application/json';
+
+ let response;
+ try {
+ response = await fetch(API_BASE + path, { ...options, headers });
+ } catch {
+ throw new Error('Abra o site por http://localhost:3000 ou deixe o servidor rodando com npm start.');
+ }
+ const text = await response.text();
+ let data = {};
+ try {
+ data = text ? JSON.parse(text) : {};
+ } catch {
+ data = {};
+ }
+ if (!response.ok) {
+  const fallback = response.status === 404
+   ? 'API não encontrada. Abra o site por http://localhost:3000 e confirme que o servidor está rodando.'
+   : `Não foi possível concluir a operação. Código ${response.status}.`;
+  throw new Error(data.error || fallback);
+ }
+ return data;
+}
+
+async function registerAccount(payload) {
+ const data = await apiRequest('/api/register', { method: 'POST', body: JSON.stringify(payload) });
+ setAccountData(data);
+ return data.user;
+}
+
+async function loginAccount(email, password) {
+ const data = await apiRequest('/api/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+ setAccountData(data);
+ return data.user;
+}
+
+async function refreshAccount() {
+ if (!getToken()) return null;
+ const data = await apiRequest('/api/me');
+ setAccountData(data);
+ return data.user;
+}
+
+function persistUser(user) {
+ if (!getToken()) return;
+ apiRequest('/api/me', { method: 'PUT', body: JSON.stringify(user) }).catch(() => {
+ showToast('Não foi possível sincronizar seus dados agora.');
+ });
+}
+
+async function updateAccount(payload) {
+ const data = await apiRequest('/api/account', { method: 'PUT', body: JSON.stringify(payload) });
+ setAccountData(data);
+ return data.user;
+}
+
+async function persistSession(session) {
+ if (!getToken()) return;
+ await apiRequest('/api/sessions', { method: 'POST', body: JSON.stringify(session) });
+}
+
+async function persistSubject(subject) {
+ if (!getToken()) return null;
+ return apiRequest('/api/subjects', { method: 'POST', body: JSON.stringify(subject) });
+}
+
+async function deleteSubjectFromServer(id) {
+ if (!getToken() || !id) return;
+ await apiRequest(`/api/subjects/${id}`, { method: 'DELETE' });
+}
+
+async function uploadAvatar(file) {
+ const form = new FormData();
+ form.append('avatar', file);
+ const data = await apiRequest('/api/avatar', { method: 'POST', body: form });
+ setAccountData(data);
+ return data.user;
+}
+
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 function getUser() {
   const raw = localStorage.getItem('focustrip_user');
   // Se existir o registro, converte de JSON para objeto JavaScript, caso contrário retorna null
@@ -11,6 +119,7 @@ function getUser() {
 
 // Salva/atualiza os dados do usuário no localStorage
 function saveUser(user) {
+<<<<<<< HEAD
   // Transforma o objeto do usuário em string JSON antes de salvar
   localStorage.setItem('focustrip_user', JSON.stringify(user));
 }
@@ -23,6 +132,29 @@ function getTodaySessions() {
   const all = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
   // Filtra o array mantendo apenas as sessões cuja data corresponda a hoje
   return all.filter(s => s.data === today);
+=======
+ localStorage.setItem('focustrip_user', JSON.stringify(user));
+ persistUser(user);
+}
+
+// Sessões
+function localDateKey(date = new Date()) {
+ const year = date.getFullYear();
+ const month = String(date.getMonth() + 1).padStart(2, '0');
+ const day = String(date.getDate()).padStart(2, '0');
+ return `${year}-${month}-${day}`;
+}
+
+function localDateFromKey(key) {
+ const [year, month, day] = key.split('-').map(Number);
+ return new Date(year, month - 1, day);
+}
+
+function getTodaySessions() {
+ const today = localDateKey();
+ const all = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
+ return all.filter(s =>s.data === today);
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 }
 
 // Formata uma quantidade em minutos para um texto amigável de horas e minutos (ex: 75 -> "1h 15min")
@@ -81,6 +213,7 @@ function getAchievements() {
 
 // Verifica individualmente se o usuário cumpre as condições para desbloquear uma determinada conquista
 function checkAchievement(a, user) {
+<<<<<<< HEAD
   // Obtém todas as sessões registradas no histórico
   const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
   // Soma a duração de todas as sessões em minutos
@@ -111,6 +244,33 @@ function checkAchievement(a, user) {
     }
     default: return false;
   }
+=======
+ const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
+ const totalMins = sessions.reduce((acc, s) =>acc + (s.duracao || 0), 0);
+ switch (a.id) {
+ case 'first_session': return sessions.length >= 1;
+ case 'streak3': return user.streak >= 3;
+ case 'streak7': return user.streak >= 7;
+ case 'streak14': return user.streak >= 14;
+ case 'streak30': return user.streak >= 30;
+ case 'hours10': return totalMins >= 600;
+ case 'hours50': return totalMins >= 3000;
+ case 'hours100': return totalMins >= 6000;
+ case 'level5': return (user.nivel || 1) >= 5;
+ case 'pomodoro5': {
+ const today = localDateKey();
+ const todayPomodoros = sessions.filter(s =>s.data === today && s.metodo === 'pomodoro');
+ return todayPomodoros.length >= 5;
+ }
+ case 'night_owl': {
+ return sessions.some(s => {
+ const d = new Date(s.criadoEm || s.data);
+ return d.getHours() >= 22;
+ });
+ }
+ default: return false;
+ }
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 }
 
 // Varre todas as conquistas do jogo e desbloqueia aquelas que o usuário ainda não possui
@@ -130,9 +290,21 @@ function checkAndUnlockAchievements(user) {
 
 // Inicialização executada assim que o HTML da página atual estiver totalmente construído
 document.addEventListener('DOMContentLoaded', () => {
+<<<<<<< HEAD
   // Configuração inicial do tema da página (Escuro/Claro)
   // Busca no localStorage qual tema foi escolhido, definindo 'dark' como padrão
   const savedTheme = localStorage.getItem('ft_theme') || 'dark';
   // Aplica o atributo global 'data-theme' na tag raiz <html> do documento
   document.documentElement.setAttribute('data-theme', savedTheme);
+=======
+ // Marcar sessão com hora de criação
+ const origSave = localStorage.setItem.bind(localStorage);
+ // Nenhuma sobrescrita necessária — a hora é salva inline em sessao.html
+
+ // Modo escuro / claro (toggle futuro)
+ const savedTheme = localStorage.getItem('ft_theme') || 'dark';
+ document.documentElement.setAttribute('data-theme', savedTheme);
+
+ refreshAccount().catch(() => {});
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 });

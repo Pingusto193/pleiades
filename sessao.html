@@ -3,6 +3,7 @@
 <html lang="pt-BR">
 <!-- Início do documento HTML, configurando o idioma para Português do Brasil -->
 <head>
+<<<<<<< HEAD
   <!-- Cabeçalho com metadados, links externos e título da página -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,6 +11,13 @@
   <link rel="stylesheet" href="style.css" />
   <!-- Importa as fontes do Google Fonts (Inter e Space Grotesk) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+=======
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Focus Trip | Sessão de Estudo</title>
+ <link rel="stylesheet" href="style.css" />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 </head>
 <body class="app-page">
   <!-- Corpo da página principal da aplicação -->
@@ -50,10 +58,17 @@
 
     <div class="app-content">
 
+<<<<<<< HEAD
       <!-- SETUP PANEL (Painel de Configuração Inicial da Sessão) -->
       <div id="setupPanel">
         <div class="session-setup-card">
           <h2>Configurações de Estudo</h2>
+=======
+ <div class="form-group">
+ <label>Matéria / Assunto</label>
+ <input type="text" id="subjectInput" class="input-styled" placeholder="Ex: Matemática - Derivadas" />
+ </div>
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
           <div class="form-group">
             <label>Matéria / Assunto</label>
@@ -92,12 +107,23 @@
         </div>
       </div>
 
+<<<<<<< HEAD
       <!-- TIMER PANEL (Painel do Cronômetro Ativo durante o estudo) -->
       <div id="timerPanel" style="display:none">
         <div class="timer-container">
 
           <!-- AVISO COGNITIVO TOP (Lembrete motivador de streak ativo) -->
           <div class="cognitive-reminder" id="cognitiveReminder">Seu streak de <span id="streakReminder">0</span> dias está ativo — não abandone agora!</div>
+=======
+ <!-- AVISO COGNITIVO TOP -->
+ <div class="cognitive-reminder" id="cognitiveReminder">Seu streak de <span id="streakReminder">0</span>dias está ativo - não abandone agora!
+ </div>
+
+ <div class="timer-card">
+ <div class="timer-phase" id="timerPhase">FOCO</div>
+ <div class="timer-subject" id="timerSubject">-</div>
+ <div class="timer-method-tag" id="timerMethodTag">Pomodoro</div>
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
           <div class="timer-card">
             <!-- Informa o estado atual do ciclo (FOCO, PAUSA ou PAUSA LONGA) -->
@@ -162,8 +188,23 @@
         </div>
       </div>
 
+<<<<<<< HEAD
     </div>
   </main>
+=======
+ <script src="app.js?v=db4"></script>
+ <script>let timer = null;
+ let totalSeconds = 0;
+ let currentSeconds = 0;
+ let isPaused = false;
+ let isBreak = false;
+ let cycle = 1;
+ let maxCycles = 4;
+ let sessionMethod = 'pomodoro';
+ let sessionStart = null;
+ let sessionMinutesAccum = 0;
+ let sessionSubject = '';
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
   <!-- MODAL CONFIRMAÇÃO SAÍDA (Confirmação para evitar desistência impulsiva) -->
   <div class="modal-overlay" id="stopModal" style="display:none">
@@ -180,6 +221,7 @@
     </div>
   </div>
 
+<<<<<<< HEAD
   <script src="app.js"></script>
   <!-- Conecta os scripts utilitários comuns do sistema -->
   
@@ -196,6 +238,16 @@
     let sessionStart = null;   // Horário real em que a sessão foi disparada
     let sessionMinutesAccum = 0;
     let sessionSubject = '';
+=======
+ document.addEventListener('DOMContentLoaded', () => {
+ const user = getUser();
+ if (!user) { window.location.href = 'login.html'; return; }
+ document.getElementById('topStreak').textContent = `${user.streak} dias`;
+ document.getElementById('streakReminder').textContent = user.streak;
+ // Método padr?o do usuário
+ selectMethod(user.metodo || 'pomodoro', document.querySelector(`[data-method="${user.metodo||'pomodoro'}"]`));
+ });
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
     // Definição dos perfis dos métodos de estudo
     const METHODS = {
@@ -245,6 +297,7 @@
       sessionStart = new Date();
       sessionMinutesAccum = 0;
 
+<<<<<<< HEAD
       // Altera o painel visual visível
       document.getElementById('setupPanel').style.display = 'none';
       document.getElementById('timerPanel').style.display = 'block';
@@ -271,6 +324,60 @@
         if (currentSeconds <= 0) phaseComplete();
       }, 1000);
     }
+=======
+ function updateDisplay() {
+ const m = Math.floor(currentSeconds / 60).toString().padStart(2,'0');
+ const s = (currentSeconds % 60).toString().padStart(2,'0');
+ document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+ // Progress circle
+ const dashArray = 553;
+ const progress = 1 - (currentSeconds / totalSeconds);
+ document.getElementById('timerCircle').style.strokeDashoffset = dashArray * (1 - progress);
+ // Atualizar progresso diário
+ const user = getUser();
+ const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
+ const today = localDateKey();
+ const prevMins = sessions.filter(s =>s.data === today).reduce((a,s) =>a+(s.duracao||0), 0);
+ const currentMins = prevMins + Math.floor((totalSeconds - currentSeconds) / 60);
+ const metaMins = (user.horas || 2) * 60;
+ const pct = Math.min(100, Math.round((currentMins / metaMins) * 100));
+ document.getElementById('todayStudied').textContent = currentMins + 'min';
+ document.getElementById('sessionProgBar').style.width = pct + '%';
+ document.getElementById('sessionProgPct').textContent = pct + '% da meta diária';
+ }
+
+ function phaseComplete() {
+ clearInterval(timer);
+ const m = METHODS[sessionMethod];
+ if (!isBreak) {
+ // Terminou foco - registrar
+ sessionMinutesAccum += Math.floor(m.focus / 60);
+ if (sessionMethod === 'pomodoro' && cycle < maxCycles) {
+ isBreak = true;
+ const breakDur = (cycle % 4 === 0) ? m.longBreak : m.breakTime;
+ totalSeconds = breakDur;
+ currentSeconds = breakDur;
+ document.getElementById('timerPhase').textContent = cycle % 4 === 0 ? 'PAUSA LONGA' : 'PAUSA';
+ document.getElementById('timerDisplay').style.color = 'var(--color-success)';
+ playSound('break');
+ startTimer();
+ } else {
+ finishSession(true);
+ }
+ } else {
+ // Pausa acabou, volta pro foco
+ isBreak = false;
+ cycle++;
+ updateCycleInfo();
+ totalSeconds = m.focus;
+ currentSeconds = m.focus;
+ document.getElementById('timerPhase').textContent = 'FOCO';
+ document.getElementById('timerDisplay').style.color = '';
+ playSound('focus');
+ startTimer();
+ }
+ }
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
     // Formata o mostrador digital e ajusta o preenchimento circular do cronômetro
     function updateDisplay() {
@@ -301,6 +408,7 @@
       document.getElementById('sessionProgPct').textContent = pct + '% da meta diária';
     }
 
+<<<<<<< HEAD
     // Gerencia o fluxo entre a conclusão das fases de FOCO e PAUSA
     function phaseComplete() {
       clearInterval(timer);
@@ -342,6 +450,25 @@
         startTimer();
       }
     }
+=======
+ function confirmStop() {
+ const user = getUser();
+ const elapsed = Math.floor((new Date() - sessionStart) / 60000);
+ const m = METHODS[sessionMethod];
+ const streakRisk = elapsed < m.focus / 60 * 0.5;
+ document.getElementById('stopModalText').textContent =
+ streakRisk ? `Você só estudou ${elapsed} minutos. Tem certeza que quer parar?` :
+ `Você está encerrando com ${elapsed} minutos de estudo.`;
+ document.getElementById('stopConsequences').innerHTML = `
+ <div class="consequence ${streakRisk ? 'danger' : 'warn'}">
+ ${streakRisk ? ` Sessão curta - nenhum XP será ganho` : ` Você ganhará XP pelo tempo estudado`}
+ </div>
+ ${streakRisk && user.streak > 0 ? `<div class="consequence danger">Streak de <strong>${user.streak} dias</strong>pode ser perdido se você não completar a meta hoje</div>` : ''}
+ `;
+ document.getElementById('stopModal').style.display = 'flex';
+ isPaused = true;
+ }
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
     // Atualiza o indicador visual do ciclo de Pomodoro
     function updateCycleInfo() {
@@ -355,6 +482,7 @@
       document.getElementById('btnPause').textContent = isPaused ? 'Retomar' : 'Pausar';
     }
 
+<<<<<<< HEAD
     // Mostra o pop-up de confirmação avisando sobre as penalidades de desistência precoce
     function confirmStop() {
       const user = getUser();
@@ -384,6 +512,21 @@
       document.getElementById('stopModal').style.display = 'none';
       isPaused = false;
     }
+=======
+ function finishSession(completed, forcedMinutes) {
+ clearInterval(timer);
+ const user = getUser();
+ const mins = forcedMinutes !== undefined ? forcedMinutes :
+ Math.floor(METHODS[sessionMethod].focus * METHODS[sessionMethod].cycles / 60);
+ const today = localDateKey();
+
+ // Salvar sessão
+ const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
+ const sessionRecord = { data: today, duracao: mins, materia: sessionSubject, metodo: sessionMethod, completa: completed };
+ sessions.push(sessionRecord);
+ localStorage.setItem('focustrip_sessions', JSON.stringify(sessions));
+ persistSession(sessionRecord).catch(() =>showToast('Sessão salva localmente. A sincronização será tentada depois.'));
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
     // Confirma a parada da sessão salvando apenas os minutos acumulados reais
     function forceStop() {
@@ -392,6 +535,7 @@
       finishSession(false, elapsed);
     }
 
+<<<<<<< HEAD
     // Grava a sessão, distribui XP, incrementa streaks e abre tela de resultados
     function finishSession(completed, forcedMinutes) {
       clearInterval(timer);
@@ -405,6 +549,24 @@
       const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
       sessions.push({ data: today, duracao: mins, materia: sessionSubject, metodo: sessionMethod, completa: completed, criadoEm: new Date().toISOString() });
       localStorage.setItem('focustrip_sessions', JSON.stringify(sessions));
+=======
+ // Checar streak
+ const todayMins = sessions.filter(s =>s.data === today).reduce((a,s) =>a+(s.duracao||0), 0);
+ const metaMins = (user.horas || 2) * 60;
+ if (todayMins >= metaMins) {
+ const yest = new Date(); yest.setDate(yest.getDate()-1);
+ const yestKey = localDateKey(yest);
+ const yestSessions = sessions.filter(s =>s.data === yestKey);
+ const yestMins = yestSessions.reduce((a,s)=>a+(s.duracao||0),0);
+ if (yestMins >= metaMins || user.streak === 0) {
+ user.streak = (user.streak || 0) + 1;
+ }
+ // Checar conquistas
+ checkAndUnlockAchievements(user);
+ }
+
+ saveUser(user);
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
       // CÁLCULO E ATRIBUIÇÃO DE XP
       // Bônus de +10 XP caso a sessão tenha sido inteiramente concluída sem desistências
@@ -440,9 +602,24 @@
       document.getElementById('timerPanel').style.display = 'none';
       document.getElementById('resultPanel').style.display = 'block';
 
+<<<<<<< HEAD
       // Compara conquistas desbloqueadas para alertar o usuário apenas das novas
       const newAchs = (user.conquistas || []).filter(id => !JSON.parse(localStorage.getItem('focustrip_prev_achs') || '[]').includes(id));
       localStorage.setItem('focustrip_prev_achs', JSON.stringify(user.conquistas || []));
+=======
+ function updateSocialRanking() {
+ // Dados mockados para demonstração social
+ const user = getUser();
+ const today = localDateKey();
+ const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
+ const myMins = sessions.filter(s =>s.data === today).reduce((a,s)=>a+(s.duracao||0),0);
+ const fakeRanking = [
+ { nome: 'Ana Lima', mins: 120, streak: 21 },
+ { nome: user.nome.split(' ')[0], mins: myMins, streak: user.streak, isMe: true },
+ { nome: 'Pedro Costa', mins: 85, streak: 8 },
+ { nome: 'Julia Souza', mins: 60, streak: 5 },
+ ].sort((a,b) =>b.mins - a.mins);
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
       document.getElementById('resultIcon').textContent = '';
       document.getElementById('resultTitle').textContent = completed ? 'Sessão concluída!' : 'Sessão encerrada';

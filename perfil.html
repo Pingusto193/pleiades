@@ -3,6 +3,7 @@
 <html lang="pt-BR">
 <!-- Início do documento HTML, configurando o idioma para Português do Brasil -->
 <head>
+<<<<<<< HEAD
   <!-- Cabeçalho com metadados, links externos e título da página -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,6 +11,13 @@
   <link rel="stylesheet" href="style.css" />
   <!-- Importa as fontes do Google Fonts (Inter e Space Grotesk) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+=======
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Focus Trip | Meu Perfil</title>
+ <link rel="stylesheet" href="style.css" />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 </head>
 <body class="app-page">
   <!-- Corpo da página principal da aplicação -->
@@ -38,6 +46,7 @@
     </nav>
   </aside>
 
+<<<<<<< HEAD
   <!-- MAIN (Área Principal de Conteúdo) -->
   <main class="app-main">
     <header class="app-topbar">
@@ -48,6 +57,15 @@
       </div>
     </header>
     <div class="app-content">
+=======
+ <!-- ABAS -->
+ <div class="profile-tabs">
+ <button class="tab-btn active" onclick="showTab('conquistas', this)">Conquistas</button>
+ <button class="tab-btn" onclick="showTab('historico', this)">Histórico</button>
+ <button class="tab-btn" onclick="showTab('conta', this)">Conta</button>
+ <button class="tab-btn" onclick="showTab('configuracoes', this)">Configurações</button>
+ </div>
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
       <!-- PERFIL CARD (Card de cabeçalho do perfil preenchido via JS) -->
       <div class="profile-hero-card" id="profileHero"></div>
@@ -59,16 +77,68 @@
         <button class="tab-btn" onclick="showTab('configuracoes', this)">Configurações de Estudo</button>
       </div>
 
+<<<<<<< HEAD
       <!-- ABA CONQUISTAS (Grade com todas as conquistas do usuário) -->
       <div class="tab-content" id="tab-conquistas">
         <div class="achievements-full-grid" id="achievementsFull"></div>
       </div>
+=======
+ <!-- ABA CONTA -->
+ <div class="tab-content" id="tab-conta" style="display:none">
+ <div class="settings-card">
+ <h3>Detalhes da Conta</h3>
+ <div class="form-group">
+ <label for="accountName">Nome</label>
+ <input type="text" id="accountName" class="input-styled" />
+ </div>
+ <div class="form-group">
+ <label for="accountEmail">E-mail</label>
+ <input type="email" id="accountEmail" class="input-styled" />
+ </div>
+ <div class="form-group">
+ <label for="currentPassword">Senha atual</label>
+ <input type="password" id="currentPassword" class="input-styled" placeholder="Obrigatória apenas para trocar a senha" />
+ </div>
+ <div class="form-group">
+ <label for="newPassword">Nova senha</label>
+ <input type="password" id="newPassword" class="input-styled" placeholder="Mínimo 8 caracteres" />
+ </div>
+ <button class="btn-primary" onclick="saveAccountDetails()">Salvar detalhes da conta</button>
+ </div>
+ </div>
+
+ <!-- ABA CONFIGURACOES -->
+ <div class="tab-content" id="tab-configuracoes" style="display:none">
+ <div class="settings-card">
+ <div class="form-group">
+ <label>Foto de perfil</label>
+ <input type="file" id="avatarInput" class="input-styled" accept="image/png,image/jpeg,image/webp,image/gif" />
+ <button class="btn-ghost" onclick="saveAvatar()">Enviar foto</button>
+ </div>
+ <h3>Configurações de Estudo</h3>
+ <div class="form-group">
+ <label>Horas de estudo por dia</label>
+ <div class="hours-selector" id="settingsHours"></div>
+ </div>
+ <div class="form-group">
+ <label>Dias de estudo</label>
+ <div class="days-selector" id="settingsDays"></div>
+ </div>
+ <div class="form-group">
+ <label>Método preferido</label>
+ <div class="method-selector" id="settingsMethod"></div>
+ </div>
+ <button class="btn-primary" onclick="saveSettings()">Salvar configurações</button>
+ </div>
+ </div>
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
       <!-- ABA HISTÓRICO (Lista cronológica de sessões realizadas) -->
       <div class="tab-content" id="tab-historico" style="display:none">
         <div class="history-list" id="historyList"></div>
       </div>
 
+<<<<<<< HEAD
       <!-- ABA CONFIGURAÇÕES (Formulário para ajustar preferências de estudo) -->
       <div class="tab-content" id="tab-configuracoes" style="display:none">
         <div class="settings-card">
@@ -88,10 +158,18 @@
           <button class="btn-primary" onclick="saveSettings()">Salvar configurações</button>
         </div>
       </div>
+=======
+ <script src="app.js?v=db4"></script>
+ <script>document.addEventListener('DOMContentLoaded', () => {
+ const user = getUser();
+ if (!user) { window.location.href = 'login.html'; return; }
+ document.getElementById('topStreak').textContent = `${user.streak} dias`;
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
     </div>
   </main>
 
+<<<<<<< HEAD
   <script src="app.js"></script>
   <!-- Conecta os scripts utilitários comuns do sistema -->
   
@@ -103,6 +181,35 @@
       
       // Exibe a sequência de dias atual do usuário
       document.getElementById('topStreak').textContent = `${user.streak} dias`;
+=======
+ document.getElementById('profileHero').innerHTML = `
+ <div class="profile-hero-left">
+ <div class="profile-avatar-big">${user.avatarUrl ? `<img src="${mediaUrl(user.avatarUrl)}" alt="Foto de perfil" />` : ''}</div>
+ <div class="profile-hero-info">
+ <h2>${user.nome}</h2>
+ <div class="profile-email">${user.email}</div>
+ <div class="profile-streak-big"> ${user.streak} dias em sequência</div>
+ <div class="profile-badges-row">
+ ${getAchievements().filter(a => (user.conquistas||[]).includes(a.id) || checkAchievement(a, user))
+ .slice(0,5).map(a => `<span class="badge-icon-big" title="${a.nome}">${a.icon}</span>`).join('') || '<span class="no-badges">Sem conquistas ainda</span>'}
+ </div>
+ </div>
+ </div>
+ <div class="profile-hero-right">
+ <div class="profile-level-card">
+ <div class="level-label-big">Nível ${user.nivel}</div>
+ <div class="level-name">${getLevelName(user.nivel)}</div>
+ <div class="level-bar-big"><div class="level-fill-big" style="width:${xpPct}%"></div></div>
+ <div class="level-xp">${user.xp} / ${nextLevelXP} XP</div>
+ </div>
+ <div class="profile-quick-stats">
+ <div class="quick-stat"><span></span><strong>${minToHour(totalMins)}</strong><small>Total estudado</small></div>
+ <div class="quick-stat"><span></span><strong>${sessions.length}</strong><small>Sessões</small></div>
+ <div class="quick-stat"><span></span><strong>${(user.conquistas||[]).length}</strong><small>Conquistas</small></div>
+ </div>
+ </div>
+ `;
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
       // Recupera o histórico completo de sessões de estudo salvas
       const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
@@ -144,8 +251,15 @@
         </div>
       `;
 
+<<<<<<< HEAD
       // Renderiza a lista de todas as conquistas do sistema
       renderAchievementsFull(user);
+=======
+ // Configurações
+ renderAccount(user);
+ renderSettings(user);
+ });
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
       // Renderiza a lista histórica de sessões executadas
       renderHistory(sessions);
@@ -204,6 +318,7 @@
         `<button type="button" class="day-btn ${(user.dias || []).includes(k) ? 'active' : ''}" data-day="${k}" onclick="this.classList.toggle('active')">${l}</button>`
       ).join('');
 
+<<<<<<< HEAD
       // Cria as opções de rádio para o método favorito
       const methods = [['pomodoro','Pomodoro'],['blocos','Blocos'],['livre','Livre']];
       document.getElementById('settingsMethod').innerHTML = methods.map(([v,l]) =>
@@ -219,6 +334,70 @@
       document.querySelectorAll('#settingsHours .hours-btn').forEach(b => b.classList.remove('active'));
       el.classList.add('active');
     }
+=======
+ function saveSettings() {
+ const user = getUser();
+ const horasEl = document.querySelector('#settingsHours .hours-btn.active');
+ const diasEls = document.querySelectorAll('#settingsDays .day-btn.active');
+ const metodoEl = document.querySelector('input[name="metodo_cfg"]:checked');
+ if (horasEl) user.horas = parseInt(horasEl.dataset.hours);
+ user.dias = [...diasEls].map(b =>b.dataset.day);
+ if (metodoEl) user.metodo = metodoEl.value;
+ saveUser(user);
+ showToast('Configurações salvas!');
+ }
+
+ function renderAccount(user) {
+ document.getElementById('accountName').value = user.nome || '';
+ document.getElementById('accountEmail').value = user.email || '';
+ }
+
+ async function saveAvatar() {
+ const input = document.getElementById('avatarInput');
+ if (!input.files.length) {
+ showToast('Escolha uma imagem primeiro.');
+ return;
+ }
+ try {
+ const user = await uploadAvatar(input.files[0]);
+ showToast('Foto de perfil atualizada.');
+ document.querySelector('.profile-avatar-big').innerHTML = user.avatarUrl ? `<img src="${mediaUrl(user.avatarUrl)}" alt="Foto de perfil" />` : '';
+ input.value = '';
+ } catch (error) {
+ showToast(error.message);
+ }
+ }
+
+ async function saveAccountDetails() {
+ const payload = {
+ nome: document.getElementById('accountName').value.trim(),
+ email: document.getElementById('accountEmail').value.trim(),
+ currentPassword: document.getElementById('currentPassword').value,
+ newPassword: document.getElementById('newPassword').value
+ };
+
+ if (!payload.nome || !payload.email) {
+ showToast('Preencha nome e e-mail.');
+ return;
+ }
+
+ try {
+ const user = await updateAccount(payload);
+ showToast('Detalhes da conta salvos.');
+ document.getElementById('currentPassword').value = '';
+ document.getElementById('newPassword').value = '';
+ document.querySelector('.profile-hero-info h2').textContent = user.nome;
+ document.querySelector('.profile-email').textContent = user.email;
+ } catch (error) {
+ showToast(error.message);
+ }
+ }
+
+ function getLevelName(n) {
+ const names = ['','Iniciante','Dedicado','Focado','Avançado','Expert','Mestre','Lenda'];
+ return names[Math.min(n, names.length-1)] || 'Lenda';
+ }
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
     // Salva as novas preferências do usuário no localStorage
     function saveSettings() {

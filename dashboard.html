@@ -3,6 +3,7 @@
 <html lang="pt-BR">
 <!-- Início do documento HTML, configurando o idioma para Português do Brasil -->
 <head>
+<<<<<<< HEAD
   <!-- Início do cabeçalho da página com metadados, links externos e título -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,6 +11,13 @@
   <link rel="stylesheet" href="style.css" />
   <!-- Importa as fontes do Google Fonts (Inter e Space Grotesk) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+=======
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Focus Trip | Dashboard</title>
+ <link rel="stylesheet" href="style.css" />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 </head>
 <body class="app-page">
   <!-- Corpo principal da aplicação interna (app-page) -->
@@ -40,6 +48,7 @@
     <!-- Div preenchida via JS com dados do perfil do usuário e botão de logout -->
   </aside>
 
+<<<<<<< HEAD
   <!-- MAIN (Área de Conteúdo Principal) -->
   <main class="app-main">
     <!-- TOP BAR (Barra Superior de Saudação e Status Rápido) -->
@@ -56,6 +65,13 @@
 
     <!-- CONTEÚDO (Visualizações de estatísticas e progresso) -->
     <div class="app-content">
+=======
+ <!-- CONTEUDO -->
+ <div class="app-content">
+
+ <!-- AVISO DE SESSAO DO DIA -->
+ <div class="day-status-card" id="dayStatus"></div>
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
       <!-- AVISO DE SESSÃO DO DIA (Card de status dinâmico de hoje) -->
       <div class="day-status-card" id="dayStatus"></div>
@@ -114,6 +130,7 @@
     </div>
   </main>
 
+<<<<<<< HEAD
   <!-- MODAL BLOQUEIO COGNITIVO (Alerta que impede procrastinação impulsiva) -->
   <div class="modal-overlay" id="blockModal" style="display:none">
     <div class="modal-card modal-block">
@@ -138,6 +155,21 @@
       const user = getUser();
       // Se não houver dados de usuário, força o redirecionamento para o login
       if (!user) { window.location.href = 'login.html'; return; }
+=======
+ <script src="app.js?v=db4"></script>
+ <script>document.addEventListener('DOMContentLoaded', () => {
+ const user = getUser();
+ if (!user) { window.location.href = 'login.html'; return; }
+
+ // Greeting
+ const hora = new Date().getHours();
+ const saudacao = hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite';
+ document.getElementById('topGreeting').textContent = `${saudacao}, ${user.nome.split(' ')[0]}!`;
+ document.getElementById('topStreak').textContent = `${user.streak} dias`;
+ if (user.avatarUrl) {
+ document.getElementById('topAvatar').innerHTML = `<img src="${mediaUrl(user.avatarUrl)}" alt="Foto de perfil" />`;
+ }
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
       // Criação da saudação dinâmica com base na hora do dia
       const hora = new Date().getHours();
@@ -150,6 +182,7 @@
       document.getElementById('streakNum').textContent = user.streak;
       document.getElementById('xpNum').textContent = user.xp;
 
+<<<<<<< HEAD
       // Recupera as sessões completadas hoje
       const hoje = getTodaySessions();
       // Converte a meta de horas diárias do usuário para minutos
@@ -174,6 +207,36 @@
         </div>
         <a href="login.html" class="sidebar-logout" onclick="logout()">Sair</a>
       `;
+=======
+ // Sidebar user
+ document.getElementById('sidebarUser').innerHTML = `
+ <div class="sidebar-user-info">
+ <div class="sidebar-avatar">${user.avatarUrl ? `<img src="${mediaUrl(user.avatarUrl)}" alt="Foto de perfil" />` : ''}</div>
+ <div>
+ <div class="sidebar-name">${user.nome}</div>
+ <div class="sidebar-level">Nível ${user.nivel}</div>
+ </div>
+ </div>
+ <a href="login.html" class="sidebar-logout" onclick="logout()">Sair</a>
+ `;
+
+ // Day status
+ const diasPt = { seg:'segunda',ter:'terça',qua:'quarta',qui:'quinta',sex:'sexta',sab:'sábado',dom:'domingo' };
+ const dayKeys = ['dom','seg','ter','qua','qui','sex','sab'];
+ const diaAtual = dayKeys[new Date().getDay()];
+ const ehDiaEstudo = (user.dias || []).includes(diaAtual);
+ const statusEl = document.getElementById('dayStatus');
+ if (ehDiaEstudo && pct < 100) {
+ statusEl.innerHTML = `<span class="status-dot status-pending"></span>Hoje é dia de estudo - você ainda não completou sua meta de <strong>${user.horas}h</strong>`;
+ statusEl.className = 'day-status-card status-warning';
+ } else if (pct >= 100) {
+ statusEl.innerHTML = `<span class="status-dot status-done"></span>Meta de hoje concluída! Você ganhou <strong>+50 XP</strong>`;
+ statusEl.className = 'day-status-card status-success';
+ } else {
+ statusEl.innerHTML = `<span class="status-dot status-rest"></span>Hoje é dia de descanso - aproveite!`;
+ statusEl.className = 'day-status-card status-rest';
+ }
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
       // Gerencia o card informativo de status diário
       const dayKeys = ['dom','seg','ter','qua','qui','sex','sab'];
@@ -209,6 +272,7 @@
       // Renderiza a lista de conquistas do usuário (bloqueadas e desbloqueadas)
       renderAchievements(user);
 
+<<<<<<< HEAD
       // Exibe o modal de bloqueio cognitivo caso seja um dia de estudo planejado, o usuário ainda
       // não tenha cumprido a meta e ainda não tenha dispensado o aviso nesta sessão do navegador
       if (ehDiaEstudo && pct < 100 && !sessionStorage.getItem('block_dismissed')) {
@@ -223,6 +287,39 @@
         }, 2000);
       }
     });
+=======
+ function renderWeekly(user) {
+ const days = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+ const dayKeys = ['dom','seg','ter','qua','qui','sex','sab'];
+ const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
+ const hoje = new Date();
+ const semana = Array.from({length:7}, (_,i) => {
+ const d = new Date(hoje);
+ d.setDate(hoje.getDate() - (6-i));
+ return d;
+ });
+ const container = document.getElementById('weeklyProgress');
+ container.innerHTML = semana.map((date) => {
+ const dateKey = localDateKey(date);
+ const dayIdx = date.getDay();
+ const ehEstudo = (user.dias||[]).includes(dayKeys[dayIdx]);
+ const daySessions = sessions.filter(s =>s.data === dateKey);
+ const mins = daySessions.reduce((a,s) =>a+(s.duracao||0), 0);
+ const meta = (user.horas||2)*60;
+ const pct = Math.min(100, Math.round((mins/meta)*100));
+ const isToday = dateKey === localDateKey(hoje);
+ return `
+ <div class="week-day ${isToday?'week-today':''} ${ehEstudo?'week-study':'week-rest'}">
+ <div class="week-bar-wrap">
+ <div class="week-bar" style="height:${pct}%"></div>
+ </div>
+ <div class="week-day-label">${days[dayIdx]}</div>
+ <div class="week-day-sub">${pct > 0 ? pct+'%' : ehEstudo ? '-' : ''}</div>
+ </div>
+ `;
+ }).join('');
+ }
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
     // Função que renderiza o gráfico de barras dos últimos 7 dias da semana
     function renderWeekly(user) {
@@ -287,6 +384,7 @@
       window.location.href = 'sessao.html';
     }
 
+<<<<<<< HEAD
     // Dispensa temporariamente (durante a aba aberta) o pop-up de procrastinação
     function dismissBlock() {
       sessionStorage.setItem('block_dismissed','1');
@@ -298,5 +396,14 @@
       localStorage.removeItem('focustrip_user');
     }
   </script>
+=======
+ function logout() {
+ localStorage.removeItem('focustrip_user');
+ localStorage.removeItem('focustrip_token');
+ localStorage.removeItem('focustrip_sessions');
+ localStorage.removeItem('focustrip_subjects');
+ }
+ </script>
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 </body>
 </html>

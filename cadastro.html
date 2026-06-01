@@ -3,6 +3,7 @@
 <html lang="pt-BR">
 <!-- Início do documento HTML, configurando o idioma para Português do Brasil -->
 <head>
+<<<<<<< HEAD
   <!-- Início do cabeçalho da página (contém metadados, links externos e título) -->
   <meta charset="UTF-8" />
   <!-- Define a codificação de caracteres como UTF-8 para suportar acentos -->
@@ -14,6 +15,13 @@
   <!-- Importa a folha de estilo CSS (style.css) do projeto -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <!-- Importa as fontes do Google Fonts (Inter e Space Grotesk) -->
+=======
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Focus Trip | Criar Conta</title>
+ <link rel="stylesheet" href="style.css" />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 </head>
 <body class="auth-page">
   <!-- Corpo da página de cadastro, que é estilizada como uma página de autenticação (auth-page) -->
@@ -129,6 +137,7 @@
     </div>
   </div>
 
+<<<<<<< HEAD
   <script src="app.js"></script>
   <!-- Conecta o arquivo com as funções compartilhadas e utilitários da aplicação -->
   
@@ -141,6 +150,17 @@
         btn.classList.add('active');
       });
     });
+=======
+ <script src="app.js?v=db4"></script>
+ <script>
+ // Seletor de horas
+ document.querySelectorAll('.hours-btn').forEach(btn => {
+ btn.addEventListener('click', () => {
+ document.querySelectorAll('.hours-btn').forEach(b =>b.classList.remove('active'));
+ btn.classList.add('active');
+ });
+ });
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
     // Lógica para o seletor de dias de estudo da semana
     document.querySelectorAll('.day-btn').forEach(btn => {
@@ -186,6 +206,7 @@
       input.type = input.type === 'password' ? 'text' : 'password';
     }
 
+<<<<<<< HEAD
     // Função que trata a submissão e gravação do cadastro no localStorage
     function handleCadastro(e) {
       // Evita o recarregamento padrão do formulário do navegador
@@ -220,5 +241,28 @@
       window.location.href = 'dashboard.html';
     }
   </script>
+=======
+ async function handleCadastro(e) {
+ e.preventDefault();
+ const nome = document.getElementById('nome').value;
+ const horasBtn = document.querySelector('.hours-btn.active');
+ const dias = [...document.querySelectorAll('.day-btn.active')].map(b =>b.dataset.day);
+ const metodo = document.querySelector('input[name="metodo"]:checked').value;
+ try {
+ await registerAccount({
+ nome: nome + ' ' + document.getElementById('sobrenome').value,
+ email: document.getElementById('email').value,
+ password: document.getElementById('senha').value,
+ horas: horasBtn ? parseInt(horasBtn.dataset.hours) : 2,
+ dias,
+ metodo
+ });
+ window.location.href = 'dashboard.html';
+ } catch (error) {
+ showToast(error.message);
+ }
+ }
+ </script>
+>>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 </body>
 </html>
