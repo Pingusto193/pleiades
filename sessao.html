@@ -44,6 +44,14 @@
  <input type="text" id="subjectInput" class="input-styled" placeholder="Ex: Matemática - Derivadas" />
  </div>
 
+ <div class="favorite-subjects-card" id="favoriteSubjectsCard" style="display:none">
+ <div class="favorite-subjects-head">
+ <strong>Matérias salvas</strong>
+ <span>Toque na estrela para favoritar</span>
+ </div>
+ <div class="favorite-subjects-list" id="favoriteSubjectsList"></div>
+ </div>
+
  <div class="form-group">
  <label>Método de estudo</label>
  <div class="method-selector-big">
@@ -157,7 +165,7 @@
  </div>
  </div>
 
- <script src="app.js?v=db9"></script>
+ <script src="app.js?v=db10"></script>
  <script>let timer = null;
  let totalSeconds = 0;
  let currentSeconds = 0;
@@ -176,14 +184,69 @@
  livre: { focus: 45*60, breakTime: 0, cycles: 1, label: 'Livre' }
  };
 
- document.addEventListener('DOMContentLoaded', () => {
- const user = getUser();
+ document.addEventListener('DOMContentLoaded', async () => {
+ let user = getUser();
  if (!user) { window.location.href = 'login.html'; return; }
+ user = await refreshAccount().catch(() => user) || user;
  document.getElementById('topStreak').textContent = `${user.streak} dias`;
  document.getElementById('streakReminder').textContent = user.streak;
  // Método padr?o do usuário
  selectMethod(user.metodo || 'pomodoro', document.querySelector(`[data-method="${user.metodo||'pomodoro'}"]`));
+ renderFavoriteSubjects();
  });
+
+ function getFavoriteSubjects() {
+ return JSON.parse(localStorage.getItem('focustrip_favorite_subjects') || '[]');
+ }
+
+ function setFavoriteSubjects(favorites) {
+ localStorage.setItem('focustrip_favorite_subjects', JSON.stringify(favorites));
+ }
+
+ function subjectKey(subject) {
+ return String(subject.id || subject.nome);
+ }
+
+ function renderFavoriteSubjects() {
+ const subjects = JSON.parse(localStorage.getItem('focustrip_subjects') || '[]');
+ const card = document.getElementById('favoriteSubjectsCard');
+ const list = document.getElementById('favoriteSubjectsList');
+ if (!subjects.length) {
+ card.style.display = 'none';
+ return;
+ }
+ const favorites = getFavoriteSubjects();
+ const ordered = [...subjects].sort((a, b) => {
+ const af = favorites.includes(subjectKey(a)) ? 0 : 1;
+ const bf = favorites.includes(subjectKey(b)) ? 0 : 1;
+ return af - bf || String(a.nome).localeCompare(String(b.nome));
+ });
+ card.style.display = 'block';
+ list.innerHTML = ordered.map((subject) => {
+ const key = subjectKey(subject);
+ const active = favorites.includes(key);
+ return `
+ <div class="favorite-subject-pill ${active ? 'is-favorite' : ''}" onclick="selectSubjectFromList('${encodeURIComponent(subject.nome)}')">
+ <span>${subject.nome}</span>
+ <small>${subject.horario || '08:00'}</small>
+ <button type="button" class="favorite-star" title="${active ? 'Remover dos favoritos' : 'Favoritar materia'}" onclick="toggleFavoriteSubject(event, '${encodeURIComponent(key)}')">${active ? '★' : '☆'}</button>
+ </div>
+ `;
+ }).join('');
+ }
+
+ function selectSubjectFromList(encodedName) {
+ document.getElementById('subjectInput').value = decodeURIComponent(encodedName);
+ }
+
+ function toggleFavoriteSubject(event, encodedKey) {
+ event.stopPropagation();
+ const key = decodeURIComponent(encodedKey);
+ const favorites = getFavoriteSubjects();
+ const next = favorites.includes(key) ? favorites.filter(item =>item !== key) : [...favorites, key];
+ setFavoriteSubjects(next);
+ renderFavoriteSubjects();
+ }
 
  function selectMethod(method, el) {
  document.querySelectorAll('.method-big-card').forEach(c =>c.classList.remove('active-method-big'));
