@@ -3,7 +3,7 @@
 //
 
 // Usuário
-const API_BASE = 'https://pleiades-6ibu.onrender.com';
+const API_BASE = '';
 
 function mediaUrl(path) {
  if (!path) return '';

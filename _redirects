@@ -1,0 +1,2 @@
+/api/* https://pleiades-6ibu.onrender.com/api/:splat 200
+/uploads/* https://pleiades-6ibu.onrender.com/uploads/:splat 200
