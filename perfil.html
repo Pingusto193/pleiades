@@ -34,6 +34,7 @@
  <div class="profile-tabs">
  <button class="tab-btn active" onclick="showTab('conquistas', this)">Conquistas</button>
  <button class="tab-btn" onclick="showTab('historico', this)">Histórico</button>
+ <button class="tab-btn" onclick="showTab('estatisticas', this)">Estatisticas</button>
  <button class="tab-btn" onclick="showTab('conta', this)">Conta</button>
  <button class="tab-btn" onclick="showTab('configuracoes', this)">Configurações</button>
  </div>
@@ -46,6 +47,11 @@
  <!-- ABA HISTÓRICO -->
  <div class="tab-content" id="tab-historico" style="display:none">
  <div class="history-list" id="historyList"></div>
+ </div>
+
+ <!-- ABA ESTATISTICAS -->
+ <div class="tab-content" id="tab-estatisticas" style="display:none">
+ <div id="statsPanel"></div>
  </div>
 
  <!-- ABA CONTA -->
@@ -147,6 +153,7 @@
 
  // Histórico
  renderHistory(sessions);
+ renderStatsPanel(sessions);
 
  // Configurações
  renderAccount(user);
@@ -184,6 +191,206 @@
  <div class="history-status ${s.completa ? 'done' : 'partial'}">${s.completa ? ' Completa' : ' Parcial'}</div>
  </div>
  `).join('');
+ }
+
+ function renderStatsPanel(sessions) {
+ const panel = document.getElementById('statsPanel');
+ if (!sessions.length) {
+ panel.innerHTML = `
+ <div class="stats-empty-card">
+ <h3>Sem estatisticas ainda</h3>
+ <p>Quando voce finalizar suas sessoes de estudo, este painel vai mostrar materias, consistencia, dias e horarios mais usados.</p>
+ <a href="sessao.html" class="btn-primary">Comecar uma sessao</a>
+ </div>
+ `;
+ return;
+ }
+
+ const cleanSessions = sessions.map(normalizeSession).filter(s => s.duracao > 0);
+ const totalMins = cleanSessions.reduce((sum, s) => sum + s.duracao, 0);
+ const studyDays = new Set(cleanSessions.map(s => s.data).filter(Boolean));
+ const avgPerDay = studyDays.size ? Math.round(totalMins / studyDays.size) : 0;
+ const subjectRows = buildSubjectStats(cleanSessions);
+ const hourRows = buildHourStats(cleanSessions);
+ const methodRows = buildMethodStats(cleanSessions);
+ const bestHour = hourRows.find(row => row.key !== 'sem-hora') || hourRows[0];
+ const topSubject = subjectRows[0];
+
+ panel.innerHTML = `
+ <div class="stats-overview-grid">
+ <div class="stats-info-card"><span>Total estudado</span><strong>${minToHour(totalMins)}</strong><small>${cleanSessions.length} sessoes registradas</small></div>
+ <div class="stats-info-card"><span>Dias estudados</span><strong>${studyDays.size}</strong><small>dias diferentes com estudo</small></div>
+ <div class="stats-info-card"><span>Media por dia</span><strong>${avgPerDay}min</strong><small>em dias ativos</small></div>
+ <div class="stats-info-card"><span>Melhor horario</span><strong>${bestHour ? bestHour.label : 'Sem dados'}</strong><small>${bestHour ? `${bestHour.sessions} sessoes` : 'continue estudando'}</small></div>
+ <div class="stats-info-card highlight"><span>Materia mais estudada</span><strong>${escapeHtml(topSubject?.label || 'Sem dados')}</strong><small>${topSubject ? minToHour(topSubject.minutes) : 'continue estudando'}</small></div>
+ </div>
+
+ <section class="stats-section-card">
+ <div class="stats-section-head">
+ <h3>Desempenho por materia</h3>
+ <p>Resumo detalhado de tempo, constancia e conclusao.</p>
+ </div>
+ <div class="stats-table-wrap">
+ <table class="stats-table">
+ <thead>
+ <tr>
+ <th>Materia</th>
+ <th>Sessoes</th>
+ <th>Total</th>
+ <th>Dias</th>
+ <th>Ultimo estudo</th>
+ <th>Consistencia</th>
+ <th>Completas</th>
+ <th>Metodo</th>
+ </tr>
+ </thead>
+ <tbody>
+ ${subjectRows.map(row => `
+ <tr>
+ <td data-label="Materia"><strong>${escapeHtml(row.label)}</strong></td>
+ <td data-label="Sessoes">${row.sessions}</td>
+ <td data-label="Total">${minToHour(row.minutes)}</td>
+ <td data-label="Dias">${row.days}</td>
+ <td data-label="Ultimo estudo">${row.lastDate}</td>
+ <td data-label="Consistencia"><span class="stat-pill">${row.consistency}%</span></td>
+ <td data-label="Completas">${row.completion}%</td>
+ <td data-label="Metodo">${escapeHtml(row.bestMethod)}</td>
+ </tr>
+ `).join('')}
+ </tbody>
+ </table>
+ </div>
+ </section>
+
+ <div class="stats-two-columns">
+ <section class="stats-section-card">
+ <div class="stats-section-head">
+ <h3>Horarios mais usados</h3>
+ <p>Baseado no horario em que a sessao foi registrada.</p>
+ </div>
+ <div class="mini-rank-list">
+ ${hourRows.map(row => `
+ <div class="mini-rank-item">
+ <div><strong>${row.label}</strong><small>${row.sessions} sessoes</small></div>
+ <span>${minToHour(row.minutes)}</span>
+ </div>
+ `).join('')}
+ </div>
+ </section>
+
+ <section class="stats-section-card">
+ <div class="stats-section-head">
+ <h3>Metodos de estudo</h3>
+ <p>Quais formatos voce mais usa na rotina.</p>
+ </div>
+ <div class="mini-rank-list">
+ ${methodRows.map(row => `
+ <div class="mini-rank-item">
+ <div><strong>${escapeHtml(row.label)}</strong><small>${row.sessions} sessoes</small></div>
+ <span>${minToHour(row.minutes)}</span>
+ </div>
+ `).join('')}
+ </div>
+ </section>
+ </div>
+ `;
+ }
+
+ function normalizeSession(session) {
+ return {
+ data: session.data || '',
+ duracao: Number(session.duracao) || 0,
+ materia: (session.materia || 'Sessao de estudo').trim() || 'Sessao de estudo',
+ metodo: (session.metodo || 'pomodoro').trim() || 'pomodoro',
+ completa: Boolean(session.completa),
+ criadoEm: session.criadoEm || session.criado_em || session.createdAt || ''
+ };
+ }
+
+ function buildSubjectStats(sessions) {
+ const groups = new Map();
+ sessions.forEach(session => {
+ const key = session.materia.toLowerCase();
+ if (!groups.has(key)) {
+ groups.set(key, { label: session.materia, sessions: 0, minutes: 0, complete: 0, daysSet: new Set(), dates: [], methods: new Map() });
+ }
+ const group = groups.get(key);
+ group.sessions += 1;
+ group.minutes += session.duracao;
+ group.complete += session.completa ? 1 : 0;
+ if (session.data) {
+ group.daysSet.add(session.data);
+ group.dates.push(session.data);
+ }
+ group.methods.set(session.metodo, (group.methods.get(session.metodo) || 0) + 1);
+ });
+
+ return [...groups.values()].map(group => {
+ const dates = group.dates.sort();
+ const first = dates[0];
+ const last = dates[dates.length - 1];
+ const periodDays = first && last ? daysBetween(first, last) + 1 : group.daysSet.size || 1;
+ const consistency = Math.min(100, Math.round((group.daysSet.size / Math.max(1, periodDays)) * 100));
+ const bestMethod = [...group.methods.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] || 'pomodoro';
+ return {
+ label: group.label,
+ sessions: group.sessions,
+ minutes: group.minutes,
+ days: group.daysSet.size,
+ lastDate: last ? formatDate(last) : 'Sem data',
+ consistency,
+ completion: Math.round((group.complete / group.sessions) * 100),
+ bestMethod
+ };
+ }).sort((a, b) => b.minutes - a.minutes);
+ }
+
+ function buildHourStats(sessions) {
+ const groups = new Map();
+ sessions.forEach(session => {
+ const hour = getSessionHour(session);
+ const key = hour === null ? 'sem-hora' : String(hour).padStart(2, '0');
+ const label = hour === null ? 'Sem horario registrado' : `${String(hour).padStart(2, '0')}:00`;
+ if (!groups.has(key)) groups.set(key, { key, label, sessions: 0, minutes: 0 });
+ const group = groups.get(key);
+ group.sessions += 1;
+ group.minutes += session.duracao;
+ });
+ return [...groups.values()].sort((a, b) => b.minutes - a.minutes).slice(0, 6);
+ }
+
+ function buildMethodStats(sessions) {
+ const groups = new Map();
+ sessions.forEach(session => {
+ const key = session.metodo.toLowerCase();
+ if (!groups.has(key)) groups.set(key, { label: session.metodo, sessions: 0, minutes: 0 });
+ const group = groups.get(key);
+ group.sessions += 1;
+ group.minutes += session.duracao;
+ });
+ return [...groups.values()].sort((a, b) => b.minutes - a.minutes);
+ }
+
+ function getSessionHour(session) {
+ if (!session.criadoEm) return null;
+ const date = new Date(session.criadoEm);
+ return Number.isNaN(date.getTime()) ? null : date.getHours();
+ }
+
+ function daysBetween(start, end) {
+ const startDate = new Date(start + 'T12:00:00');
+ const endDate = new Date(end + 'T12:00:00');
+ return Math.round((endDate - startDate) / 86400000);
+ }
+
+ function escapeHtml(value) {
+ return String(value || '').replace(/[&<>"']/g, char => ({
+ '&': '&amp;',
+ '<': '&lt;',
+ '>': '&gt;',
+ '"': '&quot;',
+ "'": '&#039;'
+ }[char]));
  }
 
  function renderSettings(user) {
