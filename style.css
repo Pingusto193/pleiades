@@ -81,22 +81,6 @@ img { max-width: 100%; }
   }
 }
 
-.theme-toggle {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 10000;
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: #23211d;
-  color: #fffaf0;
-  border: 1px solid rgba(255, 250, 240, .18);
-  box-shadow: 0 12px 30px rgba(0,0,0,.18);
-  font-size: .82rem;
-  font-weight: 800;
-  transition: transform var(--motion) var(--ease-out), box-shadow var(--motion) var(--ease-out), background var(--motion) var(--ease-out), color var(--motion) var(--ease-out);
-}
-.theme-toggle:hover { transform: translateY(-2px); box-shadow: 0 16px 38px rgba(0,0,0,.24); }
 
 /* ─── Utilitários ────────────────────────────────── */
 .gradient-text {
@@ -960,6 +944,17 @@ input.input-styled:focus,
 }
 .tab-btn:hover  { color: var(--text-primary); }
 .tab-btn.active { background: var(--color-primary); color: #fff; }
+
+.tab-content {
+  display: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .22s ease, transform .22s ease;
+}
+.tab-content.tab-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 /* ACHIEVEMENTS FULL */
 .achievements-full-grid {
@@ -2459,8 +2454,7 @@ input.input-styled:focus,
 [data-theme="dark"] .app-page .nav-item.active,
 [data-theme="dark"] .app-page .tab-btn.active,
 [data-theme="dark"] .app-page .btn-primary,
-[data-theme="dark"] .auth-page .btn-primary,
-[data-theme="dark"] .theme-toggle {
+[data-theme="dark"] .auth-page .btn-primary {
   background: #f5f7ff;
   color: #111827;
 }
@@ -2694,4 +2688,181 @@ input.input-styled:focus,
 .profile-hero-card,
 .session-setup-card {
   animation: softPop var(--motion-slow) var(--ease-out) both;
+}
+
+/* Toggle de tema — checkbox no painel de configurações */
+.theme-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.theme-label { font-weight: 500; font-size: .95rem; color: var(--text-primary); display: block; }
+.theme-desc  { font-size: .8rem; color: var(--text-muted); }
+
+.switch-toggle {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+  flex-shrink: 0;
+}
+.switch-toggle input { opacity: 0; width: 0; height: 0; }
+.switch-slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 26px;
+  background: var(--border-light);
+  transition: background .25s;
+  cursor: pointer;
+}
+.switch-slider::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform .25s;
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+}
+.switch-toggle input:checked + .switch-slider          { background: var(--color-primary); }
+.switch-toggle input:checked + .switch-slider::before { transform: translateX(22px); }
+
+/* ═══════════════════════════════════════════════
+   NAVEGAÇÃO MOBILE — bottom nav bar
+   ═══════════════════════════════════════════════ */
+
+.mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 500;
+  height: 62px;
+  align-items: stretch;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 3px;
+  color: var(--text-muted);
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 8px 4px 10px;
+  transition: color .15s, background .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-nav-item svg {
+  width: 22px; height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  transition: transform .15s;
+}
+
+.mobile-nav-item.active       { color: var(--color-primary); }
+.mobile-nav-item.active svg   { transform: translateY(-2px); }
+.mobile-nav-item:active       { opacity: .65; }
+
+/* Botão voltar mobile */
+.mobile-back-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: color .15s, background .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.mobile-back-btn svg {
+  width: 20px; height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mobile-back-btn:hover  { color: var(--text-primary); background: var(--bg-elevated); }
+.mobile-back-btn:active { opacity: .6; }
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVIDADE MOBILE ≤ 680px
+   ═══════════════════════════════════════════════ */
+
+@media (max-width: 680px) {
+  /* Mostra nav mobile */
+  .mobile-nav { display: flex; }
+
+  /* Espaço para não cobrir conteúdo com a nav */
+  .app-page .app-main { padding-bottom: 62px; }
+
+  /* Topbar mais compacta + botão voltar */
+  .app-topbar { padding: 0 16px; }
+  .topbar-greeting { font-size: .9rem; }
+  .mobile-back-btn { display: flex; }
+
+  /* Profile hero: empilha verticalmente */
+  .profile-hero-card {
+    flex-direction: column;
+    padding: 20px;
+    gap: 18px;
+  }
+  .profile-hero-left  { min-width: 0; width: 100%; }
+  .profile-hero-right { min-width: 0; width: 100%; flex-direction: column; gap: 12px; }
+  .profile-level-card { width: 100%; }
+  .profile-quick-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    flex-wrap: unset;
+  }
+  .quick-stat { min-width: 0; padding: 10px; }
+  .quick-stat strong { font-size: .95rem; }
+
+  /* Tabs: ocupa toda a largura */
+  .profile-tabs { width: 100%; }
+  .tab-btn { flex: 1; padding: 8px 8px; font-size: .76rem; text-align: center; }
+
+  /* Settings card */
+  .settings-card { padding: 18px; }
+
+  /* Seletores de horas/dias/método */
+  .hours-selector { flex-wrap: wrap; }
+  .days-selector  { flex-wrap: wrap; }
+  .method-selector { flex-wrap: wrap; }
+
+  /* Session setup */
+  .session-setup-card { padding: 20px; max-width: 100%; }
+  .method-selector-big { grid-template-columns: 1fr; }
+
+  /* Timer */
+  .timer-card { padding: 24px 16px; }
+
+  /* Dashboard CTA: já tem flex-direction column */
+  .main-cta-card { padding: 20px; }
+
+  /* Agenda: form de adicionar */
+  .add-subject-card { padding: 18px; }
+
+  /* App content: menos padding lateral */
+  .app-page .app-content { padding: 16px; }
 }

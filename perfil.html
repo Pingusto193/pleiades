@@ -4,6 +4,7 @@
  <meta charset="UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
  <title>Focus Trip | Meu Perfil</title>
+ <link rel="icon" type="image/svg+xml" href="favicon.svg" />
  <link rel="stylesheet" href="style.css" />
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
@@ -81,6 +82,20 @@
  <!-- ABA CONFIGURACOES -->
  <div class="tab-content" id="tab-configuracoes" style="display:none">
  <div class="settings-card">
+ <h3>Aparência</h3>
+ <div class="form-group">
+  <div class="theme-toggle-row">
+   <div>
+    <span class="theme-label">Modo escuro</span>
+    <small class="theme-desc">Alterna entre tema claro e escuro em todas as páginas</small>
+   </div>
+   <label class="switch-toggle">
+    <input type="checkbox" id="darkModeToggle" />
+    <span class="switch-slider"></span>
+   </label>
+  </div>
+ </div>
+ <h3>Foto de Perfil</h3>
  <div class="form-group">
  <label>Foto de perfil</label>
  <input type="file" id="avatarInput" class="input-styled" accept="image/png,image/jpeg,image/webp,image/gif" />
@@ -159,6 +174,11 @@
  renderAccount(user);
  renderSettings(user);
  renderPlanLocks(user);
+
+ // Ativa transição na aba inicial
+ requestAnimationFrame(() => requestAnimationFrame(() =>
+  document.getElementById('tab-conquistas').classList.add('tab-visible')
+ ));
  });
 
  function renderAchievementsFull(user) {
@@ -525,6 +545,12 @@
  }
 
  function renderSettings(user) {
+ const toggle = document.getElementById('darkModeToggle');
+ toggle.checked = (localStorage.getItem('ft_theme') || 'light') === 'dark';
+ toggle.addEventListener('change', function() {
+  setTheme(this.checked ? 'dark' : 'light');
+ });
+
  const hours = [1,2,3,4,6];
  document.getElementById('settingsHours').innerHTML = hours.map(h =>
  `<button type="button" class="hours-btn ${user.horas===h?'active':''}" data-hours="${h}" onclick="selectHours(${h}, this)">${h}h</button>`
@@ -636,10 +662,17 @@
  }
 
  function showTab(id, btn) {
- document.querySelectorAll('.tab-content').forEach(t =>t.style.display = 'none');
- document.querySelectorAll('.tab-btn').forEach(b =>b.classList.remove('active'));
- document.getElementById('tab-' + id).style.display = 'block';
+ const next = document.getElementById('tab-' + id);
+ const current = document.querySelector('.tab-content.tab-visible');
+ if (current === next) return;
+ document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
  btn.classList.add('active');
+ if (current) {
+  current.classList.remove('tab-visible');
+  setTimeout(() => { current.style.display = 'none'; }, 220);
+ }
+ next.style.display = 'block';
+ requestAnimationFrame(() => requestAnimationFrame(() => next.classList.add('tab-visible')));
  }
  </script>
 </body>

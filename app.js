@@ -137,14 +137,31 @@ function toggleTheme() {
 }
 
 function mountThemeToggle() {
- if (document.getElementById('themeToggle')) return;
- const button = document.createElement('button');
- button.id = 'themeToggle';
- button.type = 'button';
- button.className = 'theme-toggle';
- button.addEventListener('click', toggleTheme);
- document.body.appendChild(button);
  setTheme(localStorage.getItem('ft_theme') || 'light');
+}
+
+function mountMobileNav() {
+ if (!document.body.classList.contains('app-page')) return;
+ if (document.querySelector('.mobile-nav')) return;
+ const page = window.location.pathname.split('/').pop() || 'dashboard.html';
+ const items = [
+  { href: 'dashboard.html', label: 'Início',
+    icon: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>' },
+  { href: 'sessao.html',    label: 'Sessão',
+    icon: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' },
+  { href: 'agenda.html',    label: 'Agenda',
+    icon: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>' },
+  { href: 'perfil.html',    label: 'Perfil',
+    icon: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>' },
+ ];
+ const nav = document.createElement('nav');
+ nav.className = 'mobile-nav';
+ nav.innerHTML = items.map(p => `
+  <a href="${p.href}" class="mobile-nav-item${page === p.href ? ' active' : ''}">
+   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${p.icon}</svg>
+   <span>${p.label}</span>
+  </a>`).join('');
+ document.body.appendChild(nav);
 }
 
 // Sessões
@@ -248,12 +265,28 @@ function checkAndUnlockAchievements(user) {
 }
 
 // Inicialização global
+function mountMobileBackBtn() {
+ const topbar = document.querySelector('.app-topbar');
+ if (!topbar) return;
+ const page = window.location.pathname.split('/').pop() || 'dashboard.html';
+ if (page === 'dashboard.html' || page === '') return;
+ const btn = document.createElement('button');
+ btn.type = 'button';
+ btn.className = 'mobile-back-btn';
+ btn.setAttribute('aria-label', 'Voltar');
+ btn.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6"/></svg>';
+ btn.addEventListener('click', () => history.length > 1 ? history.back() : (window.location.href = 'dashboard.html'));
+ topbar.prepend(btn);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
  // Marcar sessão com hora de criação
  const origSave = localStorage.setItem.bind(localStorage);
  // Nenhuma sobrescrita necessária — a hora é salva inline em sessao.html
 
  mountThemeToggle();
+ mountMobileNav();
+ mountMobileBackBtn();
 
  refreshAccount().catch(() => {});
 });
