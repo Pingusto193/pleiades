@@ -740,23 +740,6 @@ input.input-styled:focus,
 .session-prog-bar { height: 100%; background: var(--gradient-main); border-radius: 4px; transition: width .5s; }
 .session-prog-pct { font-size: .78rem; color: var(--text-muted); }
 
-/* SOCIAL */
-.session-social-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 20px;
-}
-.social-title { font-size: .84rem; font-weight: 700; margin-bottom: 12px; }
-.social-rank-row {
-  display: grid; grid-template-columns: 24px 1fr auto auto; gap: 8px;
-  align-items: center; padding: 8px 0;
-  border-bottom: 1px solid var(--border); font-size: .84rem;
-}
-.social-rank-row:last-child { border-bottom: none; }
-.rank-me { color: var(--color-primary); font-weight: 700; }
-.rank-pos { color: var(--text-muted); font-size: .78rem; }
-.rank-streak { color: var(--color-accent); font-size: .78rem; }
-.rank-mins  { color: var(--text-secondary); font-size: .8rem; text-align: right; }
-
 /* RESULTADO */
 .result-card {
   background: var(--bg-card); border: 1px solid var(--border);
@@ -1025,10 +1008,9 @@ input.input-styled:focus,
   color: var(--text-muted);
 }
 
-.share-card strong { font-size: .95rem; font-weight: 700; }
-.share-card p { font-size: .84rem; color: var(--text-secondary); margin-top: 2px; }
-.share-card .btn-primary { flex-shrink: 0; margin-left: auto; }
-
+/* ═══════════════════════════════════════════════
+   RANKING
+   ═══════════════════════════════════════════════ */
 /* ═══════════════════════════════════════════════
    MODAIS
    ═══════════════════════════════════════════════ */
@@ -1629,6 +1611,12 @@ input.input-styled:focus,
   display: none;
 }
 
+.app-page .sidebar-avatar.has-avatar::before,
+.app-page .topbar-avatar.has-avatar::before,
+.app-page .profile-avatar-big.has-avatar::before {
+  display: none;
+}
+
 .app-page .app-main {
   background: transparent;
 }
@@ -1679,16 +1667,14 @@ input.input-styled:focus,
   box-shadow: 0 18px 55px rgba(55, 45, 32, .1);
 }
 
-.app-page .main-cta-card,
-.app-page .share-card {
+.app-page .main-cta-card {
   background: #e7dfd1;
 }
 
 .app-page .stat-card:hover,
 .app-page .achievement-card:hover,
 .app-page .method-big-card:hover,
-.app-page .ach-full-card:hover,
-.app-page .rank-row:hover {
+.app-page .ach-full-card:hover {
   transform: translateY(-2px);
   border-color: rgba(47, 111, 115, .32);
 }
@@ -1698,11 +1684,7 @@ input.input-styled:focus,
 .app-page .ach-full-icon,
 .app-page .method-big-icon,
 .app-page .result-icon,
-.app-page .share-icon,
 .app-page .summary-stat span,
-.app-page .podium-avatar,
-.app-page .podium-medal,
-.app-page .rank-avatar,
 .app-page .modal-icon,
 .app-page .modal-block-icon {
   display: none;
@@ -1844,7 +1826,6 @@ input.input-styled:focus,
 
 .app-page .cal-today,
 .app-page .week-today,
-.app-page .rank-row-me,
 .app-page .achievement-card.unlocked,
 .app-page .ach-full-card.unlocked {
   border-color: rgba(47, 111, 115, .42) !important;

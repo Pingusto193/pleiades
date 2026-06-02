@@ -1,63 +1,35 @@
 <!DOCTYPE html>
-<!-- Define que este documento é um arquivo HTML5 -->
 <html lang="pt-BR">
-<!-- Início do documento HTML, configurando o idioma para Português do Brasil -->
 <head>
-<<<<<<< HEAD
-  <!-- Cabeçalho com metadados, links externos e título da página -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Focus Trip — Meu Perfil</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Importa as fontes do Google Fonts (Inter e Space Grotesk) -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-=======
  <meta charset="UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
  <title>Focus Trip | Meu Perfil</title>
  <link rel="stylesheet" href="style.css" />
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
->>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 </head>
 <body class="app-page">
-  <!-- Corpo da página principal da aplicação -->
+ <aside class="sidebar">
+ <div class="sidebar-logo"><span class="logo-icon"></span><span class="logo-text">Focus<span class="logo-accent">Trip</span></span></div>
+ <nav class="sidebar-nav">
+ <a href="dashboard.html" class="nav-item"><span class="nav-icon"></span><span>Dashboard</span></a>
+ <a href="sessao.html" class="nav-item"><span class="nav-icon"></span><span>Sessão de Estudo</span></a>
+ <a href="agenda.html" class="nav-item"><span class="nav-icon"></span><span>Minha Agenda</span></a>
+ <a href="perfil.html" class="nav-item active"><span class="nav-icon"></span><span>Perfil</span></a>
+ </nav>
+ </aside>
 
-  <!-- SIDEBAR (Barra Lateral de Navegação) -->
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <span class="logo-icon"></span>
-      <span class="logo-text">Focus<span class="logo-accent">Trip</span></span>
-    </div>
-    <nav class="sidebar-nav">
-      <!-- Links de navegação interna com o item "Perfil" realçado como ativo -->
-      <a href="dashboard.html" class="nav-item">
-        <span class="nav-icon"></span><span>Dashboard</span>
-      </a>
-      <a href="sessao.html" class="nav-item">
-        <span class="nav-icon"></span><span>Sessão de Estudo</span>
-      </a>
-      <a href="agenda.html" class="nav-item">
-        <span class="nav-icon"></span><span>Minha Agenda</span>
-      </a>
-      <a href="perfil.html" class="nav-item active">
-        <span class="nav-icon"></span><span>Perfil</span>
-      </a>
+ <main class="app-main">
+ <header class="app-topbar">
+ <div class="topbar-greeting">Meu Perfil</div>
+ <div class="topbar-right">
+ <div class="topbar-streak" id="topStreak">0 dias</div>
+ </div>
+ </header>
+ <div class="app-content">
 
-    </nav>
-  </aside>
+ <!-- PERFIL CARD -->
+ <div class="profile-hero-card" id="profileHero"></div>
 
-<<<<<<< HEAD
-  <!-- MAIN (Área Principal de Conteúdo) -->
-  <main class="app-main">
-    <header class="app-topbar">
-      <div class="topbar-greeting">Meu Perfil</div>
-      <div class="topbar-right">
-        <!-- Mostra a sequência de dias atual do usuário na barra superior -->
-        <div class="topbar-streak" id="topStreak">0 dias</div>
-      </div>
-    </header>
-    <div class="app-content">
-=======
  <!-- ABAS -->
  <div class="profile-tabs">
  <button class="tab-btn active" onclick="showTab('conquistas', this)">Conquistas</button>
@@ -65,24 +37,17 @@
  <button class="tab-btn" onclick="showTab('conta', this)">Conta</button>
  <button class="tab-btn" onclick="showTab('configuracoes', this)">Configurações</button>
  </div>
->>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
-      <!-- PERFIL CARD (Card de cabeçalho do perfil preenchido via JS) -->
-      <div class="profile-hero-card" id="profileHero"></div>
+ <!-- ABA CONQUISTAS -->
+ <div class="tab-content" id="tab-conquistas">
+ <div class="achievements-full-grid" id="achievementsFull"></div>
+ </div>
 
-      <!-- ABAS DE NAVEGAÇÃO INTERNA (Controle de navegação do perfil) -->
-      <div class="profile-tabs">
-        <button class="tab-btn active" onclick="showTab('conquistas', this)">Conquistas</button>
-        <button class="tab-btn" onclick="showTab('historico', this)">Histórico</button>
-        <button class="tab-btn" onclick="showTab('configuracoes', this)">Configurações de Estudo</button>
-      </div>
+ <!-- ABA HISTÓRICO -->
+ <div class="tab-content" id="tab-historico" style="display:none">
+ <div class="history-list" id="historyList"></div>
+ </div>
 
-<<<<<<< HEAD
-      <!-- ABA CONQUISTAS (Grade com todas as conquistas do usuário) -->
-      <div class="tab-content" id="tab-conquistas">
-        <div class="achievements-full-grid" id="achievementsFull"></div>
-      </div>
-=======
  <!-- ABA CONTA -->
  <div class="tab-content" id="tab-conta" style="display:none">
  <div class="settings-card">
@@ -131,60 +96,27 @@
  <button class="btn-primary" onclick="saveSettings()">Salvar configurações</button>
  </div>
  </div>
->>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
-      <!-- ABA HISTÓRICO (Lista cronológica de sessões realizadas) -->
-      <div class="tab-content" id="tab-historico" style="display:none">
-        <div class="history-list" id="historyList"></div>
-      </div>
+ </div>
+ </main>
 
-<<<<<<< HEAD
-      <!-- ABA CONFIGURAÇÕES (Formulário para ajustar preferências de estudo) -->
-      <div class="tab-content" id="tab-configuracoes" style="display:none">
-        <div class="settings-card">
-          <h3>Configurações de Estudo</h3>
-          <div class="form-group">
-            <label>Horas de estudo por dia</label>
-            <div class="hours-selector" id="settingsHours"></div>
-          </div>
-          <div class="form-group">
-            <label>Dias de estudo</label>
-            <div class="days-selector" id="settingsDays"></div>
-          </div>
-          <div class="form-group">
-            <label>Método preferido</label>
-            <div class="method-selector" id="settingsMethod"></div>
-          </div>
-          <button class="btn-primary" onclick="saveSettings()">Salvar configurações</button>
-        </div>
-      </div>
-=======
- <script src="app.js?v=db4"></script>
- <script>document.addEventListener('DOMContentLoaded', () => {
- const user = getUser();
+ <script src="app.js?v=db5"></script>
+ <script>document.addEventListener('DOMContentLoaded', async () => {
+ let user = getUser();
  if (!user) { window.location.href = 'login.html'; return; }
+ user = await refreshAccount().catch(() => user) || user;
  document.getElementById('topStreak').textContent = `${user.streak} dias`;
->>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
-    </div>
-  </main>
+ // Profile hero
+ const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
+ const totalMins = sessions.reduce((a,s) =>a+(s.duracao||0), 0);
+ const nextLevelXP = user.nivel * 500;
+ const currentLevelXP = (user.nivel - 1) * 500;
+ const xpPct = Math.min(100, Math.round(((user.xp - currentLevelXP) / 500) * 100));
 
-<<<<<<< HEAD
-  <script src="app.js"></script>
-  <!-- Conecta os scripts utilitários comuns do sistema -->
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const user = getUser();
-      // Redireciona para o login caso não encontre dados do usuário ativo
-      if (!user) { window.location.href = 'login.html'; return; }
-      
-      // Exibe a sequência de dias atual do usuário
-      document.getElementById('topStreak').textContent = `${user.streak} dias`;
-=======
  document.getElementById('profileHero').innerHTML = `
  <div class="profile-hero-left">
- <div class="profile-avatar-big">${user.avatarUrl ? `<img src="${mediaUrl(user.avatarUrl)}" alt="Foto de perfil" />` : ''}</div>
+ <div class="profile-avatar-big ${user.avatarUrl ? 'has-avatar' : ''}">${user.avatarUrl ? `<img src="${mediaUrl(user.avatarUrl)}" alt="Foto de perfil" />` : ''}</div>
  <div class="profile-hero-info">
  <h2>${user.nome}</h2>
  <div class="profile-email">${user.email}</div>
@@ -209,132 +141,75 @@
  </div>
  </div>
  `;
->>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
-      // Recupera o histórico completo de sessões de estudo salvas
-      const sessions = JSON.parse(localStorage.getItem('focustrip_sessions') || '[]');
-      // Soma o total de minutos estudados acumulados
-      const totalMins = sessions.reduce((a,s) => a + (s.duracao || 0), 0);
-      
-      // Lógica de cálculo de nível (cada nível requer 500 XP adicionais)
-      const nextLevelXP = user.nivel * 500;
-      const currentLevelXP = (user.nivel - 1) * 500;
-      // Porcentagem de progresso de XP do nível atual em direção ao próximo
-      const xpPct = Math.min(100, Math.round(((user.xp - currentLevelXP) / 500) * 100));
+ // Conquistas
+ renderAchievementsFull(user);
 
-      // Monta e renderiza o painel principal de informações do perfil (Profile Hero)
-      document.getElementById('profileHero').innerHTML = `
-        <div class="profile-hero-left">
-          <div class="profile-avatar-big"></div>
-          <div class="profile-hero-info">
-            <h2>${user.nome}</h2>
-            <div class="profile-email">${user.email}</div>
-            <div class="profile-streak-big">🔥 ${user.streak} dias em sequência</div>
-            <div class="profile-badges-row">
-              ${getAchievements().filter(a => (user.conquistas || []).includes(a.id) || checkAchievement(a, user))
-                .slice(0,5).map(a => `<span class="badge-icon-big" title="${a.nome}">${a.icon}</span>`).join('') || '<span class="no-badges">Sem conquistas ainda</span>'}
-            </div>
-          </div>
-        </div>
-        <div class="profile-hero-right">
-          <div class="profile-level-card">
-            <div class="level-label-big">Nível ${user.nivel}</div>
-            <div class="level-name">${getLevelName(user.nivel)}</div>
-            <div class="level-bar-big"><div class="level-fill-big" style="width:${xpPct}%"></div></div>
-            <div class="level-xp">${user.xp} / ${nextLevelXP} XP</div>
-          </div>
-          <div class="profile-quick-stats">
-            <div class="quick-stat"><span></span><strong>${minToHour(totalMins)}</strong><small>Total estudado</small></div>
-            <div class="quick-stat"><span></span><strong>${sessions.length}</strong><small>Sessões</small></div>
-            <div class="quick-stat"><span></span><strong>${(user.conquistas || []).length}</strong><small>Conquistas</small></div>
-          </div>
-        </div>
-      `;
+ // Histórico
+ renderHistory(sessions);
 
-<<<<<<< HEAD
-      // Renderiza a lista de todas as conquistas do sistema
-      renderAchievementsFull(user);
-=======
  // Configurações
  renderAccount(user);
  renderSettings(user);
  });
->>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
-      // Renderiza a lista histórica de sessões executadas
-      renderHistory(sessions);
+ function renderAchievementsFull(user) {
+ const all = getAchievements();
+ document.getElementById('achievementsFull').innerHTML = all.map(a => {
+ const unlocked = (user.conquistas||[]).includes(a.id) || checkAchievement(a, user);
+ return `
+ <div class="ach-full-card ${unlocked ? 'unlocked' : 'locked'}">
+ <div class="ach-full-icon">${unlocked ? a.icon : ''}</div>
+ <div class="ach-full-name">${a.nome}</div>
+ <div class="ach-full-desc">${a.desc}</div>
+ <div class="ach-full-status">${unlocked ? ' Conquistado' : 'Bloqueado'}</div>
+ </div>
+ `;
+ }).join('');
+ }
 
-      // Preenche o formulário de configurações com as preferências atuais do usuário
-      renderSettings(user);
-    });
+ function renderHistory(sessions) {
+ if (!sessions.length) {
+ document.getElementById('historyList').innerHTML = '<div class="empty-state">Nenhuma sessão registrada ainda.</div>';
+ return;
+ }
+ const sorted = [...sessions].reverse();
+ document.getElementById('historyList').innerHTML = sorted.map(s => `
+ <div class="history-item">
+ <div class="history-date">${formatDate(s.data)}</div>
+ <div class="history-subject">${s.materia || 'Sessão de estudo'}</div>
+ <div class="history-method">${s.metodo || 'pomodoro'}</div>
+ <div class="history-duration">${s.duracao}min</div>
+ <div class="history-status ${s.completa ? 'done' : 'partial'}">${s.completa ? ' Completa' : ' Parcial'}</div>
+ </div>
+ `).join('');
+ }
 
-    // Função que renderiza o grid completo de conquistas do aplicativo
-    function renderAchievementsFull(user) {
-      const all = getAchievements();
-      document.getElementById('achievementsFull').innerHTML = all.map(a => {
-        const unlocked = (user.conquistas || []).includes(a.id) || checkAchievement(a, user);
-        return `
-          <div class="ach-full-card ${unlocked ? 'unlocked' : 'locked'}">
-            <div class="ach-full-icon">${unlocked ? a.icon : ''}</div>
-            <div class="ach-full-name">${a.nome}</div>
-            <div class="ach-full-desc">${a.desc}</div>
-            <div class="ach-full-status">${unlocked ? 'Conquistado' : 'Bloqueado'}</div>
-          </div>
-        `;
-      }).join('');
-    }
+ function renderSettings(user) {
+ const hours = [1,2,3,4,6];
+ document.getElementById('settingsHours').innerHTML = hours.map(h =>
+ `<button type="button" class="hours-btn ${user.horas===h?'active':''}" data-hours="${h}" onclick="selectHours(${h}, this)">${h}h</button>`
+ ).join('');
 
-    // Função que renderiza a lista de sessões concluídas (Histórico)
-    function renderHistory(sessions) {
-      if (!sessions.length) {
-        document.getElementById('historyList').innerHTML = '<div class="empty-state">Nenhuma sessão registrada ainda.</div>';
-        return;
-      }
-      
-      // Ordena as sessões para exibir as mais recentes primeiro
-      const sorted = [...sessions].reverse();
-      document.getElementById('historyList').innerHTML = sorted.map(s => `
-        <div class="history-item">
-          <div class="history-date">${formatDate(s.data)}</div>
-          <div class="history-subject">${s.materia || 'Sessão de estudo'}</div>
-          <div class="history-method">${s.metodo || 'pomodoro'}</div>
-          <div class="history-duration">${s.duracao}min</div>
-          <div class="history-status ${s.completa ? 'done' : 'partial'}">${s.completa ? '✓ Completa' : '⚡ Parcial'}</div>
-        </div>
-      `).join('');
-    }
+ const days = [['seg','Seg'],['ter','Ter'],['qua','Qua'],['qui','Qui'],['sex','Sex'],['sab','Sáb'],['dom','Dom']];
+ document.getElementById('settingsDays').innerHTML = days.map(([k,l]) =>
+ `<button type="button" class="day-btn ${(user.dias||[]).includes(k)?'active':''}" data-day="${k}" onclick="this.classList.toggle('active')">${l}</button>`
+ ).join('');
 
-    // Preenche as opções do painel de preferências com base nos dados salvos do usuário
-    function renderSettings(user) {
-      // Cria o seletor de horas diárias de meta
-      const hours = [1,2,3,4,6];
-      document.getElementById('settingsHours').innerHTML = hours.map(h =>
-        `<button type="button" class="hours-btn ${user.horas===h ? 'active' : ''}" data-hours="${h}" onclick="selectHours(${h}, this)">${h}h</button>`
-      ).join('');
+ const methods = [['pomodoro',' Pomodoro'],['blocos',' Blocos'],['livre',' Livre']];
+ document.getElementById('settingsMethod').innerHTML = methods.map(([v,l]) =>
+ `<label class="method-option ${user.metodo===v?'active-option':''}">
+ <input type="radio" name="metodo_cfg" value="${v}" ${user.metodo===v?'checked':''} onchange="document.querySelectorAll('.method-option').forEach(o=>o.classList.remove('active-option'));this.closest('.method-option').classList.add('active-option')"/>
+ <span>${l}</span>
+ </label>`
+ ).join('');
+ }
 
-      // Cria o seletor de dias planejados na semana
-      const days = [['seg','Seg'],['ter','Ter'],['qua','Qua'],['qui','Qui'],['sex','Sex'],['sab','Sáb'],['dom','Dom']];
-      document.getElementById('settingsDays').innerHTML = days.map(([k,l]) =>
-        `<button type="button" class="day-btn ${(user.dias || []).includes(k) ? 'active' : ''}" data-day="${k}" onclick="this.classList.toggle('active')">${l}</button>`
-      ).join('');
+ function selectHours(h, el) {
+ document.querySelectorAll('#settingsHours .hours-btn').forEach(b =>b.classList.remove('active'));
+ el.classList.add('active');
+ }
 
-<<<<<<< HEAD
-      // Cria as opções de rádio para o método favorito
-      const methods = [['pomodoro','Pomodoro'],['blocos','Blocos'],['livre','Livre']];
-      document.getElementById('settingsMethod').innerHTML = methods.map(([v,l]) =>
-        `<label class="method-option ${user.metodo===v ? 'active-option' : ''}">
-          <input type="radio" name="metodo_cfg" value="${v}" ${user.metodo===v ? 'checked' : ''} onchange="document.querySelectorAll('.method-option').forEach(o=>o.classList.remove('active-option'));this.closest('.method-option').classList.add('active-option')"/>
-          <span>${l}</span>
-        </label>`
-      ).join('');
-    }
-
-    // Controla o realce ativo na seleção das horas de meta nas configurações
-    function selectHours(h, el) {
-      document.querySelectorAll('#settingsHours .hours-btn').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
-    }
-=======
  function saveSettings() {
  const user = getUser();
  const horasEl = document.querySelector('#settingsHours .hours-btn.active');
@@ -361,7 +236,9 @@
  try {
  const user = await uploadAvatar(input.files[0]);
  showToast('Foto de perfil atualizada.');
- document.querySelector('.profile-avatar-big').innerHTML = user.avatarUrl ? `<img src="${mediaUrl(user.avatarUrl)}" alt="Foto de perfil" />` : '';
+ const avatar = document.querySelector('.profile-avatar-big');
+ avatar.classList.toggle('has-avatar', Boolean(user.avatarUrl));
+ avatar.innerHTML = user.avatarUrl ? `<img src="${mediaUrl(user.avatarUrl)}" alt="Foto de perfil" />` : '';
  input.value = '';
  } catch (error) {
  showToast(error.message);
@@ -397,42 +274,18 @@
  const names = ['','Iniciante','Dedicado','Focado','Avançado','Expert','Mestre','Lenda'];
  return names[Math.min(n, names.length-1)] || 'Lenda';
  }
->>>>>>> fb2c9bd987ac5d7dcf6c9e32f89f153eb7ff175e
 
-    // Salva as novas preferências do usuário no localStorage
-    function saveSettings() {
-      const user = getUser();
-      const horasEl = document.querySelector('#settingsHours .hours-btn.active');
-      const diasEls = document.querySelectorAll('#settingsDays .day-btn.active');
-      const metodoEl = document.querySelector('input[name="metodo_cfg"]:checked');
-      
-      if (horasEl) user.horas = parseInt(horasEl.dataset.hours);
-      user.dias = [...diasEls].map(b => b.dataset.day);
-      if (metodoEl) user.metodo = metodoEl.value;
-      
-      localStorage.setItem('focustrip_user', JSON.stringify(user));
-      showToast('Configurações salvas!');
-    }
+ function formatDate(dateStr) {
+ const d = new Date(dateStr + 'T12:00:00');
+ return d.toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
+ }
 
-    // Converte o nível numérico em um título descritivo de conquistas
-    function getLevelName(n) {
-      const names = ['','Iniciante','Dedicado','Focado','Avançado','Expert','Mestre','Lenda'];
-      return names[Math.min(n, names.length-1)] || 'Lenda';
-    }
-
-    // Formata a string de data (YYYY-MM-DD) para exibição amigável ("DD de mês de AAAA")
-    function formatDate(dateStr) {
-      const d = new Date(dateStr + 'T12:00:00');
-      return d.toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
-    }
-
-    // Alterna a aba ativa e oculta o conteúdo das demais abas
-    function showTab(id, btn) {
-      document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById('tab-' + id).style.display = 'block';
-      btn.classList.add('active');
-    }
-  </script>
+ function showTab(id, btn) {
+ document.querySelectorAll('.tab-content').forEach(t =>t.style.display = 'none');
+ document.querySelectorAll('.tab-btn').forEach(b =>b.classList.remove('active'));
+ document.getElementById('tab-' + id).style.display = 'block';
+ btn.classList.add('active');
+ }
+ </script>
 </body>
 </html>
