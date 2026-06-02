@@ -213,16 +213,89 @@
  const subjectRows = buildSubjectStats(cleanSessions);
  const hourRows = buildHourStats(cleanSessions);
  const methodRows = buildMethodStats(cleanSessions);
+ const trendRows = buildDailyTrend(cleanSessions);
+ const completionRate = Math.round((cleanSessions.filter(s => s.completa).length / cleanSessions.length) * 100);
  const bestHour = hourRows.find(row => row.key !== 'sem-hora') || hourRows[0];
  const topSubject = subjectRows[0];
 
  panel.innerHTML = `
- <div class="stats-overview-grid">
- <div class="stats-info-card"><span>Total estudado</span><strong>${minToHour(totalMins)}</strong><small>${cleanSessions.length} sessoes registradas</small></div>
- <div class="stats-info-card"><span>Dias estudados</span><strong>${studyDays.size}</strong><small>dias diferentes com estudo</small></div>
- <div class="stats-info-card"><span>Media por dia</span><strong>${avgPerDay}min</strong><small>em dias ativos</small></div>
- <div class="stats-info-card"><span>Melhor horario</span><strong>${bestHour ? bestHour.label : 'Sem dados'}</strong><small>${bestHour ? `${bestHour.sessions} sessoes` : 'continue estudando'}</small></div>
- <div class="stats-info-card highlight"><span>Materia mais estudada</span><strong>${escapeHtml(topSubject?.label || 'Sem dados')}</strong><small>${topSubject ? minToHour(topSubject.minutes) : 'continue estudando'}</small></div>
+ <div class="analytics-board">
+ <section class="analytics-strip">
+ <article class="analytics-metric-card">
+ <div class="metric-title">Tempo total</div>
+ <div class="metric-value">${minToHour(totalMins)}</div>
+ <div class="metric-foot">${cleanSessions.length} sessoes registradas</div>
+ ${renderSparkline(trendRows.map(row => row.minutes), 'blue')}
+ </article>
+ <article class="analytics-metric-card">
+ <div class="metric-title">Consistencia</div>
+ <div class="metric-value">${studyDays.size}<small> dias</small></div>
+ <div class="metric-foot">${avgPerDay}min por dia ativo</div>
+ ${renderSparkline(trendRows.map(row => row.sessions), 'green')}
+ </article>
+ <article class="analytics-metric-card">
+ <div class="metric-title">Conclusao</div>
+ <div class="metric-value">${completionRate}%</div>
+ <div class="metric-foot">${cleanSessions.filter(s => s.completa).length} sessoes completas</div>
+ ${renderMiniRing(completionRate)}
+ </article>
+ <article class="analytics-metric-card">
+ <div class="metric-title">Melhor horario</div>
+ <div class="metric-value">${bestHour ? bestHour.label : 'Sem dados'}</div>
+ <div class="metric-foot">${bestHour ? `${bestHour.sessions} sessoes neste horario` : 'continue estudando'}</div>
+ ${renderSparkline(hourRows.map(row => row.minutes), 'cyan')}
+ </article>
+ <article class="analytics-metric-card">
+ <div class="metric-title">Top materia</div>
+ <div class="metric-value clamp">${escapeHtml(topSubject?.label || 'Sem dados')}</div>
+ <div class="metric-foot">${topSubject ? `${minToHour(topSubject.minutes)} acumuladas` : 'continue estudando'}</div>
+ ${renderSparkline(subjectRows.slice(0, 6).map(row => row.minutes), 'orange')}
+ </article>
+ </section>
+
+ <section class="analytics-position-card">
+ <div class="analytics-section-title">
+ <div>
+ <h3>Ritmo de estudo</h3>
+ <p>Ultimos 14 dias com sessoes registradas</p>
+ </div>
+ <span>Atualizado agora</span>
+ </div>
+ <div class="analytics-position-grid">
+ <div class="visibility-panel">
+ <span>Regularidade</span>
+ <strong>${Math.min(100, Math.round((studyDays.size / Math.max(1, trendRows.length)) * 100))}%</strong>
+ ${renderAreaChart(trendRows.map(row => row.minutes))}
+ </div>
+ <div class="keyword-panels">
+ ${subjectRows.slice(0, 4).map(row => `
+ <div class="keyword-stat-box">
+ ${renderMiniRing(row.completion)}
+ <div>
+ <span>${escapeHtml(row.label)}</span>
+ <strong>${row.consistency}%</strong>
+ <small>${row.sessions} sessoes | ${minToHour(row.minutes)}</small>
+ </div>
+ </div>
+ `).join('')}
+ </div>
+ <div class="top-keywords">
+ <h4>Materias em destaque</h4>
+ <table>
+ <thead><tr><th>Materia</th><th>Dias</th><th>Cons.</th></tr></thead>
+ <tbody>
+ ${subjectRows.slice(0, 6).map(row => `
+ <tr>
+ <td>${escapeHtml(row.label)}</td>
+ <td>${row.days}</td>
+ <td>${row.consistency}%</td>
+ </tr>
+ `).join('')}
+ </tbody>
+ </table>
+ </div>
+ </div>
+ </section>
  </div>
 
  <section class="stats-section-card">
@@ -294,6 +367,64 @@
  </section>
  </div>
  `;
+ }
+
+ function buildDailyTrend(sessions) {
+ const today = new Date();
+ const days = [];
+ for (let i = 13; i >= 0; i--) {
+ const date = new Date(today);
+ date.setDate(today.getDate() - i);
+ const key = date.toISOString().slice(0, 10);
+ days.push({ date: key, minutes: 0, sessions: 0 });
+ }
+ const byDate = new Map(days.map(day => [day.date, day]));
+ sessions.forEach(session => {
+ if (!byDate.has(session.data)) return;
+ const row = byDate.get(session.data);
+ row.minutes += session.duracao;
+ row.sessions += 1;
+ });
+ return days;
+ }
+
+ function renderSparkline(values, tone = 'blue') {
+ const points = buildChartPoints(values, 136, 42, 8);
+ const colorMap = { blue: '#38bdf8', green: '#34d399', cyan: '#06b6d4', orange: '#f59e0b' };
+ const color = colorMap[tone] || colorMap.blue;
+ return `<svg class="metric-sparkline" viewBox="0 0 136 42" aria-hidden="true">
+ <polyline points="${points}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+ </svg>`;
+ }
+
+ function renderAreaChart(values) {
+ const points = buildChartPoints(values, 320, 150, 12);
+ return `<svg class="analytics-area-chart" viewBox="0 0 320 150" aria-hidden="true">
+ <defs><linearGradient id="studyArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#38bdf8" stop-opacity=".34"/><stop offset="1" stop-color="#38bdf8" stop-opacity=".04"/></linearGradient></defs>
+ <polygon points="0,150 ${points} 320,150" fill="url(#studyArea)"></polygon>
+ <polyline points="${points}" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+ </svg>`;
+ }
+
+ function buildChartPoints(values, width, height, pad) {
+ const clean = values.length ? values : [0];
+ const max = Math.max(...clean, 1);
+ const step = clean.length > 1 ? (width - pad * 2) / (clean.length - 1) : 0;
+ return clean.map((value, index) => {
+ const x = pad + index * step;
+ const y = height - pad - ((value / max) * (height - pad * 2));
+ return `${x.toFixed(1)},${y.toFixed(1)}`;
+ }).join(' ');
+ }
+
+ function renderMiniRing(percent) {
+ const safePercent = Math.max(0, Math.min(100, Number(percent) || 0));
+ const circumference = 88;
+ const dash = (safePercent / 100) * circumference;
+ return `<svg class="mini-ring" viewBox="0 0 36 36" aria-hidden="true">
+ <circle cx="18" cy="18" r="14" pathLength="88"></circle>
+ <circle cx="18" cy="18" r="14" pathLength="88" stroke-dasharray="${dash} ${circumference - dash}"></circle>
+ </svg>`;
  }
 
  function normalizeSession(session) {
