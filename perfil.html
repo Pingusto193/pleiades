@@ -100,7 +100,7 @@
  </div>
  </main>
 
- <script src="app.js?v=db7"></script>
+ <script src="app.js?v=db8"></script>
  <script>document.addEventListener('DOMContentLoaded', async () => {
  let user = getUser();
  if (!user) { window.location.href = 'login.html'; return; }
@@ -151,6 +151,7 @@
  // Configurações
  renderAccount(user);
  renderSettings(user);
+ renderPlanLocks(user);
  });
 
  function renderAchievementsFull(user) {
@@ -227,7 +228,23 @@
  document.getElementById('accountEmail').value = user.email || '';
  }
 
+ function renderPlanLocks(user) {
+ if (isPremiumUser(user)) return;
+ const input = document.getElementById('avatarInput');
+ input.disabled = true;
+ input.closest('.form-group').insertAdjacentHTML('beforeend', `
+ <div class="upgrade-card compact">
+ <strong>Foto de perfil no Premium</strong>
+ <p>No plano gratuito a foto de perfil fica bloqueada. Atualize para liberar personalizacao do perfil.</p>
+ </div>
+ `);
+ }
+
  async function saveAvatar() {
+ if (!isPremiumUser()) {
+ showToast('Foto de perfil e exclusiva do plano Premium.');
+ return;
+ }
  const input = document.getElementById('avatarInput');
  if (!input.files.length) {
  showToast('Escolha uma imagem primeiro.');

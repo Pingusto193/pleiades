@@ -994,6 +994,28 @@ input.input-styled:focus,
 }
 .add-subject-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; }
 .add-subject-form { display: flex; flex-direction: column; gap: 12px; }
+.upgrade-card {
+  background: rgba(255, 243, 221, .9);
+  border: 1px solid #efd7ae;
+  border-radius: var(--radius);
+  color: #604019;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+.upgrade-card strong {
+  display: block;
+  color: #23211d;
+  margin-bottom: 6px;
+}
+.upgrade-card p {
+  color: #6d5533;
+  font-size: .9rem;
+}
+.upgrade-card.compact {
+  margin-top: 10px;
+  margin-bottom: 0;
+  padding: 12px;
+}
 .schedule-fields {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

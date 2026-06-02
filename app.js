@@ -115,6 +115,10 @@ function saveUser(user) {
  persistUser(user);
 }
 
+function isPremiumUser(user = getUser()) {
+ return user && user.plan === 'premium';
+}
+
 // Sessões
 function localDateKey(date = new Date()) {
  const year = date.getFullYear();

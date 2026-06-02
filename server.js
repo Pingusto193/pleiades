@@ -66,6 +66,7 @@ async function initDb() {
         streak INTEGER NOT NULL DEFAULT 0,
         xp INTEGER NOT NULL DEFAULT 0,
         nivel INTEGER NOT NULL DEFAULT 1,
+        plan TEXT NOT NULL DEFAULT 'free',
         conquistas TEXT NOT NULL DEFAULT '[]',
         avatar_url TEXT,
         criado_em TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -100,6 +101,7 @@ async function initDb() {
         criado_em TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
     `);
+    await pool.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS plan TEXT NOT NULL DEFAULT 'free'");
     return;
   }
 
@@ -119,6 +121,7 @@ async function initDb() {
       streak INTEGER NOT NULL DEFAULT 0,
       xp INTEGER NOT NULL DEFAULT 0,
       nivel INTEGER NOT NULL DEFAULT 1,
+      plan TEXT NOT NULL DEFAULT 'free',
       conquistas TEXT NOT NULL DEFAULT '[]',
       avatar_url TEXT,
       criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -156,6 +159,9 @@ async function initDb() {
       FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
     );
   `);
+
+  const userColumns = sqliteDb.prepare('PRAGMA table_info(users)').all().map((info) => info.name);
+  if (!userColumns.includes('plan')) sqliteDb.exec("ALTER TABLE users ADD COLUMN plan TEXT NOT NULL DEFAULT 'free'");
 }
 
 function localDateKey(date = new Date()) {
@@ -220,10 +226,15 @@ function publicUser(row) {
     streak: row.streak,
     xp: row.xp,
     nivel: row.nivel,
+    plan: row.plan || 'free',
     conquistas: parseJSON(row.conquistas, []),
     avatarUrl: row.avatar_url || '',
     criadoEm: row.criado_em
   };
+}
+
+function isPremium(user) {
+  return user && user.plan === 'premium';
 }
 
 async function createToken(userId) {
@@ -377,6 +388,18 @@ async function listSubjects(userId) {
 }
 
 app.post('/api/subjects', requireAuth, asyncRoute(async (req, res) => {
+  if (!isPremium(req.user)) {
+    const todayCount = await get(
+      USE_POSTGRES
+        ? "SELECT COUNT(*)::int AS total FROM subjects WHERE user_id = ? AND criado_em::date = CURRENT_DATE"
+        : "SELECT COUNT(*) AS total FROM subjects WHERE user_id = ? AND date(criado_em) = date('now')",
+      [req.user.id]
+    );
+    if (Number(todayCount.total) >= 2) {
+      return res.status(403).json({ error: 'Plano gratuito: limite de 2 materias por dia. Atualize para Premium para adicionar mais.' });
+    }
+  }
+
   const subject = {
     user_id: req.user.id,
     nome: String(req.body.nome || '').trim(),
@@ -400,6 +423,7 @@ app.delete('/api/subjects/:id', requireAuth, asyncRoute(async (req, res) => {
 }));
 
 app.post('/api/avatar', requireAuth, upload.single('avatar'), asyncRoute(async (req, res) => {
+  if (!isPremium(req.user)) return res.status(403).json({ error: 'Foto de perfil e exclusiva do plano Premium.' });
   if (!req.file) return res.status(400).json({ error: 'Envie uma imagem valida de ate 2 MB.' });
   const avatarUrl = `/uploads/${req.file.filename}`;
   await run('UPDATE users SET avatar_url = ? WHERE id = ?', [avatarUrl, req.user.id]);

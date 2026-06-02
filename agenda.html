@@ -101,12 +101,13 @@
  </div>
  </main>
 
- <script src="app.js?v=db7"></script>
+ <script src="app.js?v=db8"></script>
  <script>let viewYear, viewMonth;
 
- document.addEventListener('DOMContentLoaded', () => {
- const user = getUser();
+ document.addEventListener('DOMContentLoaded', async () => {
+ let user = getUser();
  if (!user) { window.location.href = 'login.html'; return; }
+ user = await refreshAccount().catch(() => user) || user;
  document.getElementById('topStreak').textContent = `${user.streak} dias`;
 
  const now = new Date();
@@ -116,7 +117,8 @@
  document.querySelectorAll('#subjectDays .day-btn').forEach(btn =>btn.addEventListener('click', () =>btn.classList.toggle('active'))
  );
 
- renderCalendar();
+ if (isPremiumUser(user)) renderCalendar();
+ else renderCalendarLocked();
  renderSubjectsWeek();
  });
 
@@ -124,6 +126,7 @@
  viewMonth += delta;
  if (viewMonth > 11) { viewMonth = 0; viewYear++; }
  if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+ if (!isPremiumUser()) return;
  renderCalendar();
  }
 
@@ -209,6 +212,18 @@ function renderCalendar() {
  `;
  }
 
+ function renderCalendarLocked() {
+ document.querySelector('.calendar-header').style.display = 'none';
+ document.querySelector('.cal-legend').style.display = 'none';
+ document.getElementById('calendarGrid').innerHTML = `
+ <div class="upgrade-card">
+ <strong>Calendario completo no Premium</strong>
+ <p>No plano gratuito voce pode adicionar ate 2 materias por dia. Calendario mensal, metas do mes e acompanhamento completo ficam liberados no Premium.</p>
+ </div>
+ `;
+ document.getElementById('monthSummary').innerHTML = '';
+ }
+
  function buildDayTitle(plan, mins) {
  const studied = mins > 0 ? `${mins}min estudados` : 'Sem estudo registrado';
  if (!plan.length) return studied;
@@ -248,7 +263,7 @@ function renderCalendar() {
 
  async function addSubject() {
  const nome = document.getElementById('subjectName').value.trim();
- if (!nome) { showToast('Digite o nome da matéria!'); return; }
+ if (!nome) { showToast('Digite o nome da materia!'); return; }
  const dias = [...document.querySelectorAll('#subjectDays .day-btn.active')].map(b =>b.dataset.day);
  if (!dias.length) { showToast('Selecione pelo menos um dia!'); return; }
  const horario = document.getElementById('subjectTime').value || '08:00';
@@ -257,24 +272,23 @@ function renderCalendar() {
  const colors = ['#6366f1','#ec4899','#f59e0b','#10b981','#3b82f6','#8b5cf6','#ef4444'];
  const subjects = JSON.parse(localStorage.getItem('focustrip_subjects') || '[]');
  const subject = { nome, dias, horario, duracao, pausa, color: colors[subjects.length % colors.length] };
- subjects.push(subject);
- localStorage.setItem('focustrip_subjects', JSON.stringify(subjects));
- persistSubject(subject).then((saved) => {
+ try {
+ const saved = await persistSubject(subject);
  if (!saved) return;
- const latest = JSON.parse(localStorage.getItem('focustrip_subjects') || '[]');
- latest[latest.length - 1] = saved;
- localStorage.setItem('focustrip_subjects', JSON.stringify(latest));
+ subjects.push(saved);
+ localStorage.setItem('focustrip_subjects', JSON.stringify(subjects));
  renderSubjectsWeek();
- renderCalendar();
- }).catch(() =>showToast('Matéria salva localmente. A sincronização será tentada depois.'));
+ if (isPremiumUser()) renderCalendar();
+ } catch (error) {
+ showToast(error.message);
+ return;
+ }
  document.getElementById('subjectName').value = '';
  document.getElementById('subjectTime').value = '08:00';
  document.getElementById('subjectDuration').value = '60';
  document.getElementById('subjectBreak').value = '10';
  document.querySelectorAll('#subjectDays .day-btn').forEach(b =>b.classList.remove('active'));
- renderSubjectsWeek();
- renderCalendar();
- showToast('Matéria adicionada!');
+ showToast('Materia adicionada!');
  }
 
  function removeSubject(i) {
@@ -283,7 +297,7 @@ function renderCalendar() {
  localStorage.setItem('focustrip_subjects', JSON.stringify(subjects));
  deleteSubjectFromServer(removed && removed.id).catch(() => {});
  renderSubjectsWeek();
- renderCalendar();
+ if (isPremiumUser()) renderCalendar();
  }
  </script>
 </body>
