@@ -617,7 +617,14 @@ input.input-styled:focus,
   display: flex; flex-direction: column; gap: 8px;
 }
 .sidebar-user-info { display: flex; align-items: center; gap: 10px; }
-.sidebar-avatar { font-size: 1.5rem; }
+.sidebar-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--gradient-main);
+  display: flex; align-items: center; justify-content: center;
+}
 .sidebar-name   { font-size: .84rem; font-weight: 600; }
 .sidebar-level  { font-size: .75rem; color: var(--text-muted); }
 .sidebar-logout {
@@ -653,10 +660,12 @@ input.input-styled:focus,
 }
 
 .topbar-avatar img,
-.sidebar-avatar img {
+.sidebar-avatar img,
+.profile-avatar-big img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   border-radius: inherit;
 }
 
@@ -893,10 +902,10 @@ input.input-styled:focus,
 .profile-hero-right { flex: 1; min-width: 260px; display: flex; gap: 20px; flex-wrap: wrap; }
 
 .profile-avatar-big {
-  width: 72px; height: 72px; border-radius: 50%;
+  width: 80px; height: 80px; border-radius: 50%;
   background: var(--gradient-main); display: flex;
   align-items: center; justify-content: center; font-size: 2.2rem;
-  flex-shrink: 0;
+  flex-shrink: 0; overflow: hidden;
 }
 .profile-avatar-big img {
   width: 100%;
@@ -1589,8 +1598,7 @@ input.input-styled:focus,
   .cal-day-plan small { display: none; }
   .methods-grid   { grid-template-columns: 1fr; }
   .cognitive-features { grid-template-columns: 1fr; }
-  .profile-tabs { width: 100%; overflow-x: auto; }
-  .tab-btn { white-space: nowrap; }
+  .profile-tabs { width: 100%; overflow: visible; }
   .analytics-strip { grid-template-columns: 1fr; }
   .analytics-metric-card,
   .analytics-metric-card:nth-child(2n) {
@@ -1601,8 +1609,7 @@ input.input-styled:focus,
   .analytics-section-title { align-items: flex-start; flex-direction: column; }
   .analytics-position-grid { padding: 14px; gap: 16px; }
   .keyword-panels { grid-template-columns: 1fr; }
-  .history-item   { grid-template-columns: 80px 1fr auto auto; }
-  .history-method { display: none; }
+  .history-item   { grid-template-columns: 88px 1fr auto; }
   .main-cta-card  { flex-direction: column; }
   .stats-section-head { flex-direction: column; }
   .stats-section-head p { text-align: left; }
@@ -2140,6 +2147,8 @@ input.input-styled:focus,
   color: #fffaf0;
   border: 0;
   font-size: 0;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .app-page .sidebar-avatar::before,
@@ -2827,8 +2836,8 @@ input.input-styled:focus,
     padding: 20px;
     gap: 18px;
   }
-  .profile-hero-left  { min-width: 0; width: 100%; }
-  .profile-hero-right { min-width: 0; width: 100%; flex-direction: column; gap: 12px; }
+  .profile-hero-left  { min-width: 0; max-width: 100%; width: 100%; }
+  .profile-hero-right { min-width: 0; max-width: 100%; width: 100%; flex-direction: column; gap: 12px; }
   .profile-level-card { width: 100%; }
   .profile-quick-stats {
     display: grid;
@@ -2838,9 +2847,19 @@ input.input-styled:focus,
   .quick-stat { min-width: 0; padding: 10px; }
   .quick-stat strong { font-size: .95rem; }
 
-  /* Tabs: ocupa toda a largura */
-  .profile-tabs { width: 100%; }
-  .tab-btn { flex: 1; padding: 8px 8px; font-size: .76rem; text-align: center; }
+  /* Tabs: quebra em duas linhas em vez de rolar lateralmente */
+  .profile-tabs {
+    width: 100%;
+    flex-wrap: wrap;
+    height: auto;
+  }
+  .tab-btn {
+    flex: 1 1 calc(33.33% - 4px);
+    padding: 8px 4px;
+    font-size: .75rem;
+    text-align: center;
+    white-space: nowrap;
+  }
 
   /* Settings card */
   .settings-card { padding: 18px; }
@@ -2863,6 +2882,21 @@ input.input-styled:focus,
   /* Agenda: form de adicionar */
   .add-subject-card { padding: 18px; }
 
-  /* App content: menos padding lateral */
-  .app-page .app-content { padding: 16px; }
+  /* App content: menos padding lateral e sem overflow horizontal */
+  .app-page .app-content { padding: 16px; overflow-x: hidden; }
+
+  /* Settings card: ocupa a largura disponível */
+  .settings-card { max-width: 100%; }
+
+  /* Conquistas: 2 colunas fixas em vez de minmax que pode derramar */
+  .achievements-full-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Histórico: simplifica para 3 colunas gerenciáveis */
+  .history-item {
+    grid-template-columns: 88px 1fr auto;
+    gap: 8px;
+    padding: 12px 14px;
+    font-size: .8rem;
+  }
+  .history-method, .history-status { display: none; }
 }

@@ -611,11 +611,20 @@
  }
  const input = document.getElementById('avatarInput');
  if (!input.files.length) {
- showToast('Escolha uma imagem primeiro.');
- return;
+  showToast('Escolha uma imagem primeiro.');
+  return;
+ }
+ const file = input.files[0];
+ if (file.size > 2 * 1024 * 1024) {
+  showToast('Imagem muito grande. Máximo: 2 MB.');
+  return;
+ }
+ if (!file.type.startsWith('image/')) {
+  showToast('Selecione apenas arquivos de imagem.');
+  return;
  }
  try {
- const user = await uploadAvatar(input.files[0]);
+ const user = await uploadAvatar(file);
  showToast('Foto de perfil atualizada.');
  const avatar = document.querySelector('.profile-avatar-big');
  avatar.classList.add('has-avatar');
