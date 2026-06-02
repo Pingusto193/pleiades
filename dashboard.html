@@ -151,7 +151,7 @@
  <div class="sidebar-level">Nível ${user.nivel}</div>
  </div>
  </div>
- <a href="login.html" class="sidebar-logout" onclick="logout()">Sair</a>
+ <a href="index.html" class="sidebar-logout" onclick="logout(event)">Sair</a>
  `;
 
  // Day status
@@ -256,11 +256,13 @@
  document.getElementById('blockModal').style.display = 'none';
  }
 
- function logout() {
+ function logout(event) {
+ if (event) event.preventDefault();
  localStorage.removeItem('focustrip_user');
  localStorage.removeItem('focustrip_token');
  localStorage.removeItem('focustrip_sessions');
  localStorage.removeItem('focustrip_subjects');
+ window.location.href = 'index.html';
  }
  </script>
 </body>

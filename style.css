@@ -368,6 +368,66 @@ img { max-width: 100%; }
 .level-fill { height: 100%; background: var(--gradient-main); border-radius: 3px; }
 .profile-level small { font-size: .75rem; color: var(--text-muted); }
 
+/* PRICING */
+.pricing-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.pricing-plan {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.pricing-plan.premium-plan {
+  border-color: rgba(47, 111, 115, .42);
+  box-shadow: inset 0 0 0 1px rgba(47, 111, 115, .16), 0 18px 55px rgba(55, 45, 32, .12);
+}
+.pricing-top {
+  display: grid;
+  gap: 4px;
+}
+.pricing-label {
+  color: var(--color-primary);
+  font-size: .78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.pricing-top strong {
+  color: var(--text-primary);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.1rem;
+  line-height: 1;
+}
+.pricing-top small {
+  color: var(--text-muted);
+}
+.pricing-plan ul {
+  display: grid;
+  gap: 10px;
+  color: var(--text-secondary);
+  list-style: none;
+}
+.pricing-plan li {
+  position: relative;
+  padding-left: 20px;
+}
+.pricing-plan li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: .68em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
 /* COGNITIVE BLOCK */
 .cognitive-block { max-width: 680px; margin: 0 auto; padding: 20px; }
 .cognitive-icon { font-size: 3rem; margin-bottom: 20px; }
@@ -1167,6 +1227,7 @@ input.input-styled:focus,
   .steps-grid   { grid-template-columns: 1fr; }
   .methods-grid { grid-template-columns: 1fr 1fr; }
   .rewards-showcase { grid-template-columns: 1fr; }
+  .pricing-compare { grid-template-columns: 1fr; }
   .auth-container   { grid-template-columns: 1fr; }
   .auth-left        { display: none; }
   .nav-landing      { padding: 14px 20px; }
@@ -2121,6 +2182,7 @@ input.input-styled:focus,
 .landing-page .step-card,
 .landing-page .method-card,
 .landing-page .reward-item,
+.landing-page .pricing-plan,
 .landing-page .profile-preview {
   transition:
     transform var(--motion) var(--ease-out),
@@ -2140,7 +2202,8 @@ input.input-styled:focus,
 .app-page .summary-stat:hover,
 .landing-page .step-card:hover,
 .landing-page .method-card:hover,
-.landing-page .reward-item:hover {
+.landing-page .reward-item:hover,
+.landing-page .pricing-plan:hover {
   transform: translateY(-3px);
   box-shadow: 0 20px 45px rgba(35, 33, 29, .14);
 }
