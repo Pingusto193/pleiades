@@ -3,19 +3,160 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const multer = require('multer');
-const { DatabaseSync } = require('node:sqlite');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const ROOT = __dirname;
 const DATA_DIR = path.join(ROOT, 'data');
 const UPLOAD_DIR = path.join(ROOT, 'uploads');
+const USE_POSTGRES = Boolean(process.env.DATABASE_URL);
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
-const db = new DatabaseSync(path.join(DATA_DIR, 'focus-trip.db'));
-db.exec('PRAGMA journal_mode = WAL;');
+let pool;
+let sqliteDb;
+
+function pgSql(sql) {
+  let index = 0;
+  return sql.replace(/\?/g, () => `$${++index}`);
+}
+
+async function all(sql, params = []) {
+  if (USE_POSTGRES) return (await pool.query(pgSql(sql), params)).rows;
+  return sqliteDb.prepare(sql).all(...params);
+}
+
+async function get(sql, params = []) {
+  if (USE_POSTGRES) return (await pool.query(pgSql(sql), params)).rows[0];
+  return sqliteDb.prepare(sql).get(...params);
+}
+
+async function run(sql, params = []) {
+  if (USE_POSTGRES) return pool.query(pgSql(sql), params);
+  return sqliteDb.prepare(sql).run(...params);
+}
+
+async function insert(sql, params = []) {
+  if (USE_POSTGRES) {
+    const row = await get(`${sql} RETURNING id`, params);
+    return row.id;
+  }
+  return run(sql, params).then((result) => result.lastInsertRowid);
+}
+
+async function initDb() {
+  if (USE_POSTGRES) {
+    const { Pool } = require('pg');
+    pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false }
+    });
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        nome TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        password_hash TEXT NOT NULL,
+        password_salt TEXT NOT NULL,
+        horas INTEGER NOT NULL DEFAULT 2,
+        dias TEXT NOT NULL DEFAULT '[]',
+        metodo TEXT NOT NULL DEFAULT 'pomodoro',
+        streak INTEGER NOT NULL DEFAULT 0,
+        xp INTEGER NOT NULL DEFAULT 0,
+        nivel INTEGER NOT NULL DEFAULT 1,
+        conquistas TEXT NOT NULL DEFAULT '[]',
+        avatar_url TEXT,
+        criado_em TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS sessions (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        data TEXT NOT NULL,
+        duracao INTEGER NOT NULL,
+        materia TEXT,
+        metodo TEXT,
+        completa INTEGER NOT NULL DEFAULT 0,
+        criado_em TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS subjects (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        nome TEXT NOT NULL,
+        dias TEXT NOT NULL DEFAULT '[]',
+        color TEXT NOT NULL DEFAULT '#2f6f73',
+        horario TEXT NOT NULL DEFAULT '08:00',
+        duracao INTEGER NOT NULL DEFAULT 60,
+        pausa INTEGER NOT NULL DEFAULT 10,
+        criado_em TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS auth_tokens (
+        token TEXT PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        criado_em TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    `);
+    return;
+  }
+
+  const { DatabaseSync } = require('node:sqlite');
+  sqliteDb = new DatabaseSync(path.join(DATA_DIR, 'focus-trip.db'));
+  sqliteDb.exec('PRAGMA journal_mode = WAL;');
+  sqliteDb.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nome TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      password_salt TEXT NOT NULL,
+      horas INTEGER NOT NULL DEFAULT 2,
+      dias TEXT NOT NULL DEFAULT '[]',
+      metodo TEXT NOT NULL DEFAULT 'pomodoro',
+      streak INTEGER NOT NULL DEFAULT 0,
+      xp INTEGER NOT NULL DEFAULT 0,
+      nivel INTEGER NOT NULL DEFAULT 1,
+      conquistas TEXT NOT NULL DEFAULT '[]',
+      avatar_url TEXT,
+      criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS sessions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      data TEXT NOT NULL,
+      duracao INTEGER NOT NULL,
+      materia TEXT,
+      metodo TEXT,
+      completa INTEGER NOT NULL DEFAULT 0,
+      criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS subjects (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      nome TEXT NOT NULL,
+      dias TEXT NOT NULL DEFAULT '[]',
+      color TEXT NOT NULL DEFAULT '#2f6f73',
+      horario TEXT NOT NULL DEFAULT '08:00',
+      duracao INTEGER NOT NULL DEFAULT 60,
+      pausa INTEGER NOT NULL DEFAULT 10,
+      criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS auth_tokens (
+      token TEXT PRIMARY KEY,
+      user_id INTEGER NOT NULL,
+      criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+  `);
+}
 
 function localDateKey(date = new Date()) {
   const year = date.getFullYear();
@@ -23,63 +164,6 @@ function localDateKey(date = new Date()) {
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
-
-db.exec(`
-  CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
-    password_salt TEXT NOT NULL,
-    horas INTEGER NOT NULL DEFAULT 2,
-    dias TEXT NOT NULL DEFAULT '[]',
-    metodo TEXT NOT NULL DEFAULT 'pomodoro',
-    streak INTEGER NOT NULL DEFAULT 0,
-    xp INTEGER NOT NULL DEFAULT 0,
-    nivel INTEGER NOT NULL DEFAULT 1,
-    conquistas TEXT NOT NULL DEFAULT '[]',
-    avatar_url TEXT,
-    criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-  );
-
-  CREATE TABLE IF NOT EXISTS sessions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    data TEXT NOT NULL,
-    duracao INTEGER NOT NULL,
-    materia TEXT,
-    metodo TEXT,
-    completa INTEGER NOT NULL DEFAULT 0,
-    criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
-  );
-
-  CREATE TABLE IF NOT EXISTS subjects (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    nome TEXT NOT NULL,
-    dias TEXT NOT NULL DEFAULT '[]',
-    color TEXT NOT NULL DEFAULT '#2f6f73',
-    criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
-  );
-
-  CREATE TABLE IF NOT EXISTS auth_tokens (
-    token TEXT PRIMARY KEY,
-    user_id INTEGER NOT NULL,
-    criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
-  );
-`);
-
-function ensureColumn(table, column, definition) {
-  const columns = db.prepare(`PRAGMA table_info(${table})`).all().map((info) => info.name);
-  if (!columns.includes(column)) db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
-}
-
-ensureColumn('subjects', 'horario', "TEXT NOT NULL DEFAULT '08:00'");
-ensureColumn('subjects', 'duracao', 'INTEGER NOT NULL DEFAULT 60');
-ensureColumn('subjects', 'pausa', 'INTEGER NOT NULL DEFAULT 10');
 
 app.use(express.json({ limit: '1mb' }));
 app.use((req, res, next) => {
@@ -118,7 +202,7 @@ function verifyPassword(password, user) {
 
 function parseJSON(value, fallback) {
   try {
-    return JSON.parse(value);
+    return typeof value === 'string' ? JSON.parse(value) : value;
   } catch {
     return fallback;
   }
@@ -142,20 +226,24 @@ function publicUser(row) {
   };
 }
 
-function createToken(userId) {
+async function createToken(userId) {
   const token = crypto.randomBytes(32).toString('hex');
-  db.prepare('INSERT INTO auth_tokens (token, user_id) VALUES (?, ?)').run(token, userId);
+  await run('INSERT INTO auth_tokens (token, user_id) VALUES (?, ?)', [token, userId]);
   return token;
 }
 
-function requireAuth(req, res, next) {
+async function requireAuth(req, res, next) {
   const header = req.headers.authorization || '';
   const token = header.startsWith('Bearer ') ? header.slice(7) : '';
-  const auth = token && db.prepare('SELECT user_id FROM auth_tokens WHERE token = ?').get(token);
-  if (!auth) return res.status(401).json({ error: 'Não autenticado.' });
-  req.user = db.prepare('SELECT * FROM users WHERE id = ?').get(auth.user_id);
-  if (!req.user) return res.status(401).json({ error: 'Usuário não encontrado.' });
+  const auth = token && await get('SELECT user_id FROM auth_tokens WHERE token = ?', [token]);
+  if (!auth) return res.status(401).json({ error: 'Nao autenticado.' });
+  req.user = await get('SELECT * FROM users WHERE id = ?', [auth.user_id]);
+  if (!req.user) return res.status(401).json({ error: 'Usuario nao encontrado.' });
   next();
+}
+
+function asyncRoute(handler) {
+  return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
 }
 
 function userPayload(req) {
@@ -169,7 +257,7 @@ function userPayload(req) {
   };
 }
 
-app.post('/api/register', (req, res) => {
+app.post('/api/register', asyncRoute(async (req, res) => {
   const payload = userPayload(req);
   if (!payload.nome || !payload.email || payload.password.length < 8) {
     return res.status(400).json({ error: 'Informe nome, e-mail e senha com pelo menos 8 caracteres.' });
@@ -177,45 +265,39 @@ app.post('/api/register', (req, res) => {
 
   const password = hashPassword(payload.password);
   try {
-    const result = db.prepare(`
+    const id = await insert(`
       INSERT INTO users (nome, email, password_hash, password_salt, horas, dias, metodo)
-      VALUES (@nome, @email, @password_hash, @password_salt, @horas, @dias, @metodo)
-    `).run({
-      nome: payload.nome,
-      email: payload.email,
-      horas: payload.horas,
-      dias: payload.dias,
-      metodo: payload.metodo,
-      password_hash: password.hash,
-      password_salt: password.salt
-    });
-    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(result.lastInsertRowid);
-    res.status(201).json({ token: createToken(user.id), user: publicUser(user), sessions: [], subjects: [] });
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `, [payload.nome, payload.email, password.hash, password.salt, payload.horas, payload.dias, payload.metodo]);
+    const user = await get('SELECT * FROM users WHERE id = ?', [id]);
+    res.status(201).json({ token: await createToken(user.id), user: publicUser(user), sessions: [], subjects: [] });
   } catch (error) {
-    if (String(error.message).includes('UNIQUE')) return res.status(409).json({ error: 'Este e-mail já está cadastrado.' });
+    if (String(error.message).includes('duplicate key') || String(error.message).includes('UNIQUE')) {
+      return res.status(409).json({ error: 'Este e-mail ja esta cadastrado.' });
+    }
     console.error(error);
-    res.status(500).json({ error: 'Não foi possível criar a conta.' });
+    res.status(500).json({ error: 'Nao foi possivel criar a conta.' });
   }
-});
+}));
 
-app.post('/api/login', (req, res) => {
+app.post('/api/login', asyncRoute(async (req, res) => {
   const email = String(req.body.email || '').trim().toLowerCase();
   const password = String(req.body.password || req.body.senha || '');
-  const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+  const user = await get('SELECT * FROM users WHERE email = ?', [email]);
   if (!user || !verifyPassword(password, user)) return res.status(401).json({ error: 'E-mail ou senha incorretos.' });
   res.json({
-    token: createToken(user.id),
+    token: await createToken(user.id),
     user: publicUser(user),
-    sessions: listSessions(user.id),
-    subjects: listSubjects(user.id)
+    sessions: await listSessions(user.id),
+    subjects: await listSubjects(user.id)
   });
-});
+}));
 
-app.get('/api/me', requireAuth, (req, res) => {
-  res.json({ user: publicUser(req.user), sessions: listSessions(req.user.id), subjects: listSubjects(req.user.id) });
-});
+app.get('/api/me', requireAuth, asyncRoute(async (req, res) => {
+  res.json({ user: publicUser(req.user), sessions: await listSessions(req.user.id), subjects: await listSubjects(req.user.id) });
+}));
 
-app.put('/api/me', requireAuth, (req, res) => {
+app.put('/api/me', requireAuth, asyncRoute(async (req, res) => {
   const current = publicUser(req.user);
   const next = {
     nome: req.body.nome ?? current.nome,
@@ -227,16 +309,15 @@ app.put('/api/me', requireAuth, (req, res) => {
     nivel: Number(req.body.nivel ?? current.nivel),
     conquistas: JSON.stringify(Array.isArray(req.body.conquistas) ? req.body.conquistas : current.conquistas)
   };
-  db.prepare(`
+  await run(`
     UPDATE users
-    SET nome = @nome, horas = @horas, dias = @dias, metodo = @metodo,
-        streak = @streak, xp = @xp, nivel = @nivel, conquistas = @conquistas
-    WHERE id = @id
-  `).run({ ...next, id: req.user.id });
-  res.json({ user: publicUser(db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id)) });
-});
+    SET nome = ?, horas = ?, dias = ?, metodo = ?, streak = ?, xp = ?, nivel = ?, conquistas = ?
+    WHERE id = ?
+  `, [next.nome, next.horas, next.dias, next.metodo, next.streak, next.xp, next.nivel, next.conquistas, req.user.id]);
+  res.json({ user: publicUser(await get('SELECT * FROM users WHERE id = ?', [req.user.id])) });
+}));
 
-app.put('/api/account', requireAuth, (req, res) => {
+app.put('/api/account', requireAuth, asyncRoute(async (req, res) => {
   const nome = String(req.body.nome || '').trim();
   const email = String(req.body.email || '').trim().toLowerCase();
   const currentPassword = String(req.body.currentPassword || '');
@@ -244,56 +325,58 @@ app.put('/api/account', requireAuth, (req, res) => {
 
   if (!nome || !email) return res.status(400).json({ error: 'Informe nome e e-mail.' });
 
-  const updates = { id: req.user.id, nome, email };
-  let passwordSql = '';
+  let sql = 'UPDATE users SET nome = ?, email = ?';
+  const params = [nome, email];
 
   if (newPassword) {
     if (newPassword.length < 8) return res.status(400).json({ error: 'A nova senha precisa ter pelo menos 8 caracteres.' });
     if (!verifyPassword(currentPassword, req.user)) return res.status(401).json({ error: 'Senha atual incorreta.' });
     const password = hashPassword(newPassword);
-    updates.password_hash = password.hash;
-    updates.password_salt = password.salt;
-    passwordSql = ', password_hash = @password_hash, password_salt = @password_salt';
+    sql += ', password_hash = ?, password_salt = ?';
+    params.push(password.hash, password.salt);
   }
 
   try {
-    db.prepare(`UPDATE users SET nome = @nome, email = @email${passwordSql} WHERE id = @id`).run(updates);
-    res.json({ user: publicUser(db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id)) });
+    await run(`${sql} WHERE id = ?`, [...params, req.user.id]);
+    res.json({ user: publicUser(await get('SELECT * FROM users WHERE id = ?', [req.user.id])) });
   } catch (error) {
-    if (String(error.message).includes('UNIQUE')) return res.status(409).json({ error: 'Este e-mail já está em uso.' });
-    res.status(500).json({ error: 'Não foi possível atualizar a conta.' });
+    if (String(error.message).includes('duplicate key') || String(error.message).includes('UNIQUE')) {
+      return res.status(409).json({ error: 'Este e-mail ja esta em uso.' });
+    }
+    res.status(500).json({ error: 'Nao foi possivel atualizar a conta.' });
   }
-});
+}));
 
-function listSessions(userId) {
-  return db.prepare(`
-    SELECT id, data, duracao, materia, metodo, completa, criado_em AS criadoEm
+async function listSessions(userId) {
+  const rows = await all(`
+    SELECT id, data, duracao, materia, metodo, completa, criado_em AS "criadoEm"
     FROM sessions WHERE user_id = ? ORDER BY id ASC
-  `).all(userId).map((session) => ({ ...session, completa: Boolean(session.completa) }));
+  `, [userId]);
+  return rows.map((session) => ({ ...session, completa: Boolean(session.completa) }));
 }
 
-app.post('/api/sessions', requireAuth, (req, res) => {
+app.post('/api/sessions', requireAuth, asyncRoute(async (req, res) => {
   const session = {
     user_id: req.user.id,
     data: String(req.body.data || localDateKey()),
     duracao: Number(req.body.duracao || 0),
-    materia: String(req.body.materia || 'Sessão de estudo'),
+    materia: String(req.body.materia || 'Sessao de estudo'),
     metodo: String(req.body.metodo || 'pomodoro'),
     completa: req.body.completa ? 1 : 0
   };
-  const result = db.prepare(`
+  const id = await insert(`
     INSERT INTO sessions (user_id, data, duracao, materia, metodo, completa)
-    VALUES (@user_id, @data, @duracao, @materia, @metodo, @completa)
-  `).run(session);
-  res.status(201).json({ id: result.lastInsertRowid, ...session, completa: Boolean(session.completa) });
-});
+    VALUES (?, ?, ?, ?, ?, ?)
+  `, [session.user_id, session.data, session.duracao, session.materia, session.metodo, session.completa]);
+  res.status(201).json({ id, ...session, completa: Boolean(session.completa) });
+}));
 
-function listSubjects(userId) {
-  return db.prepare('SELECT id, nome, dias, color, horario, duracao, pausa FROM subjects WHERE user_id = ? ORDER BY id ASC').all(userId)
-    .map((subject) => ({ ...subject, dias: parseJSON(subject.dias, []) }));
+async function listSubjects(userId) {
+  const rows = await all('SELECT id, nome, dias, color, horario, duracao, pausa FROM subjects WHERE user_id = ? ORDER BY id ASC', [userId]);
+  return rows.map((subject) => ({ ...subject, dias: parseJSON(subject.dias, []) }));
 }
 
-app.post('/api/subjects', requireAuth, (req, res) => {
+app.post('/api/subjects', requireAuth, asyncRoute(async (req, res) => {
   const subject = {
     user_id: req.user.id,
     nome: String(req.body.nome || '').trim(),
@@ -303,26 +386,36 @@ app.post('/api/subjects', requireAuth, (req, res) => {
     duracao: Number(req.body.duracao || 60),
     pausa: Number(req.body.pausa || 10)
   };
-  if (!subject.nome) return res.status(400).json({ error: 'Nome da matéria é obrigatório.' });
-  const result = db.prepare(`
+  if (!subject.nome) return res.status(400).json({ error: 'Nome da materia e obrigatorio.' });
+  const id = await insert(`
     INSERT INTO subjects (user_id, nome, dias, color, horario, duracao, pausa)
-    VALUES (@user_id, @nome, @dias, @color, @horario, @duracao, @pausa)
-  `).run(subject);
-  res.status(201).json({ id: result.lastInsertRowid, ...subject, dias: parseJSON(subject.dias, []) });
-});
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `, [subject.user_id, subject.nome, subject.dias, subject.color, subject.horario, subject.duracao, subject.pausa]);
+  res.status(201).json({ id, ...subject, dias: parseJSON(subject.dias, []) });
+}));
 
-app.delete('/api/subjects/:id', requireAuth, (req, res) => {
-  db.prepare('DELETE FROM subjects WHERE id = ? AND user_id = ?').run(req.params.id, req.user.id);
+app.delete('/api/subjects/:id', requireAuth, asyncRoute(async (req, res) => {
+  await run('DELETE FROM subjects WHERE id = ? AND user_id = ?', [req.params.id, req.user.id]);
   res.status(204).end();
-});
+}));
 
-app.post('/api/avatar', requireAuth, upload.single('avatar'), (req, res) => {
-  if (!req.file) return res.status(400).json({ error: 'Envie uma imagem válida de até 2 MB.' });
+app.post('/api/avatar', requireAuth, upload.single('avatar'), asyncRoute(async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'Envie uma imagem valida de ate 2 MB.' });
   const avatarUrl = `/uploads/${req.file.filename}`;
-  db.prepare('UPDATE users SET avatar_url = ? WHERE id = ?').run(avatarUrl, req.user.id);
-  res.json({ avatarUrl, user: publicUser(db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id)) });
+  await run('UPDATE users SET avatar_url = ? WHERE id = ?', [avatarUrl, req.user.id]);
+  res.json({ avatarUrl, user: publicUser(await get('SELECT * FROM users WHERE id = ?', [req.user.id])) });
+}));
+
+app.use((error, _req, res, _next) => {
+  console.error(error);
+  res.status(500).json({ error: 'Erro interno do servidor.' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Focus Trip rodando em http://localhost:${PORT}`);
+initDb().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Focus Trip rodando na porta ${PORT} usando ${USE_POSTGRES ? 'PostgreSQL' : 'SQLite'}`);
+  });
+}).catch((error) => {
+  console.error('Falha ao iniciar o banco de dados:', error);
+  process.exit(1);
 });
