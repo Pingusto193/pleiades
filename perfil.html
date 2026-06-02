@@ -100,7 +100,7 @@
  </div>
  </main>
 
- <script src="app.js?v=db8"></script>
+ <script src="app.js?v=db9"></script>
  <script>document.addEventListener('DOMContentLoaded', async () => {
  let user = getUser();
  if (!user) { window.location.href = 'login.html'; return; }
@@ -116,7 +116,7 @@
 
  document.getElementById('profileHero').innerHTML = `
  <div class="profile-hero-left">
- <div class="profile-avatar-big ${user.avatarUrl ? 'has-avatar' : ''}">${user.avatarUrl ? `<img src="${mediaUrl(user.avatarUrl)}" alt="Foto de perfil" />` : ''}</div>
+ <div class="profile-avatar-big has-avatar"><img src="${userAvatarUrl(user)}" alt="Foto de perfil" /></div>
  <div class="profile-hero-info">
  <h2>${user.nome}</h2>
  <div class="profile-email">${user.email}</div>
@@ -254,8 +254,8 @@
  const user = await uploadAvatar(input.files[0]);
  showToast('Foto de perfil atualizada.');
  const avatar = document.querySelector('.profile-avatar-big');
- avatar.classList.toggle('has-avatar', Boolean(user.avatarUrl));
- avatar.innerHTML = user.avatarUrl ? `<img src="${mediaUrl(user.avatarUrl)}" alt="Foto de perfil" />` : '';
+ avatar.classList.add('has-avatar');
+ avatar.innerHTML = `<img src="${userAvatarUrl(user)}" alt="Foto de perfil" />`;
  input.value = '';
  } catch (error) {
  showToast(error.message);

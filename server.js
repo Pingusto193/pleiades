@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 const ROOT = __dirname;
 const DATA_DIR = path.join(ROOT, 'data');
 const UPLOAD_DIR = path.join(ROOT, 'uploads');
+const DEFAULT_AVATAR_URL = '/assets/default-avatar.svg';
 const USE_POSTGRES = Boolean(process.env.DATABASE_URL);
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -228,7 +229,7 @@ function publicUser(row) {
     nivel: row.nivel,
     plan: row.plan || 'free',
     conquistas: parseJSON(row.conquistas, []),
-    avatarUrl: row.avatar_url || '',
+    avatarUrl: row.avatar_url || DEFAULT_AVATAR_URL,
     criadoEm: row.criado_em
   };
 }

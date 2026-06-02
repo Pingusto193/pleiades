@@ -4,11 +4,16 @@
 
 // Usuário
 const API_BASE = '';
+const DEFAULT_AVATAR_URL = '/assets/default-avatar.svg';
 
 function mediaUrl(path) {
  if (!path) return '';
  if (/^(https?:|data:|blob:)/.test(path)) return path;
  return `${API_BASE}${path}`;
+}
+
+function userAvatarUrl(user) {
+ return mediaUrl((user && user.avatarUrl) || DEFAULT_AVATAR_URL);
 }
 
 function getToken() {
@@ -119,6 +124,29 @@ function isPremiumUser(user = getUser()) {
  return user && user.plan === 'premium';
 }
 
+function setTheme(theme) {
+ localStorage.setItem('ft_theme', theme);
+ document.documentElement.setAttribute('data-theme', theme);
+ const toggle = document.getElementById('themeToggle');
+ if (toggle) toggle.textContent = theme === 'dark' ? 'Claro' : 'Escuro';
+}
+
+function toggleTheme() {
+ const current = document.documentElement.getAttribute('data-theme') || 'light';
+ setTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+function mountThemeToggle() {
+ if (document.getElementById('themeToggle')) return;
+ const button = document.createElement('button');
+ button.id = 'themeToggle';
+ button.type = 'button';
+ button.className = 'theme-toggle';
+ button.addEventListener('click', toggleTheme);
+ document.body.appendChild(button);
+ setTheme(localStorage.getItem('ft_theme') || 'light');
+}
+
 // Sessões
 function localDateKey(date = new Date()) {
  const year = date.getFullYear();
@@ -225,9 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
  const origSave = localStorage.setItem.bind(localStorage);
  // Nenhuma sobrescrita necessária — a hora é salva inline em sessao.html
 
- // Modo escuro / claro (toggle futuro)
- const savedTheme = localStorage.getItem('ft_theme') || 'dark';
- document.documentElement.setAttribute('data-theme', savedTheme);
+ mountThemeToggle();
 
  refreshAccount().catch(() => {});
 });

@@ -117,7 +117,7 @@
  </div>
  </div>
 
- <script src="app.js?v=db8"></script>
+ <script src="app.js?v=db9"></script>
  <script>document.addEventListener('DOMContentLoaded', async () => {
  let user = getUser();
  if (!user) { window.location.href = 'login.html'; return; }
@@ -128,10 +128,8 @@
  const saudacao = hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite';
  document.getElementById('topGreeting').textContent = `${saudacao}, ${user.nome.split(' ')[0]}!`;
  document.getElementById('topStreak').textContent = `${user.streak} dias`;
- if (user.avatarUrl) {
  document.getElementById('topAvatar').classList.add('has-avatar');
- document.getElementById('topAvatar').innerHTML = `<img src="${mediaUrl(user.avatarUrl)}" alt="Foto de perfil" />`;
- }
+ document.getElementById('topAvatar').innerHTML = `<img src="${userAvatarUrl(user)}" alt="Foto de perfil" />`;
 
  // Stats
  document.getElementById('streakNum').textContent = user.streak;
@@ -147,7 +145,7 @@
  // Sidebar user
  document.getElementById('sidebarUser').innerHTML = `
  <div class="sidebar-user-info">
- <div class="sidebar-avatar ${user.avatarUrl ? 'has-avatar' : ''}">${user.avatarUrl ? `<img src="${mediaUrl(user.avatarUrl)}" alt="Foto de perfil" />` : ''}</div>
+ <div class="sidebar-avatar has-avatar"><img src="${userAvatarUrl(user)}" alt="Foto de perfil" /></div>
  <div>
  <div class="sidebar-name">${user.nome}</div>
  <div class="sidebar-level">Nível ${user.nivel}</div>

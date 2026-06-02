@@ -56,6 +56,21 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 input, select, textarea { font-family: inherit; }
 img { max-width: 100%; }
 
+.theme-toggle {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 10000;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #23211d;
+  color: #fffaf0;
+  border: 1px solid rgba(255, 250, 240, .18);
+  box-shadow: 0 12px 30px rgba(0,0,0,.18);
+  font-size: .82rem;
+  font-weight: 800;
+}
+
 /* ─── Utilitários ────────────────────────────────── */
 .gradient-text {
   background: var(--gradient-main);
@@ -1880,4 +1895,131 @@ input.input-styled:focus,
   .app-page .app-content {
     padding: 20px;
   }
+}
+
+[data-theme="dark"] .app-page,
+[data-theme="dark"] .auth-page {
+  --bg-base: #0d0f14;
+  --bg-surface: #161923;
+  --bg-elevated: #1e2330;
+  --bg-card: #232840;
+  --border: #2e3450;
+  --border-light: #3d4568;
+  --color-primary: #7dd3fc;
+  --color-primary-h: #38bdf8;
+  --color-accent: #fbbf24;
+  --color-success: #34d399;
+  --color-danger: #f87171;
+  --color-warn: #fbbf24;
+  --text-primary: #f5f7ff;
+  --text-secondary: #b8c1dc;
+  --text-muted: #7d87a8;
+  --gradient-main: linear-gradient(135deg, #38bdf8, #8b5cf6);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, .03) 1px, transparent 1px),
+    var(--bg-base);
+  background-size: 42px 42px;
+}
+
+[data-theme="dark"] .app-page .sidebar,
+[data-theme="dark"] .auth-page .auth-form-wrapper,
+[data-theme="dark"] .app-page .app-topbar {
+  background: rgba(22, 25, 35, .92);
+  border-color: rgba(255, 255, 255, .08);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, .32);
+}
+
+[data-theme="dark"] .auth-page .auth-right {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, .03) 1px, transparent 1px),
+    var(--bg-base);
+  background-size: 42px 42px;
+}
+
+[data-theme="dark"] .app-page .nav-item:hover,
+[data-theme="dark"] .app-page .main-cta-card {
+  background: rgba(125, 211, 252, .1);
+}
+
+[data-theme="dark"] .app-page .nav-item.active,
+[data-theme="dark"] .app-page .tab-btn.active,
+[data-theme="dark"] .app-page .btn-primary,
+[data-theme="dark"] .auth-page .btn-primary,
+[data-theme="dark"] .theme-toggle {
+  background: #f5f7ff;
+  color: #111827;
+}
+
+[data-theme="dark"] .app-page .day-status-card,
+[data-theme="dark"] .app-page .stat-card,
+[data-theme="dark"] .app-page .main-cta-card,
+[data-theme="dark"] .app-page .week-day,
+[data-theme="dark"] .app-page .achievement-card,
+[data-theme="dark"] .app-page .session-setup-card,
+[data-theme="dark"] .app-page .method-big-card,
+[data-theme="dark"] .app-page .timer-card,
+[data-theme="dark"] .app-page .session-progress-card,
+[data-theme="dark"] .app-page .result-card,
+[data-theme="dark"] .app-page .profile-hero-card,
+[data-theme="dark"] .app-page .profile-level-card,
+[data-theme="dark"] .app-page .quick-stat,
+[data-theme="dark"] .app-page .profile-tabs,
+[data-theme="dark"] .app-page .ach-full-card,
+[data-theme="dark"] .app-page .history-item,
+[data-theme="dark"] .app-page .settings-card,
+[data-theme="dark"] .app-page .cal-day,
+[data-theme="dark"] .app-page .summary-stat,
+[data-theme="dark"] .app-page .subject-card,
+[data-theme="dark"] .app-page .add-subject-card,
+[data-theme="dark"] .app-page .modal-card,
+[data-theme="dark"] .app-page .block-stat,
+[data-theme="dark"] .app-page .consequence {
+  background: rgba(35, 40, 64, .86);
+  border-color: rgba(255, 255, 255, .08);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, .28);
+}
+
+[data-theme="dark"] .app-page input,
+[data-theme="dark"] .app-page select,
+[data-theme="dark"] .app-page textarea,
+[data-theme="dark"] .auth-page input,
+[data-theme="dark"] .auth-page select,
+[data-theme="dark"] .auth-page textarea,
+[data-theme="dark"] .auth-page .onboarding-section,
+[data-theme="dark"] .auth-page .method-option,
+[data-theme="dark"] .auth-page .hours-btn,
+[data-theme="dark"] .auth-page .day-btn {
+  background: rgba(30, 35, 48, .92);
+  border-color: rgba(255, 255, 255, .1);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .app-page .topbar-streak,
+[data-theme="dark"] .app-page .cognitive-reminder,
+[data-theme="dark"] .app-page .mockup-warning,
+[data-theme="dark"] .app-page .status-warning,
+[data-theme="dark"] .app-page .consequence.warn,
+[data-theme="dark"] .upgrade-card {
+  background: rgba(251, 191, 36, .12);
+  color: #fde68a;
+  border-color: rgba(251, 191, 36, .28);
+}
+
+[data-theme="dark"] .upgrade-card strong {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .upgrade-card p {
+  color: #f8d77d;
+}
+
+[data-theme="dark"] .app-page .week-bar-wrap,
+[data-theme="dark"] .app-page .session-prog-bar-wrap,
+[data-theme="dark"] .app-page .level-bar,
+[data-theme="dark"] .app-page .level-bar-big,
+[data-theme="dark"] .app-page .timer-bg-circle {
+  background: #111827;
+  stroke: #111827;
 }
