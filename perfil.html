@@ -5,7 +5,7 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
  <title>Focus Trip | Meu Perfil</title>
  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
- <link rel="stylesheet" href="style.css" />
+ <link rel="stylesheet" href="style.css?v=stats-charts1" />
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body class="app-page">
@@ -227,6 +227,16 @@
  }
 
  const cleanSessions = sessions.map(normalizeSession).filter(s => s.duracao > 0);
+ if (!cleanSessions.length) {
+ panel.innerHTML = `
+ <div class="stats-empty-card">
+ <h3>Sem tempo de estudo registrado</h3>
+ <p>Finalize uma sessão para começar a acompanhar seu tempo, matérias e hábitos de estudo.</p>
+ <a href="sessao.html" class="btn-primary">Começar uma sessão</a>
+ </div>
+ `;
+ return;
+ }
  const totalMins = cleanSessions.reduce((sum, s) => sum + s.duracao, 0);
  const studyDays = new Set(cleanSessions.map(s => s.data).filter(Boolean));
  const avgPerDay = studyDays.size ? Math.round(totalMins / studyDays.size) : 0;
@@ -234,132 +244,114 @@
  const hourRows = buildHourStats(cleanSessions);
  const methodRows = buildMethodStats(cleanSessions);
  const trendRows = buildDailyTrend(cleanSessions);
- const completionRate = Math.round((cleanSessions.filter(s => s.completa).length / cleanSessions.length) * 100);
- const bestHour = hourRows.find(row => row.key !== 'sem-hora') || hourRows[0];
+ const completedSessions = cleanSessions.filter(s => s.completa).length;
+ const completionRate = Math.round((completedSessions / cleanSessions.length) * 100);
+ const bestHour = hourRows.find(row => row.key !== 'sem-hora');
  const topSubject = subjectRows[0];
+ const recentTrend = trendRows.slice(-7);
 
  panel.innerHTML = `
- <div class="analytics-board">
- <section class="analytics-strip">
- <article class="analytics-metric-card">
- <div class="metric-title">Tempo total</div>
- <div class="metric-value">${minToHour(totalMins)}</div>
- <div class="metric-foot">${cleanSessions.length} sessoes registradas</div>
- ${renderSparkline(trendRows.map(row => row.minutes), 'blue')}
+ <section class="stats-simple-intro">
+ <h3>Seu estudo em números</h3>
+ <p>Veja rapidamente quanto você estudou e quais hábitos aparecem na sua rotina.</p>
+ </section>
+
+ <section class="stats-simple-summary">
+ <article class="stats-simple-card">
+ <span>Tempo estudado</span>
+ <strong>${minToHour(totalMins)}</strong>
+ <small>em ${cleanSessions.length} sessões</small>
  </article>
- <article class="analytics-metric-card">
- <div class="metric-title">Consistencia</div>
- <div class="metric-value">${studyDays.size}<small> dias</small></div>
- <div class="metric-foot">${avgPerDay}min por dia ativo</div>
- ${renderSparkline(trendRows.map(row => row.sessions), 'green')}
+ <article class="stats-simple-card">
+ <span>Dias com estudo</span>
+ <strong>${studyDays.size}</strong>
+ <small>média de ${avgPerDay} min por dia</small>
  </article>
- <article class="analytics-metric-card">
- <div class="metric-title">Conclusao</div>
- <div class="metric-value">${completionRate}%</div>
- <div class="metric-foot">${cleanSessions.filter(s => s.completa).length} sessoes completas</div>
- ${renderMiniRing(completionRate)}
+ <article class="stats-simple-card">
+ <span>Sessões concluídas</span>
+ <strong>${completedSessions} de ${cleanSessions.length}</strong>
+ <small>${completionRate}% foram até o fim</small>
  </article>
- <article class="analytics-metric-card">
- <div class="metric-title">Melhor horario</div>
- <div class="metric-value">${bestHour ? bestHour.label : 'Sem dados'}</div>
- <div class="metric-foot">${bestHour ? `${bestHour.sessions} sessoes neste horario` : 'continue estudando'}</div>
- ${renderSparkline(hourRows.map(row => row.minutes), 'cyan')}
- </article>
- <article class="analytics-metric-card">
- <div class="metric-title">Top materia</div>
- <div class="metric-value clamp">${escapeHtml(topSubject?.label || 'Sem dados')}</div>
- <div class="metric-foot">${topSubject ? `${minToHour(topSubject.minutes)} acumuladas` : 'continue estudando'}</div>
- ${renderSparkline(subjectRows.slice(0, 6).map(row => row.minutes), 'orange')}
+ <article class="stats-simple-card highlight">
+ <span>Matéria mais estudada</span>
+ <strong>${escapeHtml(topSubject?.label || 'Sem dados')}</strong>
+ <small>${topSubject ? minToHour(topSubject.minutes) : 'Continue estudando'}</small>
  </article>
  </section>
 
- <section class="analytics-position-card">
- <div class="analytics-section-title">
+ <section class="stats-section-card stats-quick-read">
+ <div class="stats-section-head">
  <div>
- <h3>Ritmo de estudo</h3>
- <p>Ultimos 14 dias com sessoes registradas</p>
- </div>
- <span>Atualizado agora</span>
- </div>
- <div class="analytics-position-grid">
- <div class="visibility-panel">
- <span>Regularidade</span>
- <strong>${Math.min(100, Math.round((studyDays.size / Math.max(1, trendRows.length)) * 100))}%</strong>
- ${renderAreaChart(trendRows.map(row => row.minutes))}
- </div>
- <div class="keyword-panels">
- ${subjectRows.slice(0, 4).map(row => `
- <div class="keyword-stat-box">
- ${renderMiniRing(row.completion)}
- <div>
- <span>${escapeHtml(row.label)}</span>
- <strong>${row.consistency}%</strong>
- <small>${row.sessions} sessoes | ${minToHour(row.minutes)}</small>
+ <h3>Resumo rápido</h3>
+ <p>O que seus estudos mostram até agora.</p>
  </div>
  </div>
- `).join('')}
- </div>
- <div class="top-keywords">
- <h4>Materias em destaque</h4>
- <table>
- <thead><tr><th>Materia</th><th>Dias</th><th>Cons.</th></tr></thead>
- <tbody>
- ${subjectRows.slice(0, 6).map(row => `
- <tr>
- <td>${escapeHtml(row.label)}</td>
- <td>${row.days}</td>
- <td>${row.consistency}%</td>
- </tr>
- `).join('')}
- </tbody>
- </table>
- </div>
+ <div class="stats-insight-list">
+ <div class="stats-insight"><strong>Você costuma estudar mais às ${bestHour ? bestHour.label : 'horário ainda não identificado'}.</strong><span>${bestHour ? `${bestHour.sessions} sessões registradas nesse horário.` : 'Continue estudando para descobrir seu melhor horário.'}</span></div>
+ <div class="stats-insight"><strong>Em um dia de estudo, você estuda cerca de ${avgPerDay} minutos.</strong><span>Essa média considera apenas os dias em que houve alguma sessão.</span></div>
+ <div class="stats-insight"><strong>${completionRate}% das suas sessões foram concluídas.</strong><span>${completedSessions} sessões chegaram até o final.</span></div>
  </div>
  </section>
- </div>
 
  <section class="stats-section-card">
  <div class="stats-section-head">
- <h3>Desempenho por materia</h3>
- <p>Resumo detalhado de tempo, constancia e conclusao.</p>
+ <div>
+ <h3>Como seu tempo é dividido</h3>
+ <p>Veja quanto do seu estudo foi dedicado a cada matéria.</p>
  </div>
- <div class="stats-table-wrap">
- <table class="stats-table">
- <thead>
- <tr>
- <th>Materia</th>
- <th>Sessoes</th>
- <th>Total</th>
- <th>Dias</th>
- <th>Ultimo estudo</th>
- <th>Consistencia</th>
- <th>Completas</th>
- <th>Metodo</th>
- </tr>
- </thead>
- <tbody>
+ </div>
+ <div class="stats-subject-charts">
+ <div class="stats-pie-panel">
+ ${renderSubjectPie(subjectRows, totalMins)}
+ </div>
+ <div class="stats-bars-panel">
+ ${renderSubjectBars(subjectRows)}
+ </div>
+ </div>
+ </section>
+
+ <section class="stats-section-card">
+ <div class="stats-section-head">
+ <div>
+ <h3>Últimos 7 dias</h3>
+ <p>Quanto tempo você estudou em cada dia.</p>
+ </div>
+ </div>
+ <div class="stats-week-bars">
+ ${renderSimpleWeekBars(recentTrend)}
+ </div>
+ </section>
+
+ <section class="stats-section-card">
+ <div class="stats-section-head">
+ <div>
+ <h3>Estudo por matéria</h3>
+ <p>Compare o tempo dedicado a cada matéria.</p>
+ </div>
+ </div>
+ <div class="stats-subject-list">
  ${subjectRows.map(row => `
- <tr>
- <td data-label="Materia"><strong>${escapeHtml(row.label)}</strong></td>
- <td data-label="Sessoes">${row.sessions}</td>
- <td data-label="Total">${minToHour(row.minutes)}</td>
- <td data-label="Dias">${row.days}</td>
- <td data-label="Ultimo estudo">${row.lastDate}</td>
- <td data-label="Consistencia"><span class="stat-pill">${row.consistency}%</span></td>
- <td data-label="Completas">${row.completion}%</td>
- <td data-label="Metodo">${escapeHtml(row.bestMethod)}</td>
- </tr>
+ <article class="stats-subject-card">
+ <div>
+ <strong>${escapeHtml(row.label)}</strong>
+ <span>${row.sessions} sessões em ${row.days} dias</span>
+ </div>
+ <div class="stats-subject-result">
+ <strong>${minToHour(row.minutes)}</strong>
+ <span>${row.completion}% concluídas</span>
+ </div>
+ </article>
  `).join('')}
- </tbody>
- </table>
  </div>
  </section>
 
  <div class="stats-two-columns">
  <section class="stats-section-card">
  <div class="stats-section-head">
- <h3>Horarios mais usados</h3>
- <p>Baseado no horario em que a sessao foi registrada.</p>
+ <div>
+ <h3>Horários mais usados</h3>
+ <p>Quando você mais inicia suas sessões.</p>
+ </div>
  </div>
  <div class="mini-rank-list">
  ${hourRows.map(row => `
@@ -373,8 +365,10 @@
 
  <section class="stats-section-card">
  <div class="stats-section-head">
- <h3>Metodos de estudo</h3>
- <p>Quais formatos voce mais usa na rotina.</p>
+ <div>
+ <h3>Métodos de estudo</h3>
+ <p>Os formatos que você mais usa.</p>
+ </div>
  </div>
  <div class="mini-rank-list">
  ${methodRows.map(row => `
@@ -406,6 +400,73 @@
  row.sessions += 1;
  });
  return days;
+ }
+
+ function renderSimpleWeekBars(days) {
+ const maxMinutes = Math.max(...days.map(day => day.minutes), 1);
+ return days.map(day => {
+ const date = new Date(day.date + 'T12:00:00');
+ const label = date.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', '');
+ const height = day.minutes ? Math.max(12, Math.round((day.minutes / maxMinutes) * 100)) : 4;
+ return `
+ <div class="stats-week-day">
+ <span>${day.minutes ? minToHour(day.minutes) : '0 min'}</span>
+ <div class="stats-week-bar-track"><div class="stats-week-bar" style="height:${height}%"></div></div>
+ <strong>${label}</strong>
+ </div>
+ `;
+ }).join('');
+ }
+
+ function renderSubjectPie(rows, totalMinutes) {
+ const colors = getSubjectChartColors();
+ let current = 0;
+ const stops = rows.map((row, index) => {
+ const start = current;
+ current += (row.minutes / totalMinutes) * 100;
+ return `${colors[index % colors.length]} ${start.toFixed(2)}% ${current.toFixed(2)}%`;
+ }).join(', ');
+
+ return `
+ <div class="stats-pie-chart" style="background:conic-gradient(${stops})">
+ <div class="stats-pie-center"><strong>${minToHour(totalMinutes)}</strong><span>total</span></div>
+ </div>
+ <div class="stats-chart-legend">
+ ${rows.map((row, index) => {
+ const percent = Math.round((row.minutes / totalMinutes) * 100);
+ return `
+ <div class="stats-legend-item">
+ <i style="background:${colors[index % colors.length]}"></i>
+ <span>${escapeHtml(row.label)}</span>
+ <strong>${percent}%</strong>
+ </div>
+ `;
+ }).join('')}
+ </div>
+ `;
+ }
+
+ function renderSubjectBars(rows) {
+ const colors = getSubjectChartColors();
+ const maxMinutes = Math.max(...rows.map(row => row.minutes), 1);
+ return `
+ <div class="stats-chart-title">Tempo por matéria</div>
+ <div class="stats-horizontal-bars">
+ ${rows.map((row, index) => {
+ const width = Math.max(4, Math.round((row.minutes / maxMinutes) * 100));
+ return `
+ <div class="stats-horizontal-bar">
+ <div class="stats-horizontal-bar-head"><strong>${escapeHtml(row.label)}</strong><span>${minToHour(row.minutes)}</span></div>
+ <div class="stats-horizontal-bar-track"><div class="stats-horizontal-bar-fill" style="width:${width}%;background:${colors[index % colors.length]}"></div></div>
+ </div>
+ `;
+ }).join('')}
+ </div>
+ `;
+ }
+
+ function getSubjectChartColors() {
+ return ['#2f6f73', '#b35f2a', '#7c5c9e', '#2f7d54', '#c28b2c', '#4f78a8', '#b44f62', '#6f7d3b', '#8b6546', '#397f8f'];
  }
 
  function renderSparkline(values, tone = 'blue') {

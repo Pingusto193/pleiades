@@ -285,7 +285,6 @@ document.addEventListener('DOMContentLoaded', () => {
  // Nenhuma sobrescrita necessária — a hora é salva inline em sessao.html
 
  mountThemeToggle();
- mountMobileNav();
  mountMobileBackBtn();
 
  refreshAccount().catch(() => {});
