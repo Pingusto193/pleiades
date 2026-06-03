@@ -4,7 +4,7 @@
  <meta charset="UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
  <title>Focus Trip | Meu Perfil</title>
- <link rel="stylesheet" href="style.css?v=stats-simple1" />
+ <link rel="stylesheet" href="style.css?v=stats-charts1" />
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body class="app-page">
@@ -276,6 +276,23 @@
  <section class="stats-section-card">
  <div class="stats-section-head">
  <div>
+ <h3>Como seu tempo é dividido</h3>
+ <p>Veja quanto do seu estudo foi dedicado a cada matéria.</p>
+ </div>
+ </div>
+ <div class="stats-subject-charts">
+ <div class="stats-pie-panel">
+ ${renderSubjectPie(subjectRows, totalMins)}
+ </div>
+ <div class="stats-bars-panel">
+ ${renderSubjectBars(subjectRows)}
+ </div>
+ </div>
+ </section>
+
+ <section class="stats-section-card">
+ <div class="stats-section-head">
+ <div>
  <h3>Últimos 7 dias</h3>
  <p>Quanto tempo você estudou em cada dia.</p>
  </div>
@@ -379,6 +396,57 @@
  </div>
  `;
  }).join('');
+ }
+
+ function renderSubjectPie(rows, totalMinutes) {
+ const colors = getSubjectChartColors();
+ let current = 0;
+ const stops = rows.map((row, index) => {
+ const start = current;
+ current += (row.minutes / totalMinutes) * 100;
+ return `${colors[index % colors.length]} ${start.toFixed(2)}% ${current.toFixed(2)}%`;
+ }).join(', ');
+
+ return `
+ <div class="stats-pie-chart" style="background:conic-gradient(${stops})">
+ <div class="stats-pie-center"><strong>${minToHour(totalMinutes)}</strong><span>total</span></div>
+ </div>
+ <div class="stats-chart-legend">
+ ${rows.map((row, index) => {
+ const percent = Math.round((row.minutes / totalMinutes) * 100);
+ return `
+ <div class="stats-legend-item">
+ <i style="background:${colors[index % colors.length]}"></i>
+ <span>${escapeHtml(row.label)}</span>
+ <strong>${percent}%</strong>
+ </div>
+ `;
+ }).join('')}
+ </div>
+ `;
+ }
+
+ function renderSubjectBars(rows) {
+ const colors = getSubjectChartColors();
+ const maxMinutes = Math.max(...rows.map(row => row.minutes), 1);
+ return `
+ <div class="stats-chart-title">Tempo por matéria</div>
+ <div class="stats-horizontal-bars">
+ ${rows.map((row, index) => {
+ const width = Math.max(4, Math.round((row.minutes / maxMinutes) * 100));
+ return `
+ <div class="stats-horizontal-bar">
+ <div class="stats-horizontal-bar-head"><strong>${escapeHtml(row.label)}</strong><span>${minToHour(row.minutes)}</span></div>
+ <div class="stats-horizontal-bar-track"><div class="stats-horizontal-bar-fill" style="width:${width}%;background:${colors[index % colors.length]}"></div></div>
+ </div>
+ `;
+ }).join('')}
+ </div>
+ `;
+ }
+
+ function getSubjectChartColors() {
+ return ['#2f6f73', '#b35f2a', '#7c5c9e', '#2f7d54', '#c28b2c', '#4f78a8', '#b44f62', '#6f7d3b', '#8b6546', '#397f8f'];
  }
 
  function renderSparkline(values, tone = 'blue') {
