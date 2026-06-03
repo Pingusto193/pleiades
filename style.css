@@ -2695,3 +2695,435 @@ input.input-styled:focus,
 .session-setup-card {
   animation: softPop var(--motion-slow) var(--ease-out) both;
 }
+
+/* Responsive layout hardening */
+body {
+  overflow-x: hidden;
+}
+
+.app-page .app-content {
+  margin-inline: auto;
+}
+
+.calendar-grid,
+.profile-tabs,
+.stats-table-wrap {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-light) transparent;
+}
+
+@media (max-width: 900px) {
+  .container {
+    padding-inline: 20px;
+  }
+
+  .landing-page .nav-links {
+    gap: 12px;
+  }
+
+  .landing-page .hero {
+    align-items: stretch;
+  }
+
+  .landing-page .hero-content,
+  .landing-page .hero-visual {
+    max-width: 680px;
+    margin-inline: auto;
+  }
+
+  .app-page .stats-row,
+  .app-page .achievements-grid,
+  .app-page .month-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-page .analytics-position-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  :root {
+    --mobile-nav-h: 68px;
+  }
+
+  .app-page {
+    display: block;
+    padding-bottom: var(--mobile-nav-h);
+  }
+
+  .app-page .sidebar {
+    display: block;
+    width: 100%;
+    height: var(--mobile-nav-h);
+    top: auto;
+    right: 0;
+    bottom: 0;
+    border-right: 0;
+    border-top: 1px solid rgba(35, 33, 29, .1);
+    box-shadow: 0 -10px 30px rgba(55, 45, 32, .1);
+    overflow: hidden;
+  }
+
+  .app-page .sidebar-logo,
+  .app-page .sidebar-user {
+    display: none;
+  }
+
+  .app-page .sidebar-nav {
+    height: 100%;
+    padding: 7px 8px max(7px, env(safe-area-inset-bottom));
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .app-page .nav-item {
+    min-width: 0;
+    padding: 7px 4px;
+    justify-content: center;
+    text-align: center;
+    font-size: .68rem;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+
+  .app-page .app-main {
+    margin-left: 0;
+    min-width: 0;
+  }
+
+  .app-page .app-topbar {
+    height: 56px;
+    padding-inline: 16px;
+  }
+
+  .app-page .topbar-greeting {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .app-page .topbar-right {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .app-page .topbar-streak {
+    padding: 4px 9px;
+    font-size: .76rem;
+  }
+
+  .app-page .app-content {
+    padding: 18px 16px 24px;
+    min-width: 0;
+  }
+
+  .app-page .day-status-card,
+  .app-page .stat-card,
+  .app-page .main-cta-card,
+  .app-page .session-setup-card,
+  .app-page .timer-card,
+  .app-page .result-card,
+  .app-page .profile-hero-card,
+  .app-page .settings-card,
+  .app-page .add-subject-card,
+  .app-page .stats-section-card {
+    padding: 18px;
+  }
+
+  .app-page .main-cta-card {
+    align-items: stretch;
+  }
+
+  .app-page .main-cta-card .btn-primary {
+    width: 100%;
+  }
+
+  .app-page .weekly-progress,
+  .app-page .calendar-grid,
+  .app-page .profile-tabs {
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .app-page .weekly-progress {
+    grid-template-columns: repeat(7, minmax(62px, 1fr));
+    padding-bottom: 6px;
+  }
+
+  .app-page .cal-week-headers,
+  .app-page .cal-days {
+    min-width: 560px;
+  }
+
+  .app-page .cal-day {
+    min-height: 86px;
+  }
+
+  .app-page .cal-day-plan small {
+    display: block;
+  }
+
+  .app-page .profile-tabs {
+    max-width: 100%;
+    padding-bottom: 5px;
+  }
+
+  .app-page .profile-hero-left,
+  .app-page .profile-hero-right {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .app-page .profile-hero-left {
+    align-items: flex-start;
+  }
+
+  .app-page .profile-hero-info,
+  .app-page .subject-info {
+    min-width: 0;
+  }
+
+  .app-page .profile-email,
+  .app-page .subject-schedule {
+    overflow-wrap: anywhere;
+  }
+
+  .app-page .method-selector-big {
+    grid-template-columns: 1fr;
+  }
+
+  .app-page .timer-container,
+  .app-page .session-setup-card,
+  .app-page .result-card,
+  .app-page .settings-card {
+    max-width: 100%;
+  }
+
+  .app-page .timer-actions {
+    flex-wrap: wrap;
+  }
+
+  .app-page .subject-card {
+    align-items: flex-start;
+  }
+
+  .app-page .btn-icon-del {
+    flex-shrink: 0;
+    padding: 8px;
+  }
+
+  .app-page .history-item {
+    grid-template-columns: 1fr auto;
+    gap: 6px 12px;
+  }
+
+  .app-page .history-method {
+    display: block;
+  }
+
+  .app-page .history-status,
+  .app-page .history-duration {
+    text-align: right;
+  }
+
+  .auth-page .auth-right {
+    padding: 20px;
+  }
+
+  .auth-page .auth-form-wrapper {
+    width: min(100%, 440px);
+    min-height: 0;
+    padding: 24px;
+    border: 1px solid rgba(35, 33, 29, .1);
+    border-radius: 14px;
+    box-shadow: 0 18px 55px rgba(55, 45, 32, .12);
+  }
+
+  .landing-page .section {
+    padding-block: 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding-inline: 16px;
+  }
+
+  .landing-page .nav-landing {
+    padding: 10px 12px;
+  }
+
+  .landing-page .nav-logo {
+    gap: 6px;
+  }
+
+  .landing-page .logo-text {
+    font-size: 1.05rem;
+  }
+
+  .landing-page .nav-links {
+    gap: 6px;
+  }
+
+  .landing-page .btn-nav-login {
+    display: none;
+  }
+
+  .landing-page .btn-nav-signup {
+    padding: 7px 10px;
+    font-size: .78rem;
+  }
+
+  .landing-page .hero {
+    padding: 96px 16px 44px;
+  }
+
+  .landing-page .hero::before {
+    inset: 72px 8px 16px;
+    border-radius: 18px;
+  }
+
+  .landing-page .hero-title {
+    font-size: clamp(2rem, 11vw, 2.5rem);
+  }
+
+  .landing-page .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .landing-page .hero-cta,
+  .landing-page .hero-cta .btn-primary,
+  .landing-page .hero-cta .btn-ghost {
+    width: 100%;
+  }
+
+  .landing-page .mockup-body,
+  .landing-page .step-card,
+  .landing-page .method-card,
+  .landing-page .profile-preview,
+  .landing-page .pricing-plan {
+    padding: 20px;
+  }
+
+  .landing-page .mockup-timer {
+    font-size: 2.8rem;
+  }
+
+  .landing-page .cognitive-block {
+    padding: 0;
+  }
+
+  .landing-page .footer-links {
+    flex-wrap: wrap;
+    gap: 10px 18px;
+  }
+
+  .app-page .stats-row,
+  .app-page .achievements-grid,
+  .app-page .month-summary,
+  .app-page .analytics-strip,
+  .app-page .keyword-panels,
+  .app-page .schedule-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .app-page .stat-card {
+    min-height: 78px;
+  }
+
+  .app-page .calendar-header {
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .app-page .cal-month-title {
+    font-size: 1.15rem;
+    text-align: center;
+  }
+
+  .app-page .cal-legend {
+    gap: 8px 12px;
+  }
+
+  .app-page .profile-hero-left {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .app-page .profile-avatar-big {
+    width: 60px;
+    height: 60px;
+  }
+
+  .app-page .quick-stat {
+    min-width: calc(50% - 6px);
+  }
+
+  .app-page .timer-circle-wrap {
+    width: min(190px, 70vw);
+    height: min(190px, 70vw);
+  }
+
+  .app-page .timer-display {
+    font-size: 2.35rem;
+  }
+
+  .app-page .timer-actions > * {
+    flex-basis: 100%;
+  }
+
+  .app-page .subject-card {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .app-page .subject-color {
+    width: 6px;
+  }
+
+  .app-page .modal-overlay {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .app-page .modal-card {
+    max-height: calc(100dvh - 24px);
+    overflow-y: auto;
+    padding: 24px 18px;
+    border-radius: 14px;
+  }
+
+  .ft-toast {
+    left: 12px;
+    right: 12px;
+    bottom: calc(var(--mobile-nav-h, 0px) + 12px);
+    max-width: none;
+    text-align: center;
+  }
+
+  .auth-page .auth-right {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .auth-page .auth-form-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    padding: 24px 18px;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .auth-page .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-page .auth-title {
+    font-size: 1.55rem;
+  }
+}
