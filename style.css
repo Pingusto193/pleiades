@@ -1339,6 +1339,154 @@ input.input-styled:focus,
   max-width: 520px;
 }
 
+/* SIMPLE PROFILE STATISTICS */
+.stats-simple-intro {
+  margin-bottom: 16px;
+}
+.stats-simple-intro h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.stats-simple-intro p {
+  color: var(--text-muted);
+  font-size: .88rem;
+}
+.stats-simple-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.stats-simple-card {
+  min-height: 126px;
+  padding: 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.stats-simple-card.highlight {
+  background: linear-gradient(135deg, rgba(47, 111, 115, .1), var(--bg-card));
+  border-color: rgba(47, 111, 115, .26);
+}
+.stats-simple-card span {
+  color: var(--text-secondary);
+  font-size: .8rem;
+  font-weight: 700;
+}
+.stats-simple-card strong {
+  color: var(--text-primary);
+  font-size: 1.45rem;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.stats-simple-card small {
+  color: var(--text-muted);
+  font-size: .76rem;
+  margin-top: auto;
+}
+.stats-quick-read .stats-section-head {
+  margin-bottom: 12px;
+}
+.stats-insight-list {
+  display: grid;
+  gap: 10px;
+}
+.stats-insight {
+  padding: 13px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: grid;
+  gap: 3px;
+}
+.stats-insight strong {
+  color: var(--text-primary);
+  font-size: .88rem;
+}
+.stats-insight span {
+  color: var(--text-muted);
+  font-size: .78rem;
+}
+.stats-week-bars {
+  height: 190px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(48px, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+.stats-week-day {
+  height: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: 20px 1fr 20px;
+  gap: 6px;
+  text-align: center;
+}
+.stats-week-day span {
+  color: var(--text-muted);
+  font-size: .68rem;
+  white-space: nowrap;
+}
+.stats-week-day strong {
+  color: var(--text-secondary);
+  font-size: .74rem;
+  text-transform: capitalize;
+}
+.stats-week-bar-track {
+  height: 100%;
+  border-radius: 7px;
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.stats-week-bar {
+  width: 100%;
+  min-height: 4px;
+  border-radius: 7px 7px 0 0;
+  background: var(--color-primary);
+}
+.stats-subject-list {
+  display: grid;
+  gap: 10px;
+}
+.stats-subject-card {
+  padding: 14px 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.stats-subject-card > div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+.stats-subject-card strong {
+  color: var(--text-primary);
+  font-size: .88rem;
+  overflow-wrap: anywhere;
+}
+.stats-subject-card span {
+  color: var(--text-muted);
+  font-size: .75rem;
+}
+.stats-subject-result {
+  flex-shrink: 0;
+  text-align: right;
+}
+.stats-subject-result strong {
+  color: var(--color-primary);
+}
+
 /* SETTINGS */
 .settings-card {
   background: var(--bg-card); border: 1px solid var(--border);
@@ -2740,6 +2888,10 @@ body {
   .app-page .analytics-position-grid {
     grid-template-columns: 1fr;
   }
+
+  .stats-simple-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 680px) {
@@ -2930,6 +3082,12 @@ body {
     text-align: right;
   }
 
+  .stats-week-bars {
+    overflow-x: auto;
+    grid-template-columns: repeat(7, minmax(56px, 1fr));
+    padding-bottom: 6px;
+  }
+
   .auth-page .auth-right {
     padding: 20px;
   }
@@ -3029,6 +3187,18 @@ body {
   .app-page .keyword-panels,
   .app-page .schedule-fields {
     grid-template-columns: 1fr;
+  }
+
+  .stats-simple-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-simple-card {
+    min-height: 104px;
+  }
+
+  .stats-subject-card {
+    align-items: flex-start;
   }
 
   .app-page .stat-card {
