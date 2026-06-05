@@ -5,6 +5,7 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
  <title>Focus Trip | estudo com rotina, metas e progresso</title>
  <link rel="stylesheet" href="style.css?v=responsive1" />
+ <link rel="stylesheet" href="animations.css" />
  <link rel="preconnect" href="https://fonts.googleapis.com" />
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
 </head>
@@ -26,6 +27,7 @@
 
  <main>
  <section class="hero">
+ <div class="hero-parallax-bg" aria-hidden="true"></div>
  <div class="hero-content">
  <p class="hero-badge">Para quem quer estudar sem depender da motiva&ccedil;&atilde;o do dia</p>
  <h1 class="hero-title">Organize seus estudos e acompanhe o que voc&ecirc; realmente fez.
@@ -55,14 +57,14 @@
  <div class="mockup-subject">C&aacute;lculo I</div>
  <div class="mockup-timer">24:37</div>
  <div class="mockup-method-badge">Pomodoro</div>
- <div class="mockup-progress-bar"><div class="mockup-progress-fill" style="width:62%"></div></div>
+ <div class="mockup-progress-bar"><div class="mockup-progress-fill" data-progress="62" style="width:62%"></div></div>
  <div class="mockup-progress-label">15 min estudados de 25 min</div>
  <div class="mockup-warning">Parar agora vai registrar a sess&atilde;o como incompleta.</div>
  <button class="mockup-btn-stop">Pausar sess&atilde;o</button>
  </div>
  </div>
  <div class="mockup-streak-card">
- <strong>14 dias</strong>
+ <strong data-count="14" data-count-suffix=" dias">14 dias</strong>
  <span>sequ&ecirc;ncia atual</span>
  </div>
  </div>
@@ -135,22 +137,22 @@
  <div class="rewards-showcase">
  <div class="rewards-left">
  <div class="reward-item unlocked">
- <span class="reward-icon">7d</span>
+ <span class="reward-icon" data-count="7" data-count-suffix="d">7d</span>
  <div><strong>Sequ&ecirc;ncia de 7 dias</strong><br/><small>uma semana sem abandonar o plano</small></div>
  <span class="reward-status">Feito</span>
  </div>
  <div class="reward-item unlocked">
- <span class="reward-icon">5x</span>
+ <span class="reward-icon" data-count="5" data-count-suffix="x">5x</span>
  <div><strong>Dia produtivo</strong><br/><small>5 sess&otilde;es Pomodoro conclu&iacute;das</small></div>
  <span class="reward-status">Feito</span>
  </div>
  <div class="reward-item locked">
- <span class="reward-icon">30d</span>
+ <span class="reward-icon" data-count="30" data-count-suffix="d">30d</span>
  <div><strong>Sequ&ecirc;ncia de 30 dias</strong><br/><small>um m&ecirc;s acompanhando sua rotina</small></div>
  <span class="reward-status locked-status">Pendente</span>
  </div>
  <div class="reward-item locked">
- <span class="reward-icon">100h</span>
+ <span class="reward-icon" data-count="100" data-count-suffix="h">100h</span>
  <div><strong>100 horas registradas</strong><br/><small>volume acumulado de estudo</small></div>
  <span class="reward-status locked-status">Pendente</span>
  </div>
@@ -159,11 +161,11 @@
  <div class="profile-preview">
  <div class="profile-avatar">JS</div>
  <div class="profile-name">Jo&atilde;o Silva</div>
- <div class="profile-streak">14 dias de sequ&ecirc;ncia</div>
+ <div class="profile-streak" data-count="14" data-count-suffix=" dias de sequ&ecirc;ncia">14 dias de sequ&ecirc;ncia</div>
  <div class="profile-level">
  <span>N&iacute;vel 4 - Estudante dedicado</span>
- <div class="level-bar"><div class="level-fill" style="width:68%"></div></div>
- <small>680 / 1000 XP</small>
+ <div class="level-bar"><div class="level-fill" data-progress="68" style="width:68%"></div></div>
+ <small data-count="680" data-count-suffix=" / 1000 XP">680 / 1000 XP</small>
  </div>
  </div>
  </div>
@@ -197,7 +199,7 @@
  <article class="pricing-plan premium-plan">
  <div class="pricing-top">
  <span class="pricing-label">Premium</span>
- <strong>R$ 15</strong>
+ <strong data-count="15" data-count-prefix="R$ ">R$ 15</strong>
  <small>por m&ecirc;s</small>
  </div>
  <ul>
@@ -249,5 +251,6 @@
  </footer>
 
  <script src="app.js?v=db9"></script>
+ <script src="animations.js"></script>
 </body>
 </html>

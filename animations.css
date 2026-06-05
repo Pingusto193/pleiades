@@ -1,0 +1,167 @@
+/* Premium landing motion layer */
+
+.landing-page .hero {
+  isolation: isolate;
+}
+
+.landing-page .hero-parallax-bg {
+  position: absolute;
+  inset: 92px 34px 32px;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 28px;
+  background:
+    linear-gradient(120deg, rgba(255, 253, 247, .72), rgba(255, 253, 247, .18)),
+    radial-gradient(circle at 16% 18%, rgba(47, 111, 115, .14), transparent 34%),
+    radial-gradient(circle at 82% 12%, rgba(179, 95, 42, .12), transparent 30%),
+    radial-gradient(circle at 58% 86%, rgba(35, 33, 29, .08), transparent 36%);
+  transform: translate3d(0, var(--hero-parallax-y, 0px), 0);
+  will-change: transform;
+}
+
+.landing-page .hero::before {
+  z-index: 1;
+}
+
+.landing-page .hero-content,
+.landing-page .hero-visual {
+  will-change: transform;
+}
+
+.landing-page.motion-ready .hero-badge,
+.landing-page.motion-ready .hero-title,
+.landing-page.motion-ready .hero-subtitle,
+.landing-page.motion-ready .hero-cta,
+.landing-page.motion-ready .hero-note {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+}
+
+.landing-page.motion-ready.hero-loaded .hero-badge,
+.landing-page.motion-ready.hero-loaded .hero-title,
+.landing-page.motion-ready.hero-loaded .hero-subtitle,
+.landing-page.motion-ready.hero-loaded .hero-cta,
+.landing-page.motion-ready.hero-loaded .hero-note {
+  animation: heroTextIn 820ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.landing-page.motion-ready.hero-loaded .hero-title {
+  animation-delay: 90ms;
+}
+
+.landing-page.motion-ready.hero-loaded .hero-subtitle {
+  animation-delay: 180ms;
+}
+
+.landing-page.motion-ready.hero-loaded .hero-cta {
+  animation-delay: 260ms;
+}
+
+.landing-page.motion-ready.hero-loaded .hero-note {
+  animation-delay: 340ms;
+}
+
+.landing-page.motion-ready .mockup-card {
+  opacity: 0;
+  transform: rotate(1.2deg) scale(.9);
+}
+
+.landing-page.motion-ready.hero-loaded .mockup-card {
+  animation: mockupScaleIn 920ms cubic-bezier(.16, 1, .3, 1) 180ms both;
+}
+
+.landing-page.motion-ready .scroll-reveal {
+  opacity: 0;
+  transform: translate3d(0, 50px, 0);
+  transition:
+    opacity 760ms cubic-bezier(.16, 1, .3, 1),
+    transform 760ms cubic-bezier(.16, 1, .3, 1);
+  will-change: opacity, transform;
+}
+
+.landing-page.motion-ready .scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.landing-page .step-card,
+.landing-page .method-card,
+.landing-page .reward-item,
+.landing-page .pricing-plan {
+  transform-origin: center;
+  transition:
+    transform 300ms cubic-bezier(.16, 1, .3, 1),
+    box-shadow 300ms cubic-bezier(.16, 1, .3, 1),
+    border-color 300ms cubic-bezier(.16, 1, .3, 1),
+    background-color 300ms cubic-bezier(.16, 1, .3, 1),
+    opacity 300ms cubic-bezier(.16, 1, .3, 1);
+}
+
+.landing-page .step-card:hover,
+.landing-page .method-card:hover,
+.landing-page .reward-item:hover,
+.landing-page .pricing-plan:hover {
+  transform: translate3d(0, -8px, 0) scale(1.03);
+  box-shadow: 0 26px 70px rgba(35, 33, 29, .18);
+}
+
+.landing-page .progress-animate {
+  width: 0 !important;
+}
+
+.landing-page .progress-animate.progress-grown {
+  transition: width 1100ms cubic-bezier(.16, 1, .3, 1);
+}
+
+@keyframes heroTextIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 34px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes mockupScaleIn {
+  from {
+    opacity: 0;
+    transform: rotate(1.2deg) scale(.9);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(1.2deg) scale(1);
+  }
+}
+
+@media (max-width: 680px) {
+  .landing-page .hero-parallax-bg {
+    inset: 72px 8px 16px;
+    border-radius: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-page .hero-parallax-bg,
+  .landing-page .hero-content,
+  .landing-page .hero-visual,
+  .landing-page.motion-ready .hero-badge,
+  .landing-page.motion-ready .hero-title,
+  .landing-page.motion-ready .hero-subtitle,
+  .landing-page.motion-ready .hero-cta,
+  .landing-page.motion-ready .hero-note,
+  .landing-page.motion-ready .mockup-card,
+  .landing-page.motion-ready .scroll-reveal,
+  .landing-page .step-card,
+  .landing-page .method-card,
+  .landing-page .reward-item,
+  .landing-page .pricing-plan,
+  .landing-page .progress-animate.progress-grown {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto;
+  }
+}
