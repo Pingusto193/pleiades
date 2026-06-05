@@ -12,6 +12,11 @@
   '.auth-promo',
   '.auth-form',
   '.onboarding-section',
+  '.hero-metric',
+  '.dashboard-stat',
+  '.dashboard-progress',
+  '.week-node',
+  '.orbit-core',
   '.app-content > *',
   '.stat-card',
   '.main-cta-card',
@@ -44,6 +49,7 @@
   '.stats-section-card',
   '.stats-insight',
   '.stats-subject-card',
+  '.profile-proof-grid span',
   '.quick-stat',
   '.profile-level-card',
   '.step-card',
@@ -84,7 +90,12 @@
   '.stats-subject-card',
   '.cog-feat',
   '.profile-preview',
-  '.mockup-card'
+  '.mockup-card',
+  '.hero-metric',
+  '.dashboard-stat',
+  '.dashboard-progress',
+  '.week-node',
+  '.profile-proof-grid span'
  ].join(',');
 
  const counterSelector = [

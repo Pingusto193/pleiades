@@ -82,12 +82,13 @@
   inset: 92px 34px 32px;
   z-index: 0;
   pointer-events: none;
-  border-radius: 28px;
+  border-radius: 24px;
   background:
-    linear-gradient(120deg, rgba(255, 253, 247, .72), rgba(255, 253, 247, .18)),
-    radial-gradient(circle at 16% 18%, rgba(47, 111, 115, .14), transparent 34%),
-    radial-gradient(circle at 82% 12%, rgba(179, 95, 42, .12), transparent 30%),
-    radial-gradient(circle at 58% 86%, rgba(35, 33, 29, .08), transparent 36%);
+    radial-gradient(circle at 12% 18%, rgba(139, 216, 255, .18) 0 1px, transparent 2px),
+    radial-gradient(circle at 68% 16%, rgba(246, 215, 122, .18) 0 1px, transparent 2px),
+    radial-gradient(circle at 84% 64%, rgba(184, 156, 255, .16) 0 1px, transparent 2px),
+    linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.018));
+  background-size: 180px 180px, 260px 260px, 220px 220px, auto;
   transform: translate3d(0, var(--hero-parallax-y, 0px), 0);
   will-change: transform;
 }
@@ -136,11 +137,36 @@
 
 .landing-page.motion-ready .mockup-card {
   opacity: 0;
-  transform: rotate(1.2deg) scale(.9);
+  transform: translate3d(0, 24px, 0) scale(.92);
 }
 
 .landing-page.motion-ready.hero-loaded .mockup-card {
   animation: mockupScaleIn 920ms cubic-bezier(.16, 1, .3, 1) 180ms both;
+}
+
+.landing-page.motion-ready .star-point {
+  opacity: 0;
+  transform: scale(.72);
+}
+
+.landing-page.motion-ready.hero-loaded .star-point {
+  animation: starWake 900ms cubic-bezier(.16, 1, .3, 1) both, starPulse 3.8s ease-in-out 900ms infinite;
+}
+
+.landing-page.motion-ready.hero-loaded .star-b { animation-delay: 120ms, 1020ms; }
+.landing-page.motion-ready.hero-loaded .star-c { animation-delay: 220ms, 1120ms; }
+.landing-page.motion-ready.hero-loaded .star-d { animation-delay: 320ms, 1220ms; }
+.landing-page.motion-ready.hero-loaded .star-e { animation-delay: 420ms, 1320ms; }
+.landing-page.motion-ready.hero-loaded .star-f { animation-delay: 520ms, 1420ms; }
+.landing-page.motion-ready.hero-loaded .star-g { animation-delay: 620ms, 1520ms; }
+
+.landing-page.motion-ready .constellation-line {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+}
+
+.landing-page.motion-ready.hero-loaded .constellation-line {
+  animation: constellationDraw 1200ms cubic-bezier(.16, 1, .3, 1) 480ms both;
 }
 
 @keyframes heroTextIn {
@@ -157,11 +183,42 @@
 @keyframes mockupScaleIn {
   from {
     opacity: 0;
-    transform: rotate(1.2deg) scale(.9);
+    transform: translate3d(0, 24px, 0) scale(.92);
   }
   to {
     opacity: 1;
-    transform: rotate(1.2deg) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes starWake {
+  from {
+    opacity: 0;
+    transform: scale(.72);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes starPulse {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.45);
+  }
+}
+
+@keyframes constellationDraw {
+  from {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
   }
 }
 
@@ -242,6 +299,8 @@
   .landing-page.motion-ready .hero-cta,
   .landing-page.motion-ready .hero-note,
   .landing-page.motion-ready .mockup-card,
+  .landing-page.motion-ready .star-point,
+  .landing-page.motion-ready .constellation-line,
   .app-page.motion-ready .sidebar,
   .app-page.motion-ready .app-topbar,
   .auth-page.motion-ready .auth-left,
